@@ -1,0 +1,2 @@
+module TwitterSearchResultsHelper
+end

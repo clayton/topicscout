@@ -69,3 +69,11 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
+
+gem "tweetkit", git: 'https://github.com/clayton/tweetkit'
+
+gem "omniauth-twitter2", "~> 0.1.0"
+
+gem "pagy", "~> 5.10"
+
+gem "faraday", "~> 1.10"

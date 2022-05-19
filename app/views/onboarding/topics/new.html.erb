@@ -1,0 +1,28 @@
+  <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-base font-semibold text-violet-600 tracking-wide uppercase">Get started</h2>
+      <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">Track Topics on Twitter</p>
+      <p class="max-w-xl mt-5 mx-auto text-xl text-gray-500">Give us a keyword for the topic you want to track, and we'll send you a daily digest of tweets.</p>
+    </div>
+    <div class="py-16">
+      <%= form_with model: [:onboarding, @topic], class: 'w-1/2 mx-auto' do |f| %>
+        <div>
+          <label for="topic" class="sr-only">topic</label>
+          <%= f.text_field :topic, class: 'p-6 shadow-sm focus:ring-violet-500 focus:border-violet-500 block w-full text-4xl border-gray-300 rounded-md', required: true %>
+          <p class="text-center mt-8">
+            <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-2xl font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Continue</button>
+          </p>
+          <div class="mt-8 p-8 bg-gray-50 rounded-md">
+            <p class="text-sm font-bold">Hints:</p>
+            <div class="prose prose-sm">
+              <ul>
+                <li>Try a #hashtag.</li>
+                <li>Capitalization and punctuation don't matter.</li>
+                <li>Think "medium tail." Not too broad, not too narrow.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>

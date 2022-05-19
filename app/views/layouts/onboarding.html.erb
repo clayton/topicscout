@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="h-full bg-violet-gray-100">
+  <head>
+    <title>Topic Scout – Find your customers</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="h-full">
+    <header class="bg-violet-600">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+        <div class="w-full py-6 flex items-center justify-between border-b border-violet-500 lg:border-none">
+          <div class="flex items-center">
+            <%= link_to root_path do %>
+              <span class="sr-only">Topic Scout</span>
+              <%= image_tag 'topic-scout-white-mark.svg', class: 'h-10 w-auto', alt: 'Topic Scout' %>
+            <% end %>
+          </div>
+          <div class="ml-10 space-x-4">
+            <%= link_to "Sign in", login_path, class: 'inline-block bg-violet-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75' %>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
+    <script>
+      window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+<h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+<div class="py-16 divide-y-8">
+  <% @topics.each do |topic| %>
+    <%= link_to topic_tweets_path(topic), class: 'block bg-gray-50 p-8 rounded-md shadow-md' do %>
+      <div>
+        <h2 class="font-semibold text-gray-900 text-lg"><%= topic.topic %></h2>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600"><%= topic.tweets.count %> tweets</p>
+      </div>
+    <% end %>
+  <% end %>
+</div>
