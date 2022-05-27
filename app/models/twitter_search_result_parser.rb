@@ -13,7 +13,7 @@ class TwitterSearchResultParser
     @results = results
     @twitter_search_result = twitter_search_result
     @intent = intent
-    @result_count = 0
+    @results_count = 0
   end
 
   def parse
@@ -25,7 +25,7 @@ class TwitterSearchResultParser
     save_tweets(@results)
 
     if @twitter_search_result.limited?
-      @twitter_search_result.update(result_count: @result_count, completed: true)
+      @twitter_search_result.update(results_count: @results_count, completed: true)
       return self
     end
 
@@ -34,7 +34,7 @@ class TwitterSearchResultParser
       @results.next_page
     end
 
-    @twitter_search_result.update(result_count: @result_count, completed: true)
+    @twitter_search_result.update(results_count: @results_count, completed: true)
 
     self
   end
@@ -45,7 +45,7 @@ class TwitterSearchResultParser
     users = results.expansions&.users&.users
 
     found_tweets = results.tweets
-    @result_count += found_tweets.count
+    @results_count += found_tweets.count
 
     found_tweets.each do |tweet|
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
