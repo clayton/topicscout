@@ -1,5 +1,9 @@
 class TwitterSearchResult < ApplicationRecord
+
+  include Routeable
+
   belongs_to :topic
+  has_many :tweets, dependent: :destroy
 
   after_create :search
 
@@ -19,5 +23,18 @@ class TwitterSearchResult < ApplicationRecord
 
   def parsed_start_time
     start_time&.rfc3339
+  end
+
+  def digest
+    {
+      topic: topic.topic,
+      results_count: tweets_count,
+      topic_tweets_url: topic_tweets_url(topic),
+      edit_topic_url: edit_topic_url(topic),
+      support_email: 'help@topicscout.app',
+      tweets: tweets.map do |t|
+                { name: t.name, username: t.username, profile_image_url: t.profile_image_url, embed_html: t.embed_html }
+              end
+    }
   end
 end

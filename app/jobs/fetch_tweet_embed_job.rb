@@ -8,7 +8,7 @@ class FetchTweetEmbedJob < ApplicationJob
   def perform(tweet)
     url = tweet.url
 
-    conn = Faraday.new('https://publish.twitter.com/oembed') do |f|
+    conn = Faraday.new('https://publish.twitter.com') do |f|
       f.request :url_encoded
       f.request :retry
       f.response :json
@@ -16,8 +16,12 @@ class FetchTweetEmbedJob < ApplicationJob
       f.request :authorization, 'Bearer', ENV.fetch('TWITTER_BEARER_TOKEN', nil)
     end
 
-    conn.get(url, hide_media: true, hide_thread: true, omit_script: true)
+    results = conn.get('/oembed', url: url, hide_media: true, hide_thread: true, omit_script: true)
 
+    return if results.nil?
+    return if results.body.nil?
+    return if results.body['html'].blank?
 
+    tweet.update(embed_html: results.body['html'], embed_cache_expires_at: Time.at(results.body['cache_age'].to_i))
   end
 end

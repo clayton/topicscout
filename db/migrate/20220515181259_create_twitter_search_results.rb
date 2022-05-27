@@ -4,8 +4,9 @@ class CreateTwitterSearchResults < ActiveRecord::Migration[7.0]
       t.references :topic, null: false, foreign_key: true, type: :uuid
       t.string :newest_tweet_id
       t.string :oldest_tweet_id
-      t.integer :tweets_count, default: 0
+      t.integer :results_count, default: 0
       t.integer :max_results, default: 10
+      t.boolean :limited, default: false
       t.boolean :completed, default: false
       t.datetime :start_time
 

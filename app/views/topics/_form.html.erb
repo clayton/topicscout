@@ -1,0 +1,95 @@
+<%= form_with model: @topic, class: '' do |f| %>
+  <div class="space-y-8 divide-y divide-gray-200">
+    <div>
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Details</h3>
+        <p class="mt-1 text-sm text-gray-500">The details about this particular topic.</p>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= f.label :name, "Name", class: "block text-sm font-medium text-gray-700"%>
+          <div class="mt-1">
+            <%= f.text_field :name, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+          </div>
+        </div>
+        <div class="sm:col-span-4">
+          <%= f.label :topic, "Topic keyword", class: "block text-sm font-medium text-gray-700"%>
+          <div class="mt-1">
+            <% if @topic.persisted? %>
+              <%= f.text_field :topic, disabled: 'disabled', class: 'block w-full border-0 border-b border-transparent bg-gray-50 focus:border-violet-600 focus:ring-0 sm:text-sm' %>
+            <% else %>
+              <%= f.text_field :topic, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pt-8">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Search modifiers</h3>
+        <p class="mt-1 text-sm text-gray-500">Optional modifiers that can help narrow the scope of your search.</p>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <%= f.fields_for :search_terms do |term_form| %>
+          <div class="sm:col-span-4">
+            <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+          </div>
+        <% end %>
+        <% if @topic.persisted? %>
+          <div class="sm:col-span-4">
+            <%= f.fields_for @topic.search_terms.build do |new_term| %>
+              <%= new_term.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+            <% end %>
+          </div>
+        <% else %>
+          <% 3.times do %>
+            <div class="sm:col-span-4">
+              <%= f.fields_for :new_search_terms do |search_term_builder| %>
+                <%= search_term_builder.label 'Search Term', class: 'sr-only' %>
+                <%= search_term_builder.text_field '', class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="pt-8">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Notifications</h3>
+        <p class="mt-1 text-sm text-gray-500">Choose how to be notified about this topic.</p>
+      </div>
+      <div class="mt-6">
+        <fieldset>
+          <legend class="sr-only">By Email</legend>
+          <div class="text-base font-medium text-gray-900" aria-hidden="true">By Email</div>
+          <div class="mt-4 space-y-4">
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= f.check_box :daily_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= f.label :daily_digest, "Daily Digest", class: 'font-medium text-gray-700' %>
+                <p class="text-gray-500">Receive a daily digest of new results for this topic.</p>
+              </div>
+            </div>
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= f.check_box :weekly_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= f.label :weekly_digest, "Weekly Digest", class: 'font-medium text-gray-700' %>
+                <p class="text-gray-500">Receive a weekly summary of the results for this topic.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div class="pt-5">
+    <div class="flex justify-end">
+      <%= link_to "Cancel", cancel_link, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
+      <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
+    </div>
+  </div>
+<% end %>

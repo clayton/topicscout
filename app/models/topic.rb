@@ -1,41 +1,67 @@
 class Topic < ApplicationRecord
   has_many :twitter_search_results
   has_many :tweets
-  has_many :search_terms
+  has_many :search_terms, dependent: :destroy
 
-  has_many :interests
-  has_many :users, through: :interests
-  has_many :tweet_read_receipts, through: :interests
+  belongs_to :user
 
   validates :topic, presence: true
 
-  after_create :create_search_term
+  before_create :sanitize_topic
   after_create :initial_search
 
-  def search_term_attributes=(attributes)
-    attributes.each do |term|
-      next if term.nil?
-      next if term.empty?
-      next if term.downcase.strip.empty?
+  accepts_nested_attributes_for :search_terms, allow_destroy: true
 
-      search_terms.find_or_create_by(term: term.downcase.strip)
+  def latest_result
+    twitter_search_results.completed.order(created_at: :desc).first
+  end
+
+  def new_search_terms=(terms)
+    terms.each do |term|
+      next if term.strip.blank?
+
+      search_terms << SearchTerm.new(term: term)
     end
   end
 
-  def search_phrase
-    terms = search_terms.map { |search_term| %("#{search_term.term}") }
+  def search_term_attributes=(attributes)
+    attributes.each do |term|
+      search_term = search_terms.find_by(id: term[:id])
+      if term[:term].strip.blank?
+        search_term.destroy
+        next
+      end
+      search_term.update(term: term[:term])
+    end
+  end
 
-    terms.join(' OR ')
+  def search_term=(attributes)
+    term = attributes[:term]
+
+    return if term.nil?
+    return if term.empty?
+    return if term.downcase.strip.empty?
+
+    search_terms.find_or_create_by(term: term)
+  end
+
+  def search_phrase
+    optionals = search_terms.map { |search_term| %("#{search_term.term}") }.flatten.uniq.join(' OR ')
+
+    return %("#{topic}" (#{optionals})) if optionals.present?
+
+    %("#{topic}")
   end
 
   def initial_search
     twitter_search_results.create(
-      max_results: 10, 
+      max_results: 12,
+      limited: true,
       start_time: DateTime.yesterday.beginning_of_day
     )
   end
 
-  def create_search_term
-    search_terms.create(term: topic.downcase.strip)
+  def sanitize_topic
+    self.topic = topic.downcase.strip
   end
 end

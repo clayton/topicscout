@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     
     if session[:topic_id]
       @topic = Topic.find_by(id: session[:topic_id])
-      @interest = Interest.find_or_create_by(topic: @topic, user: @user)
+      @topic.update(user: @user) if @topic
     end
 
     session[:user_id] = @user.id

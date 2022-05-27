@@ -1,22 +1,26 @@
 Rails.application.routes.draw do
-  get 'tweets/index'
   namespace :onboarding do
+    get 'email_verifications/edit'
     resources :topics
-    resources :interests
+    resources :users
+    resources :email_verifications
   end
 
   get '/onboarding/start', to: 'onboarding/topics#new', as: :onboarding_start
   get '/onboarding/topics/:topic_id/refine', to: 'onboarding/topics#edit', as: :onboarding_refine
-  get '/onboarding/topics/:topic_id/finish', to: 'onboarding/interests#new', as: :onboarding_finish
+  get '/onboarding/topics/:topic_id/finish', to: 'onboarding/users#edit', as: :onboarding_finish
 
   resources :topics do
     resources :twitter_search_results
     resources :search_terms
-    resources :interests
     resources :tweets
-    resources :tweet_read_receipts
   end
 
+  resources :users do
+    resources :email_verifications
+  end
+
+  get '/profile', to: 'users#edit', as: :profile
   get '/login', to: 'sessions#new', as: 'login'
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/logout', to: 'sessions#destroy', as: 'logout'

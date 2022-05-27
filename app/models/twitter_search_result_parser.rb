@@ -2,6 +2,7 @@ class TwitterSearchResultParser
   def self.parse(results, twitter_search_result, intent = nil)
     return unless results
     return unless results.tweets
+    return if results.tweets.nil?
     return if results.tweets.empty?
 
     parser = TwitterSearchResultParser.new(results, twitter_search_result, intent)
@@ -12,7 +13,7 @@ class TwitterSearchResultParser
     @results = results
     @twitter_search_result = twitter_search_result
     @intent = intent
-    @created_tweet_count = 0
+    @result_count = 0
   end
 
   def parse
@@ -23,10 +24,17 @@ class TwitterSearchResultParser
 
     save_tweets(@results)
 
-    while @results.meta&.data&.fetch('next_token', nil) || @created_tweet_count < @twitter_search_result.max_results
+    if @twitter_search_result.limited?
+      @twitter_search_result.update(result_count: @result_count, completed: true)
+      return self
+    end
+
+    while @results.meta&.data&.fetch('next_token', nil)
       save_tweets(@results)
       @results.next_page
     end
+
+    @twitter_search_result.update(result_count: @result_count, completed: true)
 
     self
   end
@@ -37,11 +45,11 @@ class TwitterSearchResultParser
     users = results.expansions&.users&.users
 
     found_tweets = results.tweets
-
-    @created_tweet_count += found_tweets.count
+    @result_count += found_tweets.count
 
     found_tweets.each do |tweet|
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
+        t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.id == tweet.author_id }.name
         t.profile_image_url = users.find { |user| user.id == tweet.author_id }.profile_image_url
         t.username = users.find { |user| user.id == tweet.author_id }.username

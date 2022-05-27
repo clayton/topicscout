@@ -10,18 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_18_182708) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_20_175205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "interests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "topic_id", null: false
+  create_table "email_verifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
+    t.string "code"
+    t.boolean "verified", default: false
+    t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["topic_id"], name: "index_interests_on_topic_id"
-    t.index ["user_id"], name: "index_interests_on_user_id"
+    t.index ["user_id"], name: "index_email_verifications_on_user_id"
   end
 
   create_table "search_terms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -34,19 +35,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_18_182708) do
 
   create_table "topics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "topic"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "tweet_read_receipts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "tweet_id", null: false
+    t.string "name"
+    t.boolean "daily_digest", default: true
+    t.boolean "weekly_digest", default: false
     t.uuid "user_id", null: false
-    t.uuid "interest_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["interest_id"], name: "index_tweet_read_receipts_on_interest_id"
-    t.index ["tweet_id"], name: "index_tweet_read_receipts_on_tweet_id"
-    t.index ["user_id"], name: "index_tweet_read_receipts_on_user_id"
+    t.index ["user_id"], name: "index_topics_on_user_id"
   end
 
   create_table "tweets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -73,8 +68,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_18_182708) do
     t.uuid "topic_id", null: false
     t.string "newest_tweet_id"
     t.string "oldest_tweet_id"
-    t.integer "tweets_count", default: 0
+    t.integer "results_count", default: 0
     t.integer "max_results", default: 10
+    t.boolean "limited", default: false
     t.boolean "completed", default: false
     t.datetime "start_time"
     t.datetime "created_at", null: false
@@ -89,16 +85,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_18_182708) do
     t.string "email"
     t.string "image"
     t.string "username"
+    t.boolean "email_verified", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "interests", "topics"
-  add_foreign_key "interests", "users"
+  add_foreign_key "email_verifications", "users"
   add_foreign_key "search_terms", "topics"
-  add_foreign_key "tweet_read_receipts", "interests"
-  add_foreign_key "tweet_read_receipts", "tweets"
-  add_foreign_key "tweet_read_receipts", "users"
+  add_foreign_key "topics", "users"
   add_foreign_key "tweets", "topics"
   add_foreign_key "tweets", "twitter_search_results"
   add_foreign_key "twitter_search_results", "topics"

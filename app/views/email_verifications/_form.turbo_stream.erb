@@ -1,0 +1,9 @@
+<%= turbo_frame_tag 'form' do %>
+  <%= form_with model: [:onboarding, verification] do %>
+    <%= label_tag :entered_code, "Enter the code we just sent to <span class='font-bold'>#{verification.email}</span>".html_safe, class: 'block font-medium text-gray-700'%>
+    <%= text_field_tag :entered_code, "", class: 'shadow-sm text-3xl focus:ring-violet-500 focus:border-violet-500 block w-full border-gray-300 rounded-md' %>
+    <div class="pt-4">
+      <button type="submit" class="inline-flex w-full justify-center items-center px-6 py-3 border border-transparent text-xl font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Verify</button>
+    </div>
+  <% end %>
+<% end %>

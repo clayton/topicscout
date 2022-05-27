@@ -77,3 +77,11 @@ gem "omniauth-twitter2", "~> 0.1.0"
 gem "pagy", "~> 5.10"
 
 gem "faraday", "~> 1.10"
+
+gem 'postmark-rails'
+
+gem 'resque', require: 'resque/server'
+
+gem 'brakeman', '~> 5.0'
+gem 'honeybadger', '~> 4.0'
+gem 'resque-scheduler', '~> 4.4'

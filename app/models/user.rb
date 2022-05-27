@@ -1,6 +1,10 @@
 class User < ApplicationRecord
-  has_many :interests
-  has_many :topics, through: :interests
+  has_many :topics
+  has_many :email_verifications, dependent: :destroy
+
+  after_update :verify_email
+
+  scope :verified, -> { where(email_verified: true) }
   
   def self.find_or_create_from_auth_hash(auth_hash)
     uid = auth_hash[:uid]
@@ -18,4 +22,23 @@ class User < ApplicationRecord
       user.image = image
     end
   end
+
+  def email=(email)
+    return unless email
+
+    self[:email] = email.downcase.strip
+  end
+
+  def verify_email
+    return if email.nil?
+    return if email.empty?
+    return unless saved_change_to_email?
+    return if email_verifications.pending_for(email).any?
+
+    email_verifications.pending.destroy_all
+    update(email_verified: false)
+
+    email_verifications.create(email: email)
+  end
+
 end

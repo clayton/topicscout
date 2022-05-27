@@ -1,19 +1,21 @@
-class Onboarding::TopicsController < ApplicationController
+class Onboarding::TopicsController < AuthenticatedUserController
   layout 'onboarding'
 
-  before_action :load_topic, only: [:show, :edit, :update]
-
-  def show
-  end  
+  before_action :create_user, only: [:new]
+  before_action :load_topic, only: %i[show edit update]
 
   def new
     @topic = Topic.new
   end
 
   def create
-    @topic = Topic.create(topic: topic_params[:topic])
+    @topic = Topic.new(name: topic_params[:topic], topic: topic_params[:topic], user: current_user)
 
-    redirect_to onboarding_refine_url(@topic)
+    if @topic.save
+      redirect_to onboarding_refine_url(@topic)
+    else
+      redirect_to onboarding_start_url
+    end
   end
 
   def edit
@@ -29,11 +31,18 @@ class Onboarding::TopicsController < ApplicationController
 
   private
 
+  def create_user
+    return if current_user
+
+    @user = User.create
+    session[:user_id] = @user.id
+  end
+
   def load_topic
     @topic = Topic.find_by(id: params[:topic_id]) || Topic.find_by(id: params[:id])
   end
 
   def topic_params
-    params.require(:topic).permit(:topic, search_term_attributes: [])
+    params.require(:topic).permit(:topic, new_search_terms: [])
   end
 end
