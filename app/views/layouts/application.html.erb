@@ -9,7 +9,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <% if Rails.env.production? %>
-      <%= render partial: 'analytics' %>
+      <%= render partial: 'shared/analytics' %>
     <% end %>
   </head>
   <body class="h-full bg-gray-100">
