@@ -187,6 +187,9 @@ GEM
     omniauth-oauth2 (1.7.2)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
+    omniauth-rails_csrf_protection (1.0.1)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     omniauth-twitter2 (0.1.0)
       omniauth
       omniauth-oauth2 (~> 1.0)
@@ -321,6 +324,7 @@ DEPENDENCIES
   honeybadger (~> 4.0)
   importmap-rails
   jbuilder
+  omniauth-rails_csrf_protection
   omniauth-twitter2 (~> 0.1.0)
   pagy (~> 5.10)
   pg (~> 1.1)
