@@ -28,7 +28,7 @@ class TwitterSearchResult < ApplicationRecord
   def digest
     {
       topic: topic.topic,
-      results_count: tweets_count,
+      results_count: results_count,
       topic_tweets_url: topic_tweets_url(topic),
       edit_topic_url: edit_topic_url(topic),
       support_email: 'help@topicscout.app',
