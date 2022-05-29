@@ -1,6 +1,6 @@
 class Topic < ApplicationRecord
-  has_many :twitter_search_results
-  has_many :tweets
+  has_many :twitter_search_results, dependent: :destroy
+  has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
 
   belongs_to :user

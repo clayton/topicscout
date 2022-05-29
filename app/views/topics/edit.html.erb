@@ -9,3 +9,8 @@
 <div class="mt-16 py-8 px-8 shadow-md rounded-md bg-white">
   <%= render partial: 'form', locals: { cancel_link: topic_tweets_path(@topic) } %>
 </div>
+<div class="mt-16 py-8 px-8 shadow-md rounded-md bg-white">
+  <% if @topic.persisted? %>
+    <%= render partial: 'delete_form' %>
+  <% end %>
+</div>

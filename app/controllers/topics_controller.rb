@@ -31,12 +31,25 @@ class TopicsController < AuthenticatedUserController
   end
 
   def update
-    @topic = Topic.find_by(params[:topic_id])
+    @topic = Topic.find_by(id: params[:id])
     @topic.update(topic_params)
 
     flash[:success] = 'Your topic has been updated.'
 
     redirect_to topic_tweets_path(@topic)
+  end
+
+  def destroy
+    @topic = Topic.find_by(id: params[:id])
+
+    if params[:delete] && params[:delete] == '1'
+      @topic.destroy
+      flash[:success] = 'Your topic has been deleted.'
+
+      redirect_to root_url
+    else
+      redirect_to edit_topic_url(@topic)
+    end
   end
 
   private
