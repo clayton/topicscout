@@ -16,12 +16,16 @@ class FetchTweetEmbedJob < ApplicationJob
       f.request :authorization, 'Bearer', ENV.fetch('TWITTER_BEARER_TOKEN', nil)
     end
 
-    results = conn.get('/oembed', url: url, hide_media: true, hide_thread: true, omit_script: true)
+    begin
+      results = conn.get('/oembed', url: url, hide_media: true, hide_thread: true, omit_script: true)
 
-    return if results.nil?
-    return if results.body.nil?
-    return if results.body['html'].blank?
+      return if results.nil?
+      return if results.body.nil?
+      return if results.body['html'].blank?
 
-    tweet.update(embed_html: results.body['html'], embed_cache_expires_at: Time.at(results.body['cache_age'].to_i))
+      tweet.update(embed_html: results.body['html'], embed_cache_expires_at: Time.at(results.body['cache_age'].to_i))
+    rescue StandardError => e
+      Honeybadger.notify(e)
+    end
   end
 end

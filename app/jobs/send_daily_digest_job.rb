@@ -2,20 +2,15 @@ require 'postmark'
 
 class SendDailyDigestJob < ApplicationJob
   include Routeable
-  
+
   queue_as :default
 
-  def perform(twitter_search_result=nil)
+  def perform(twitter_search_result = nil)
     return unless twitter_search_result
     return unless twitter_search_result.completed?
 
-    Rails.logger.debug('-------------- SendDailyDigestJob --------------')
-    
     topic = twitter_search_result.topic
     user = topic&.user
-
-    Rails.logger.debug("topic: #{topic.name}")
-    Rails.logger.debug("user: #{user.name}")
 
     return unless user
 
@@ -28,5 +23,7 @@ class SendDailyDigestJob < ApplicationJob
         template_alias: 'daily-tweet-digest',
         template_model: twitter_search_result.digest }
     )
+  rescue StandardError => e
+    Honeybadger.notify(e)
   end
 end
