@@ -1,3 +1,4 @@
+<%= turbo_frame_tag dom_id(@topic) do %>
 <div class="md:flex md:items-center md:justify-between">
   <div class="flex-1 min-w-0">
     <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Editing: "<%= @topic.topic %>"</h2>
@@ -14,3 +15,4 @@
     <%= render partial: 'delete_form' %>
   <% end %>
 </div>
+<% end %>

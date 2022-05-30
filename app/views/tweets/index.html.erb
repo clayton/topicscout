@@ -1,4 +1,4 @@
-<%= turbo_frame_tag dom_id(@topic, :tweets) do %>
+<%= turbo_frame_tag dom_id(@topic) do %>
   <div class="md:flex md:items-center md:justify-between">
     <div class="flex-1 min-w-0">
       <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate"><%= @topic.name %></h2>
@@ -11,7 +11,7 @@
   <div class="py-8 px-8 mt-8 bg-white rounded-md shadow-md">
     <h2 class="text-xl font-semibold text-gray-900">Recent tweets</h2>
     <div class="mt-8">
-      <div id="tweets" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div id="tweets" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-4 sm:gap-4">
         <% @tweets.each do |tweet| %>
           <%= render partial: 'tweets/managed_tweet', locals: {tweet: tweet} %>
         <% end %>
