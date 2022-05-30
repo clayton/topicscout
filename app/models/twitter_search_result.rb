@@ -37,4 +37,8 @@ class TwitterSearchResult < ApplicationRecord
               end
     }
   end
+
+  def ignored_authors
+    topic.tweeter_ignore_rules.map(&:author_id)
+  end
 end

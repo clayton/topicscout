@@ -48,6 +48,8 @@ class TwitterSearchResultParser
     @results_count += found_tweets.count
 
     found_tweets.each do |tweet|
+      next if @twitter_search_result.ignored_authors.include?(tweet.author_id)
+      
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.id == tweet.author_id }.name

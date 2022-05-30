@@ -14,16 +14,18 @@ Rails.application.routes.draw do
     resources :twitter_search_results
     resources :search_terms
     resources :tweets
+    resources :tweeter_ignore_rules
   end
 
   resources :users do
     resources :email_verifications
   end
 
+  get '/dashboard', to: 'dashboard#show', as: :dashboard
   get '/profile', to: 'users#edit', as: :profile
   get '/login', to: 'sessions#new', as: 'login'
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/logout', to: 'sessions#destroy', as: 'logout'
 
-  root 'topics#index'
+  root 'dashboard#show'
 end

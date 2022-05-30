@@ -13,13 +13,16 @@ class SendDailyDigestJob < ApplicationJob
     user = topic&.user
 
     return unless user
+    return unless user.email_verified?
+    return unless twitter_search_result.tweets.any?
 
     client = Postmark::ApiClient.new(Rails.application.credentials.postmark_api_token)
 
     # Example request
     client.deliver_with_template(
-      { from: 'help@topicscout.app',
+      { from: 'scott@topicscout.app',
         to: user.email,
+        subject: "Daily #{topic.name} Tweets",
         template_alias: 'daily-tweet-digest',
         template_model: twitter_search_result.digest }
     )

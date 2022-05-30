@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_20_175205) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_30_182948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -44,6 +44,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_20_175205) do
     t.index ["user_id"], name: "index_topics_on_user_id"
   end
 
+  create_table "tweeter_ignore_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "topic_id", null: false
+    t.string "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_tweeter_ignore_rules_on_topic_id"
+  end
+
   create_table "tweets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "twitter_search_result_id", null: false
     t.uuid "topic_id", null: false
@@ -59,6 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_20_175205) do
     t.datetime "embed_cache_expires_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ignored", default: false
+    t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
     t.index ["twitter_search_result_id"], name: "index_tweets_on_twitter_search_result_id"
@@ -93,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_20_175205) do
   add_foreign_key "email_verifications", "users"
   add_foreign_key "search_terms", "topics"
   add_foreign_key "topics", "users"
+  add_foreign_key "tweeter_ignore_rules", "topics"
   add_foreign_key "tweets", "topics"
   add_foreign_key "tweets", "twitter_search_results"
   add_foreign_key "twitter_search_results", "topics"
