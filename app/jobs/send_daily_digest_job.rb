@@ -22,7 +22,6 @@ class SendDailyDigestJob < ApplicationJob
     client.deliver_with_template(
       { from: 'scott@topicscout.app',
         to: user.email,
-        subject: "Daily #{topic.name} Tweets",
         template_alias: 'daily-tweet-digest',
         template_model: twitter_search_result.digest }
     )
