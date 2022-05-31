@@ -10,10 +10,24 @@
   <% @topics.each do |topic| %>
     <%= link_to topic_tweets_path(topic), class: 'block bg-gray-50 p-8 rounded-md shadow-md' do %>
       <div>
-        <h2 class="font-semibold text-gray-900 text-lg"><%= topic.topic %></h2>
+        <h2 class="font-semibold text-emerald-500 hover:text-emerald-700 text-xl"><%= topic.name %></h2>
+        <p class="text-sm font-mono mt-2"><%= topic.search_phrase %></p>
       </div>
       <div>
-        <p class="text-sm text-gray-600"><%= topic.tweets.count %> tweets</p>
+        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Total Tweets</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= topic.tweets.count %></dd>
+          </div>
+          <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Unique Authors</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= topic.tweets.map(&:author_id).uniq.compact.size %></dd>
+          </div>
+          <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Last Search</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= distance_of_time_in_words_to_now(topic.twitter_search_results.completed.first.created_at) %> ago</dd>
+          </div>
+        </dl>
       </div>
     <% end %>
   <% end %>
