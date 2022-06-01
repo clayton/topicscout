@@ -55,6 +55,22 @@
     </div>
     <div class="pt-8">
       <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Search timing</h3>
+        <p class="mt-1 text-sm text-gray-500">Choose when searches happen for this topic.</p>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= f.label :search_time_zone, "Time zone", class: 'block text-sm font-medium text-gray-700' %>
+          <%= time_zone_select :topic, :search_time_zone, ActiveSupport::TimeZone.us_zones, {default: "Pacific Time (US & Canada)", value: @topic.search_time_zone}, {class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'} %>
+        </div>
+        <div class="sm:col-span-4">
+          <%= f.label :search_time_hour, "Search time", class: 'block text-sm font-medium text-gray-700' %>
+          <%= f.select :search_time_hour, options_for_select(hour_options_array), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+        </div>        
+      </div>
+    </div>
+    <div class="pt-8">
+      <div>
         <h3 class="text-lg leading-6 font-medium text-gray-900">Notifications</h3>
         <p class="mt-1 text-sm text-gray-500">Choose how to be notified about this topic.</p>
       </div>

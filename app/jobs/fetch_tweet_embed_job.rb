@@ -21,11 +21,12 @@ class FetchTweetEmbedJob < ApplicationJob
 
       return if results.nil?
       return if results.body.nil?
+      # return if results.body.include?(%(<html lang="en" class="dog">))
       return if results.body['html'].blank?
 
       tweet.update(embed_html: results.body['html'], embed_cache_expires_at: Time.at(results.body['cache_age'].to_i))
     rescue StandardError => e
-      Honeybadger.notify(e)
+      Honeybadger.notify("FetchTweetEmbedJob (#{tweet&.id}): #{e.message}")
     end
   end
 end
