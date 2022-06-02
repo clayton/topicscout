@@ -1,4 +1,12 @@
 module TopicsHelper
+
+  def recent_search_time_in_words(topic)
+    return "some time" unless topic
+    return "some time" unless topic.twitter_search_results.completed.any?
+
+    distance_of_time_in_words_to_now(topic.twitter_search_results.completed&.last&.created_at)
+  end
+
   def hour_options_array
     [
       ['12:00 AM', '0'],

@@ -2,7 +2,6 @@ class TwitterSearchJob < ApplicationJob
   queue_as :default
 
   def perform(twitter_search_result)
-    Rails.logger.debug("Searching for #{twitter_search_result.search_phrase}")
     begin
       client = Tweetkit::Client.new(bearer_token: ENV['TWITTER_BEARER_TOKEN'])
 
@@ -11,7 +10,7 @@ class TwitterSearchJob < ApplicationJob
       options.merge!('since_id' => twitter_search_result.since_id) if twitter_search_result.since_id
       options.merge!('start_time' => twitter_search_result.parsed_start_time) if twitter_search_result.start_time
 
-      Rails.logger.debug("[TwitterSearchJob] query:#{twitter_search_result.search_phrase} \n options: #{options}\n\n")
+      Rails.logger.info("[TwitterSearchJob] query:#{twitter_search_result.search_phrase} \n options: #{options}\n\n")
       results = client.search(twitter_search_result.search_phrase, **options) do
         is_not :retweet
       end

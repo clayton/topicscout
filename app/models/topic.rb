@@ -25,9 +25,10 @@ class Topic < ApplicationRecord
     end
   end
 
-  def search_term_attributes=(attributes)
-    attributes.each do |term|
-      search_term = search_terms.find_by(id: term[:id])
+  def search_terms_attributes=(attributes)
+    Rails.logger.debug(attributes)
+    attributes.each do |_key, term|
+      search_term = search_terms.find_by(id: term['id'])
       if term[:term].strip.blank?
         search_term.destroy
         next
