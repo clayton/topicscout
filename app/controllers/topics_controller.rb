@@ -2,7 +2,7 @@ class TopicsController < AuthenticatedUserController
   before_action :check_for_new_user
 
   def index
-    @topics = current_user.topics
+    @topics = current_user.topics.order(:name)
   end
 
   def new
