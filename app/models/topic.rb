@@ -49,9 +49,11 @@ class Topic < ApplicationRecord
   def search_phrase
     optionals = search_terms.map { |search_term| %("#{search_term.term}") }.flatten.uniq.join(' OR ')
 
-    return %("#{topic}" (#{optionals})) if optionals.present?
+    hashtag_or_phrase = topic.starts_with?('#') ? topic : %("#{topic}")
 
-    %("#{topic}")
+    return %(#{hashtag_or_phrase} (#{optionals})) if optionals.present?
+
+    hashtag_or_phrase
   end
 
   def initial_search
