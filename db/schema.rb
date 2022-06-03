@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_01_135054) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_03_140915) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -119,9 +119,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_01_135054) do
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "search_time_zone"
-    t.string "search_time_hour"
+    t.string "search_time_zone", default: "Pacific Time (US & Canada)"
+    t.string "search_time_hour", default: "8"
+    t.integer "utc_search_hour", default: 14
     t.index ["user_id"], name: "index_topics_on_user_id"
+    t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
 
   create_table "tweeter_ignore_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

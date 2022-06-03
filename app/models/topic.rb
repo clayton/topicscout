@@ -9,6 +9,7 @@ class Topic < ApplicationRecord
   validates :topic, presence: true
 
   before_create :sanitize_topic
+  before_save :calculate_search_hour
   after_create :initial_search
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
@@ -67,5 +68,21 @@ class Topic < ApplicationRecord
 
   def sanitize_topic
     self.topic = topic.downcase.strip
+  end
+
+  def calculate_search_hour
+    self.utc_search_hour = 14
+
+    return if search_time_hour.blank?
+    return if search_time_zone.blank?
+
+    begin
+      today = Time.parse("#{Date.today} #{search_time_hour}:00")
+      in_specific_time_zone = today.in_time_zone(search_time_zone)
+      self.utc_search_hour = in_specific_time_zone.in_time_zone("UTC").hour
+    rescue StandardError => e
+      self.utc_search_hour = 14
+      Honeybadger.notify(e)      
+    end
   end
 end

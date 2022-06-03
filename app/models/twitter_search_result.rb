@@ -7,6 +7,8 @@ class TwitterSearchResult < ApplicationRecord
 
   after_create :search
 
+  after_update :send_digest_if_completed
+
   scope :completed, -> { where(completed: true) }
 
   def search_phrase
@@ -40,5 +42,11 @@ class TwitterSearchResult < ApplicationRecord
 
   def ignored_authors
     topic.tweeter_ignore_rules.map(&:author_id)
+  end
+
+  def send_digest_if_completed
+    return unless saved_change_to_completed? && completed?
+
+    SendDailyDigestJob.perform_later(self)
   end
 end
