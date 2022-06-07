@@ -1,6 +1,5 @@
 class AuthenticatedUserController < ApplicationController
   before_action :require_authenticated_user
-  before_action :check_for_new_user
 
   private
 
