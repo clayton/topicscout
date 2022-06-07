@@ -1,5 +1,4 @@
 class TopicsController < AuthenticatedUserController
-  before_action :check_for_new_user
 
   def index
     @topics = current_user.topics.order(:name)
@@ -60,7 +59,5 @@ class TopicsController < AuthenticatedUserController
                                                                                                                       new_search_terms: [])
   end
 
-  def check_for_new_user
-    redirect_to onboarding_start_url if current_user.topics.empty?
-  end
+  
 end

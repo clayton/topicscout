@@ -6,7 +6,7 @@
     <%= link_to 'Logout', logout_path, class: 'inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
   </div>
 </div>
-<% if !current_user.email_verified? %>
+<% if !current_user.email_verified? && current_user.email_verifications.pending.any? %>
   <div class="py-8 px-8 mt-8 bg-yellow-50 rounded-md shadow-md">
     <%= form_with model: [current_user, current_user.email_verifications.pending.first] do |form| %>
       <div class="space-y-8 divide-y divide-gray-200">
