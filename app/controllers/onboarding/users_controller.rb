@@ -13,6 +13,8 @@ class Onboarding::UsersController < AuthenticatedUserController
     @user.update(user_params)
     @verification = @user.email_verifications.pending.first
 
+    redirect_to dashboard_url and return unless @verification
+
     respond_to do |format|
       format.html { redirect_to root_path }
       format.turbo_stream

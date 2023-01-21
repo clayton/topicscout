@@ -49,6 +49,8 @@ class TwitterSearchResultParser
 
     found_tweets.each do |tweet|
       next if @twitter_search_result.ignored_authors.include?(tweet.author_id)
+
+      Rails.logger.debug(tweet.entities)
       
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
