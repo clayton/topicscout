@@ -3,11 +3,10 @@
 app = "topicscout"
 kill_signal = "SIGINT"
 kill_timeout = 5
-processes = []
 
 [processes]
-web = "bin/rails fly:server"
-worker = "QUEUE=default bundle exec resque:work"
+  web = "bin/rails fly:server"
+  worker = "QUEUE=default bundle exec resque:work"
 
 
 [build]
