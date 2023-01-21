@@ -7,7 +7,7 @@ processes = []
 
 [processes]
 web = "bin/rails fly:server"
-worker = "QUEUE=default bin/rails resque:work"
+worker = "QUEUE=default bundle exec resque:work"
 
 
 [build]
