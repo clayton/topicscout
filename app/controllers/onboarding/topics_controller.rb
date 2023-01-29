@@ -5,6 +5,7 @@ class Onboarding::TopicsController < AuthenticatedUserController
   before_action :load_topic, only: %i[show edit update]
 
   def new
+    Rails.logger.debug("Subscription: #{session[:subscription_id]}")
     @topic = Topic.new
   end
 

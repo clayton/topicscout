@@ -1,5 +1,7 @@
 class UsersController < AuthenticatedUserController
   def edit
+    @twitter_account = current_user.twitter_account
+    @subscription = current_user.subscription
   end
 
   def update

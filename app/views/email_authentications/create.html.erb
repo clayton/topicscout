@@ -1,0 +1,19 @@
+<div class="sm:mx-auto sm:w-full sm:max-w-md">
+<img class="mx-auto h-20 w-auto" src="<%= asset_path('topic-scout-mark.svg') %>" alt="Topic Scout">
+<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Verify your login</h2>
+</div>
+<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+  <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+    <%= form_tag verify_login_path, class: 'space-y-6' do |f| %>
+      <div>
+        <label for="code" class="block text-sm font-medium text-gray-700">Enter your login code</label>
+        <div class="mt-1">
+          <%= text_field_tag :code, '', placeholder: '12345', required: true, class: 'block w-full text-lg appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-md' %>
+        </div>
+      </div>
+      <div>
+        <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-purple-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Send me a Code</button>
+      </div>
+    <% end %>
+  </div>
+</div>

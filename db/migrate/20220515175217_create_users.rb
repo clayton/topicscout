@@ -9,6 +9,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :email
       t.string :image
       t.string :username
+      t.uuid :subscription_id
       t.boolean :email_verified, default: false
 
       t.timestamps
