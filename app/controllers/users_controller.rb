@@ -1,4 +1,7 @@
 class UsersController < AuthenticatedUserController
+
+  before_action :verify_email, only: [:edit]
+
   def edit
     @twitter_account = current_user.twitter_account
     @subscription = current_user.subscription
@@ -16,5 +19,10 @@ class UsersController < AuthenticatedUserController
 
   def user_params
     params.require(:user).permit(:email, :name)
+  end
+
+  def verify_email
+    return if @user.email_verified?
+    current_user.verify_email
   end
 end
