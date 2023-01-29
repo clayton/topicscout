@@ -5,7 +5,8 @@ class User < ApplicationRecord
   has_many :email_verifications, dependent: :destroy
   has_many :email_authentications, dependent: :destroy
 
-  after_update :verify_email
+  after_update :verify_email_update
+  after_create :verify_email
 
   scope :verified, -> { where(email_verified: true) }
   
@@ -15,10 +16,14 @@ class User < ApplicationRecord
     self[:email] = email.downcase.strip
   end
 
+  def verify_email_update
+    return unless saved_change_to_email?
+    verify_email
+  end
+
   def verify_email
     return if email.nil?
     return if email.empty?
-    return unless saved_change_to_email?
     return if email_verifications.pending_for(email).any?
 
     email_verifications.pending.destroy_all
