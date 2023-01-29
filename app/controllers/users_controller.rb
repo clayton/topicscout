@@ -22,9 +22,9 @@ class UsersController < AuthenticatedUserController
   end
 
   def verify_email
-    return if @user.email_verified?
-    return if @users.email_verifications.pending.any?
-    
+    return if current_user.email_verified?
+    return if current_user.email_verifications.pending.any?
+
     current_user.verify_email
   end
 end
