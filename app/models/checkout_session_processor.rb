@@ -5,6 +5,7 @@ class CheckoutSessionProcessor
   end
 
   def save
+    
     @checkout_session = Stripe::Checkout::Session.retrieve({id: @checkout_session_id, expand: ['customer', 'subscription']})
 
     raise CheckoutSessionProcessor::CheckoutNotFound unless @checkout_session
