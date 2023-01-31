@@ -44,6 +44,12 @@ class TwitterSearchResult < ApplicationRecord
     topic.tweeter_ignore_rules.map(&:author_id)
   end
 
+  def excluded_language?(lang)
+    return if topic.filter_by_language.blank?
+
+    topic.filter_by_language.exclude?(lang)
+  end
+
   def send_digest_if_completed
     return unless saved_change_to_completed? && completed?
 

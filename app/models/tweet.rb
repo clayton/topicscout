@@ -18,4 +18,11 @@ class Tweet < ApplicationRecord
   def fetch_embed_html
     FetchTweetEmbedJob.perform_later(self)
   end
+
+  def public_metrics=(metrics)
+    self.retweet_count = metrics['retweet_count']
+    self.reply_count = metrics['reply_count']
+    self.like_count = metrics['like_count']
+    self.quote_count = metrics['quote_count']
+  end
 end

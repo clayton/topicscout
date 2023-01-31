@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_28_202633) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_31_002708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_28_202633) do
     t.string "search_time_zone", default: "Pacific Time (US & Canada)"
     t.string "search_time_hour", default: "8"
     t.integer "utc_search_hour", default: 14
+    t.string "filter_by_language"
     t.index ["user_id"], name: "index_topics_on_user_id"
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
@@ -91,6 +92,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_28_202633) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "ignored", default: false
+    t.integer "retweet_count", default: 0
+    t.integer "reply_count", default: 0
+    t.integer "like_count", default: 0
+    t.integer "quote_count", default: 0
+    t.integer "impression_count", default: 0
+    t.string "lang"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"

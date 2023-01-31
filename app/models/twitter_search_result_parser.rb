@@ -49,8 +49,10 @@ class TwitterSearchResultParser
 
     found_tweets.each do |tweet|
       next if @twitter_search_result.ignored_authors.include?(tweet.author_id)
+      next if @twitter_search_result.excluded_language?(tweet.lang)
 
-      Rails.logger.debug(tweet.entities)
+      # Rails.logger.debug(tweet.entities)
+      Rails.logger.debug("public metrics, #{tweet.data['public_metrics']}" )
       
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
@@ -64,6 +66,8 @@ class TwitterSearchResultParser
         t.author_id = tweet.author_id
         t.intent = @intent
         t.tweeted_at = tweet.created_at
+        t.public_metrics = tweet.data['public_metrics'] || {}
+        t.lang = tweet.lang
       end
     end
   end
