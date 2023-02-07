@@ -17,26 +17,31 @@ class TwitterSearchResultParser
   end
 
   def parse
-    newest_id = @results.meta&.data&.fetch('newest_id', nil)
-    oldest_id = @results.meta&.data&.fetch('oldest_id', nil)
-
-    @twitter_search_result.update(newest_tweet_id: newest_id, oldest_tweet_id: oldest_id)
-
-    save_tweets(@results)
-
-    if @twitter_search_result.limited?
-      @twitter_search_result.update(results_count: @results_count, completed: true)
-      return self
-    end
-
-    while @results.meta&.data&.fetch('next_token', nil)
+    begin
+      newest_id = @results.meta&.data&.fetch('newest_id', nil)
+      oldest_id = @results.meta&.data&.fetch('oldest_id', nil)
+  
+      @twitter_search_result.update(newest_tweet_id: newest_id, oldest_tweet_id: oldest_id)
+  
       save_tweets(@results)
-      @results.next_page
+  
+      if @twitter_search_result.limited?
+        @twitter_search_result.update(results_count: @results_count, completed: true)
+        return self
+      end
+  
+      while @results.meta&.data&.fetch('next_token', nil)
+        save_tweets(@results)
+        @results.next_page
+      end
+  
+      @twitter_search_result.update(results_count: @results_count, completed: true)
+  
+      self
+        
+    rescue => exception
+      Rails.logger.debug "TwitterSearchResultParser: #{exception}"      
     end
-
-    @twitter_search_result.update(results_count: @results_count, completed: true)
-
-    self
   end
 
   def save_tweets(results)
@@ -49,10 +54,7 @@ class TwitterSearchResultParser
 
     found_tweets.each do |tweet|
       next if @twitter_search_result.ignored_authors.include?(tweet.author_id)
-      next if @twitter_search_result.excluded_language?(tweet.lang)
 
-      # Rails.logger.debug(tweet.entities)
-      Rails.logger.debug("public metrics, #{tweet.data['public_metrics']}" )
       
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result

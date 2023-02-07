@@ -53,7 +53,11 @@ class Topic < ApplicationRecord
 
     hashtag_or_phrase = topic.starts_with?('#') ? topic : %("#{topic}")
 
-    return %(#{hashtag_or_phrase} (#{optionals})) if optionals.present?
+    language_filter = "lang:#{filter_by_language}" if filter_by_language.present?
+
+    query = [hashtag_or_phrase, language_filter].compact.join(' ')
+
+    return %(#{query} (#{optionals})) if optionals.present?
 
     hashtag_or_phrase
   end

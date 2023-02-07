@@ -127,6 +127,7 @@ GEM
       activesupport (>= 5.0)
     hashie (5.0.0)
     honeybadger (4.12.2)
+    htmlbeautifier (1.4.2)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.1.5)
@@ -329,6 +330,7 @@ DEPENDENCIES
   dotenv-rails
   faraday (~> 1.10)
   honeybadger (~> 4.0)
+  htmlbeautifier
   importmap-rails
   jbuilder
   omniauth-rails_csrf_protection

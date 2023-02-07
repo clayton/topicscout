@@ -1,0 +1,35 @@
+<tr>
+  <td class="whitespace-wrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+    <div class="flex items-center">
+      <div class="h-10 w-10 flex-shrink-0">
+        <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+      </div>
+      <div class="ml-4">
+        <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", class: 'underline text-purple-500') %></div>
+        <div class="text-gray-500"><%= tweet.name %></div>
+      </div>
+    </div>
+  </td>
+  <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
+    <div class="text-gray-900"><%= display_entitites(tweet.text) %></div>
+    <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), "https://twitter.com/#{tweet.username}/status/#{tweet.tweet_id}", class: 'text-purple-500 underline text-xs') %></div>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.retweet_count %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.like_count %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.quote_count %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.impression_count %>
+  </td>
+  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+    <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
+      <%= f.hidden_field :author_id, value: tweet.author_id %>
+      <button type="submit" class="inline-flex w-full justify-center items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
+    <% end %>
+  </td>
+</tr>

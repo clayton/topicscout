@@ -5,7 +5,7 @@ class TweeterIgnoreRulesController < ApplicationController
     @topic.tweeter_ignore_rules.create(author_id: tweeter_ignore_rule_params[:author_id])
     @pagy, @tweets = pagy(@topic.tweets.relevant.newest)
 
-    render 'tweets/index'
+    redirect_to topic_tweets_url(@topic)
   end
 
   def tweeter_ignore_rule_params

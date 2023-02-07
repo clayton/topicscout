@@ -87,3 +87,5 @@ gem 'brakeman', '~> 5.0'
 gem 'honeybadger', '~> 4.0'
 gem 'resque-scheduler', '~> 4.4'
 gem "stripe", "~> 8.1"
+
+gem 'htmlbeautifier'

@@ -1,5 +1,4 @@
 class TwitterSearchResult < ApplicationRecord
-
   include Routeable
 
   belongs_to :topic
@@ -7,7 +6,7 @@ class TwitterSearchResult < ApplicationRecord
 
   after_create :search
 
-  after_update :send_digest_if_completed
+  after_update :send_digest
 
   scope :completed, -> { where(completed: true) }
 
@@ -44,14 +43,9 @@ class TwitterSearchResult < ApplicationRecord
     topic.tweeter_ignore_rules.map(&:author_id)
   end
 
-  def excluded_language?(lang)
-    return if topic.filter_by_language.blank?
-
-    topic.filter_by_language.exclude?(lang)
-  end
-
-  def send_digest_if_completed
+  def send_digest
     return unless saved_change_to_completed? && completed?
+    return if manual_search
 
     SendDailyDigestJob.perform_later(self)
   end
