@@ -1,6 +1,9 @@
 class Tweet < ApplicationRecord
   include ActionView::RecordIdentifier
 
+  has_many :hashtag_entities
+  has_many :hashtags, through: :hashtag_entities
+
   belongs_to :twitter_search_result
   belongs_to :topic
 

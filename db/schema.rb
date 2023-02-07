@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_31_233701) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_07_042219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -31,6 +31,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_31_233701) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_email_verifications_on_user_id"
+  end
+
+  create_table "hashtag_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "hashtag_id"
+    t.uuid "tweet_id"
+    t.uuid "topic_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_hashtag_entities_on_topic_id"
+  end
+
+  create_table "hashtags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "tag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "search_terms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
