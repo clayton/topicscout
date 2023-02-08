@@ -53,6 +53,7 @@ class TwitterSearchResultParser
       next if @twitter_search_result.ignored_authors.include?(tweet.author_id)
 
       hashtags = parse_hashtags(tweet.entities)
+      urls = parse_urls(tweet.entities)
 
       Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
@@ -69,6 +70,7 @@ class TwitterSearchResultParser
         t.public_metrics = tweet.data['public_metrics'] || {}
         t.lang = tweet.lang
         t.hashtag_entities << hashtags.map { |hashtag| HashtagEntity.create(hashtag: hashtag, tweet: t, topic: @twitter_search_result.topic) }
+        t.url_entities << urls.map { |url| UrlEntity.create(url: url, tweet: t, topic: @twitter_search_result.topic) }
       end
 
     end
@@ -80,5 +82,20 @@ class TwitterSearchResultParser
     return [] unless entities.hashtags.hashtags
 
     entities.hashtags.hashtags.map { |hashtag| Hashtag.find_or_create_by(tag: hashtag.tag) }
+  end
+
+  def parse_urls(entities)
+    return [] unless entities
+    return [] unless entities.urls
+    return [] unless entities.urls.urls
+
+    entities.urls.urls.map do |url| 
+      Url.find_or_create_by(url: url.url) do |u|
+        u.status = url.status
+        u.title = url.title
+        u.display_url = url.display_url
+        u.unwound_url = url.unwound_url
+      end 
+    end
   end
 end

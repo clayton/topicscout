@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_07_042219) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_07_235257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_042219) do
     t.string "search_time_hour", default: "8"
     t.integer "utc_search_hour", default: 14
     t.string "filter_by_language"
+    t.decimal "threshold", default: "0.0"
     t.index ["user_id"], name: "index_topics_on_user_id"
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
@@ -113,6 +114,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_042219) do
     t.integer "quote_count", default: 0
     t.integer "impression_count", default: 0
     t.string "lang"
+    t.decimal "score", default: "0.0"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
@@ -143,6 +145,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_042219) do
     t.datetime "updated_at", null: false
     t.boolean "manual_search", default: false
     t.index ["topic_id"], name: "index_twitter_search_results_on_topic_id"
+  end
+
+  create_table "url_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "tweet_id"
+    t.uuid "url_id"
+    t.uuid "topic_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_url_entities_on_topic_id"
+    t.index ["tweet_id"], name: "index_url_entities_on_tweet_id"
+  end
+
+  create_table "urls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "display_url"
+    t.string "title"
+    t.string "status"
+    t.string "unwound_url"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

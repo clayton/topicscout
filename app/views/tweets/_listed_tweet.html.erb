@@ -15,6 +15,12 @@
     <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), "https://twitter.com/#{tweet.username}/status/#{tweet.tweet_id}", class: 'text-purple-500 underline text-xs') %></div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.score %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= tweet.reply_count %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     <%= tweet.retweet_count %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

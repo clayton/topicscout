@@ -34,7 +34,7 @@ class TwitterSearchResult < ApplicationRecord
       edit_topic_url: edit_topic_url(topic),
       support_email: 'help@topicscout.app',
       tweets: tweets.limit(10).map do |t|
-                { name: t.name, username: t.username, profile_image_url: t.profile_image_url, embed_html: t.embed_html }
+                { name: t.name, username: t.username, profile_image_url: t.profile_image_url, embed_html: t.text }
               end
     }
   end

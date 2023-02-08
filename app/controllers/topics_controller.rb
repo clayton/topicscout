@@ -55,7 +55,7 @@ class TopicsController < AuthenticatedUserController
   private
 
   def topic_params
-    params.require(:topic).permit(:topic, :daily_digest, :filter_by_language, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: [:term],
+    params.require(:topic).permit(:topic, :daily_digest, :filter_by_language, :threshold, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: [:term],
                                                                                                                                            search_terms_attributes: %i[term id],
                                                                                                                                            new_search_terms: [])
   end
