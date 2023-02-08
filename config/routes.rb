@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'urls/index'
   namespace :onboarding do
     get 'email_verifications/edit'
     resources :topics
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
     resources :search_terms
     resources :tweets
     resources :tweeter_ignore_rules
+    resources :urls
   end
 
   resources :users do

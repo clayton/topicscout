@@ -1,0 +1,34 @@
+<tr>
+  <td class="whitespace-wrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+    <div class="flex items-center">
+      <% url.tweets.map(&:username).uniq.compact.map do |username| %>
+        <div class="font-medium text-gray-900"><%= link_to("@#{username}", "https://twitter.com/#{username}", class: 'underline text-purple-500') %></div>
+      <% end.join(', ') %>
+    </div>
+  </td>
+  <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
+    <div class="text-gray-900"><%= link_to(url.title, url.unwound_url, class: 'text-purple-500 underline') %></div>
+    <div class="text-gray-600 text-xs font-mono"><%= url.unwound_url.truncate(50) %></div>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:score) %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:reply_count) %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:retweet_count) %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:like_count) %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:quote_count) %>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <%= url.tweets.sum(&:impression_count) %>
+  </td>
+  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+
+  </td>
+</tr>
