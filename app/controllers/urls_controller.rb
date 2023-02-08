@@ -4,6 +4,7 @@ class UrlsController < AuthenticatedUserController
     @pagy, @urls = pagy(@topic.urls
                               .joins(:tweets)
                               .where.not(title: nil)
+                              .where(Tweet.arel_table[:ignored].eq(false))
                               .where(Tweet.arel_table[:score].gt(@topic.threshold))
                               .group('urls.id')
                               .order('sum(tweets.score) desc')
