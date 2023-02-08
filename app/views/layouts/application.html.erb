@@ -13,6 +13,9 @@
     <% end %>
   </head>
   <body class="h-full bg-gray-100">
+    <% if Rails.env.development? %>
+      <div class="w-full py-2 text-white text-sm uppercase bg-red-500 text-center">Development</div>
+    <% end %>
     <div data-controller="navigation">
       <div class="relative z-40 md:hidden" role="dialog" aria-modal="true">
         <div 
