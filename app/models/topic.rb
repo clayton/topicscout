@@ -7,6 +7,7 @@ class Topic < ApplicationRecord
   has_many :twitter_search_results, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
+  has_many :negative_search_terms, dependent: :destroy
 
   belongs_to :user
 
@@ -17,6 +18,7 @@ class Topic < ApplicationRecord
   after_create :initial_search
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
+  accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
 
   def latest_result
     twitter_search_results.completed.order(created_at: :desc).first
@@ -31,7 +33,6 @@ class Topic < ApplicationRecord
   end
 
   def search_terms_attributes=(attributes)
-    Rails.logger.debug(attributes)
     attributes.each do |_key, term|
       search_term = search_terms.find_by(id: term['id'])
       if term[:term].strip.blank?
@@ -52,8 +53,38 @@ class Topic < ApplicationRecord
     search_terms.find_or_create_by(term: term)
   end
 
+  def new_negative_search_terms=(terms)
+    terms.each do |term|
+      next if term.strip.blank?
+
+      negative_search_terms << NegativeSearchTerm.new(term: term)
+    end
+  end
+
+  def negative_search_terms_attributes=(attributes)
+    attributes.each do |_key, term|
+      negative_search_term = negative_search_terms.find_by(id: term['id'])
+      if term[:term].strip.blank?
+        negative_search_term.destroy
+        next
+      end
+      negative_search_term.update(term: term[:term])
+    end
+  end
+
+  def negative_search_term=(attributes)
+    term = attributes[:term]
+
+    return if term.nil?
+    return if term.empty?
+    return if term.downcase.strip.empty?
+
+    negative_search_terms.find_or_create_by(term: term)
+  end
+
   def search_phrase
     optionals = search_terms.map { |search_term| %("#{search_term.term}") }.flatten.uniq.join(' OR ')
+    negatives = negative_search_terms.map { |search_term| %(-"#{search_term.term}") }.flatten.uniq.join(' ')
 
     hashtag_or_phrase = topic.starts_with?('#') ? topic : %("#{topic}")
 
@@ -61,7 +92,7 @@ class Topic < ApplicationRecord
 
     query = [hashtag_or_phrase, language_filter].compact.join(' ')
 
-    return %(#{query} (#{optionals})) if optionals.present?
+    return %(#{query} #{negatives} (#{optionals})) if optionals.present?
 
     hashtag_or_phrase
   end
