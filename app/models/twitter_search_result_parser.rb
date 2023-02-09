@@ -55,13 +55,12 @@ class TwitterSearchResultParser
       hashtags = parse_hashtags(tweet.entities)
       urls = parse_urls(tweet.entities)
 
-      Tweet.find_or_create_by(tweet_id: tweet.id) do |t|
+      Tweet.find_or_create_by(tweet_id: tweet.id, topic_id: @twitter_search_result.topic) do |t|
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.id == tweet.author_id }.name
         t.profile_image_url = users.find { |user| user.id == tweet.author_id }.profile_image_url
         t.username = users.find { |user| user.id == tweet.author_id }.username
         t.twitter_search_result = @twitter_search_result
-        t.topic = @twitter_search_result.topic
         t.text = tweet.text
         t.tweet_id = tweet.id
         t.author_id = tweet.author_id

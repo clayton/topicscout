@@ -20,7 +20,7 @@ class Tweet < ApplicationRecord
   scope :recent, -> { order(tweeted_at: :desc).limit(40) }
   scope :ignored, -> { where(ignored: true) }
   scope :relevant, -> { where(ignored: false) }
-  scope :qualified, -> (threshold) { where(['score > ?', threshold]) }
+  scope :qualified, ->(threshold) { where(['score > ?', threshold]) }
   scope :best, -> { order(score: :desc) }
 
   def url

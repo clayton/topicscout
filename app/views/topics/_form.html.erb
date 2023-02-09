@@ -12,12 +12,14 @@
             <%= f.text_field :name, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
           </div>
         </div>
-        <div class="sm:col-span-4">
-          <%= f.label :topic, "Search phrase", class: "block text-sm font-medium text-gray-700"%>
-          <div class="mt-1">
-            <p class="text-pink-500 bg-gray-100 text-sm w-full p-2"><%= @topic.search_phrase %></p>
+        <% if @topic.persisted? %>
+          <div class="sm:col-span-4">
+            <%= f.label :topic, "Search phrase", class: "block text-sm font-medium text-gray-700"%>
+            <div class="mt-1">
+              <p class="text-pink-500 bg-gray-100 text-sm w-full p-2"><%= @topic.search_phrase %></p>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
     <div class="pt-8">

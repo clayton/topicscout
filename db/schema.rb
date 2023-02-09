@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_08_220143) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_08_223741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -122,6 +122,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_220143) do
     t.integer "impression_count", default: 0
     t.string "lang"
     t.decimal "score", default: "0.0"
+    t.boolean "saved"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
