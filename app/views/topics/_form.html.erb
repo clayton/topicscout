@@ -19,6 +19,13 @@
               <p class="text-pink-500 bg-gray-100 text-sm w-full p-2"><%= @topic.search_phrase %></p>
             </div>
           </div>
+        <% else %>
+          <div class="sm:col-span-4">
+            <%= f.label :topic, "Topic", class: "block text-sm font-medium text-gray-700"%>
+            <div class="mt-1">
+              <%= f.text_field :topic, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>              
+            </div>
+          </div>        
         <% end %>
       </div>
     </div>

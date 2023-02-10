@@ -14,6 +14,7 @@ class TwitterSearchResultParser
     @twitter_search_result = twitter_search_result
     @intent = intent
     @results_count = 0
+    @topic = @twitter_search_result.topic
   end
 
   def parse
@@ -38,7 +39,7 @@ class TwitterSearchResultParser
 
     self
   rescue StandardError => e
-    Rails.logger.debug "TwitterSearchResultParser: #{e} \n #{e.backtrace}"
+    Rails.logger.debug "TwitterSearchResultParser: #{e} \n #{e.backtrace.join('\n')}"
   end
 
   def save_tweets(results)
@@ -55,7 +56,9 @@ class TwitterSearchResultParser
       hashtags = parse_hashtags(tweet.entities)
       urls = parse_urls(tweet.entities)
 
-      Tweet.find_or_create_by(tweet_id: tweet.id, topic_id: @twitter_search_result.topic) do |t|
+      
+
+      @topic.tweets.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.id == tweet.author_id }.name
         t.profile_image_url = users.find { |user| user.id == tweet.author_id }.profile_image_url
@@ -68,8 +71,8 @@ class TwitterSearchResultParser
         t.tweeted_at = tweet.created_at
         t.public_metrics = tweet.data['public_metrics'] || {}
         t.lang = tweet.lang
-        t.hashtag_entities << hashtags.map { |hashtag| HashtagEntity.create(hashtag: hashtag, tweet: t, topic: @twitter_search_result.topic) }
-        t.url_entities << urls.map { |url| UrlEntity.create(url: url, tweet: t, topic: @twitter_search_result.topic) }
+        t.hashtags << hashtags.map { |hashtag| t.hashtags.build(tag: hashtag) }
+        t.urls << urls.map { |url| t.urls.build(url) }
       end
 
     end
@@ -80,7 +83,7 @@ class TwitterSearchResultParser
     return [] unless entities.hashtags
     return [] unless entities.hashtags.hashtags
 
-    entities.hashtags.hashtags.map { |hashtag| Hashtag.find_or_create_by(tag: hashtag.tag) }
+    entities.hashtags.hashtags.map(&:tag)
   end
 
   def parse_urls(entities)
@@ -88,13 +91,8 @@ class TwitterSearchResultParser
     return [] unless entities.urls
     return [] unless entities.urls.urls
 
-    entities.urls.urls.map do |url| 
-      Url.find_or_create_by(url: url.url) do |u|
-        u.status = url.status
-        u.title = url.title
-        u.display_url = url.display_url
-        u.unwound_url = url.unwound_url
-      end 
+    entities.urls.urls.map do |url|
+      { status: url.status, title: url.title, display_url: url.display_url, unwound_url: url.unwound_url }
     end
   end
 end

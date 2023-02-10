@@ -1,12 +1,20 @@
 <tr>
   <td class="whitespace-wrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-    <div class="flex items-center">
-      <div class="h-10 w-10 flex-shrink-0">
-        <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+    <div class="flex flex-col space-y-2">
+      <div class="flex items-center">
+        <div class="h-10 w-10 flex-shrink-0">
+          <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+        </div>
+        <div class="ml-4">
+          <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", class: 'underline text-purple-500') %></div>
+          <div class="text-gray-500"><%= tweet.name %></div>
+        </div>
       </div>
-      <div class="ml-4">
-        <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", class: 'underline text-purple-500') %></div>
-        <div class="text-gray-500"><%= tweet.name %></div>
+      <div>
+        <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
+          <%= f.hidden_field :author_id, value: tweet.author_id %>
+          <button type="submit" class="inline-flex w-full justify-center items-center px-2 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
+        <% end %>
       </div>
     </div>
   </td>
@@ -33,9 +41,9 @@
     <%= tweet.impression_count %>
   </td>
   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-    <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
-      <%= f.hidden_field :author_id, value: tweet.author_id %>
-      <button type="submit" class="inline-flex w-full justify-center items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
+    <%= form_with model: [tweet.topic, tweet] do |f| %>
+      <%= f.hidden_field :saved, value: true %>
+      <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>    
     <% end %>
   </td>
 </tr>

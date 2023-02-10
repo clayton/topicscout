@@ -36,7 +36,7 @@ class TopicsController < AuthenticatedUserController
 
     flash[:success] = 'Your topic has been updated.'
 
-    redirect_to topic_tweets_path(@topic)
+    redirect_to edit_topic_url(@topic)
   end
 
   def destroy

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'archived_tweets/create'
   get 'urls/index'
   namespace :onboarding do
     get 'email_verifications/edit'
@@ -19,6 +20,8 @@ Rails.application.routes.draw do
     resources :tweets
     resources :tweeter_ignore_rules
     resources :urls
+    resources :archived_tweets
+    resources :archived_urls
   end
 
   resources :users do

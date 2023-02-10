@@ -1,13 +1,10 @@
 class Topic < ApplicationRecord
-
-  has_many :url_entities
-  has_many :urls, through: :url_entities
-
   has_many :tweeter_ignore_rules, dependent: :destroy
   has_many :twitter_search_results, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
   has_many :negative_search_terms, dependent: :destroy
+  has_many :urls, through: :tweets
 
   belongs_to :user
 
@@ -19,6 +16,18 @@ class Topic < ApplicationRecord
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
+
+  def unedited_tweets
+    tweets.qualified(threshold).relevant.unedited.best
+  end
+
+  def unedited_urls
+    urls.includes(:tweet)
+        .where(tweets: { saved: false, ignored: false, archived: false })
+        .where.not(urls: { title: nil })
+        .where(Tweet.arel_table[:score].gteq(threshold))
+        .order(Tweet.arel_table[:score].desc)
+  end
 
   def latest_result
     twitter_search_results.completed.order(created_at: :desc).first
@@ -118,10 +127,10 @@ class Topic < ApplicationRecord
     begin
       today = Time.parse("#{Date.today} #{search_time_hour}:00")
       in_specific_time_zone = today.in_time_zone(search_time_zone)
-      self.utc_search_hour = in_specific_time_zone.in_time_zone("UTC").hour
+      self.utc_search_hour = in_specific_time_zone.in_time_zone('UTC').hour
     rescue StandardError => e
       self.utc_search_hour = 14
-      Honeybadger.notify(e)      
+      Honeybadger.notify(e)
     end
   end
 end

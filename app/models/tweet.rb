@@ -1,11 +1,8 @@
 class Tweet < ApplicationRecord
   include ActionView::RecordIdentifier
 
-  has_many :url_entities
-  has_many :urls, through: :url_entities
-
-  has_many :hashtag_entities
-  has_many :hashtags, through: :hashtag_entities
+  has_many :urls
+  has_many :hashtags
 
   belongs_to :twitter_search_result
   belongs_to :topic
@@ -16,6 +13,7 @@ class Tweet < ApplicationRecord
 
   after_create_commit :broadcast_create
 
+  scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(tweeted_at: :desc) }
   scope :recent, -> { order(tweeted_at: :desc).limit(40) }
   scope :ignored, -> { where(ignored: true) }

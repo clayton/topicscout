@@ -1,9 +1,7 @@
 <tr>
   <td class="whitespace-wrap py-4 pl-4 pr-3 text-sm sm:pl-6">
     <div class="flex items-center">
-      <% url.tweets.map(&:username).uniq.compact.map do |username| %>
-        <div class="font-medium text-gray-900"><%= link_to("@#{username}", "https://twitter.com/#{username}", class: 'underline text-purple-500') %></div>
-      <% end.join(', ') %>
+      <div class="font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", class: 'underline text-purple-500') %></div>
     </div>
   </td>
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
@@ -11,24 +9,26 @@
     <div class="text-gray-600 text-xs font-mono"><%= url.unwound_url.truncate(50) %></div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:score) %>
+    <%= url.tweet.score %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:reply_count) %>
+    <%= url.tweet.reply_count %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:retweet_count) %>
+    <%= url.tweet.retweet_count %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:like_count) %>
+    <%= url.tweet.like_count %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:quote_count) %>
+    <%= url.tweet.quote_count %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= url.tweets.sum(&:impression_count) %>
+    <%= url.tweet.impression_count %>
   </td>
   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-
+    <%= form_with model: [topic, url] do |f| %>
+      <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>    
+    <% end %>
   </td>
 </tr>
