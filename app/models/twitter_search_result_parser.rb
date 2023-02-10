@@ -40,6 +40,7 @@ class TwitterSearchResultParser
     self
   rescue StandardError => e
     Rails.logger.debug "TwitterSearchResultParser: #{e} \n #{e.backtrace.join('\n')}"
+    Honeybadger.notify(e)
   end
 
   def save_tweets(results)

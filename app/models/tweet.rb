@@ -1,6 +1,8 @@
 class Tweet < ApplicationRecord
   include ActionView::RecordIdentifier
 
+  has_many :hashtag_entities
+  has_many :url_entities
   has_many :urls
   has_many :hashtags
 
