@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :tweets
     resources :tweeter_ignore_rules
     resources :urls
+    resources :saves
     resources :archived_tweets
     resources :archived_urls
   end

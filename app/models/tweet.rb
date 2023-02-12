@@ -22,6 +22,7 @@ class Tweet < ApplicationRecord
   scope :relevant, -> { where(ignored: false) }
   scope :qualified, ->(threshold) { where(['score > ?', threshold]) }
   scope :best, -> { order(score: :desc) }
+  scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
 
   def url
     "https://twitter.com/#{username}/status/#{tweet_id}"

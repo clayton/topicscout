@@ -1,0 +1,113 @@
+<%= turbo_stream_from dom_id(@topic, 'saves') %>
+<div class="md:flex md:items-center md:justify-between">
+  <div class="flex-1 min-w-0">
+    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Reviewing: <%= @topic.name %></h2>
+  </div>
+</div>
+<%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :saves } %>
+<%= turbo_frame_tag dom_id(@topic, 'saves') do %>
+  <div class="mt-8 flex flex-col space-y-6">
+    <% @tweets.each do |tweet| %>
+      <div class="shadow-md border-gray-50 rounded-lg">
+        <div class="p-4 flex items-center space-x-4">
+          <div class="w-1/2">
+            <div class="flex flex-col space-y-2">
+              <div class="flex items-center">
+                <div class="h-10 w-10 flex-shrink-0">
+                  <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+                </div>
+                <div class="ml-4">
+                  <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", class: 'underline text-purple-500') %></div>
+                  <div class="text-gray-500"><%= tweet.name %></div>
+                </div>
+              </div>
+              <div>
+                <%= display_entitites(tweet.text) %>
+              </div>
+            </div>
+          </div>
+          <div class="w-1/3 flex flex-col space-y-2 justify-between">
+            <div>
+              <span class="font-light text-sm tracking-tigher text-gray-600 uppercase">
+                URLS
+              </span>
+              <ul>
+                <% tweet.urls.each do |url| %>
+                  <li class="inline-flex flex-col">
+                    <%= link_to(url.title || url.display_url, url.unwound_url, class: 'text-purple-500 text-sm') %>
+                    <span class="text-gray-500 text-xs"><%= url.unwound_url&.gsub("https://","")&.truncate(40) %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+            <div>
+              <p class="font-light text-sm tracking-tigher text-gray-600 uppercase">
+                Hashtags
+              </p>
+              <% tweet.hashtags.map do |tag| %>
+                <span class="text-sm text-purple-400">#<%= tag.tag %></span>
+              <% end.join(' ') %>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 bg-purple-100">
+          <div class="flex items-center justify-evenly">
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd" d="M10.5 3.798v5.02a3 3 0 01-.879 2.121l-2.377 2.377a9.845 9.845 0 015.091 1.013 8.315 8.315 0 005.713.636l.285-.071-3.954-3.955a3 3 0 01-.879-2.121v-5.02a23.614 23.614 0 00-3 0zm4.5.138a.75.75 0 00.093-1.495A24.837 24.837 0 0012 2.25a25.048 25.048 0 00-3.093.191A.75.75 0 009 3.936v4.882a1.5 1.5 0 01-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0115 8.818V3.936z" clip-rule="evenodd" />
+              </svg>
+              <%= tweet.score.round %>
+            </div>
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd" d="M5.337 21.718a6.707 6.707 0 01-.533-.074.75.75 0 01-.44-1.223 3.73 3.73 0 00.814-1.686c.023-.115-.022-.317-.254-.543C3.274 16.587 2.25 14.41 2.25 12c0-5.03 4.428-9 9.75-9s9.75 3.97 9.75 9c0 5.03-4.428 9-9.75 9-.833 0-1.643-.097-2.417-.279a6.721 6.721 0 01-4.246.997z" clip-rule="evenodd" />
+              </svg>
+              <%= tweet.reply_count %>
+            </div>
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              <%= tweet.retweet_count %>
+            </div>
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
+              <%= tweet.like_count %>
+            </div>
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+              </svg>
+              <%= tweet.quote_count %>
+            </div>
+            <div class="flex space-x-2 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <%= tweet.impression_count %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="py-8 flex items-center justify-between">
+    <div>
+      <%== pagy_nav(@pagy) %>
+    </div>
+    <div>
+      <%= form_for topic_archived_tweets_path(@topic) do |f| %>
+        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+          <!-- Heroicon name: mini/envelope -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 w-5 h-5">
+            <path fill-rule="evenodd" d="M2 3a1 1 0 00-1 1v1a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1H2zm0 4.5h16l-.811 7.71a2 2 0 01-1.99 1.79H4.802a2 2 0 01-1.99-1.79L2 7.5zM10 9a.75.75 0 01.75.75v2.546l.943-1.048a.75.75 0 111.114 1.004l-2.25 2.5a.75.75 0 01-1.114 0l-2.25-2.5a.75.75 0 111.114-1.004l.943 1.048V9.75A.75.75 0 0110 9z" clip-rule="evenodd" />
+          </svg>
+          Archive all
+        </button>
+      <% end %>
+    </div>
+  </div>
+<% end %>
