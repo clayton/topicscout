@@ -25,7 +25,7 @@
           <tbody class="divide-y divide-gray-200">
             <% @collections.each do |collection|%>
               <tr>
-                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= collection.name %></td>
+                <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= link_to collection.name, collection_path(collection), class: 'text-purple-500 hover:text-purple-700' %></td>
                 <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500"><%= local_time(collection.created_at) %></td>
                 <td class="whitespace-nowrap py-4 px-3 text-sm text-gray-500"><%= collection.tweets.count %></td>
                 <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">

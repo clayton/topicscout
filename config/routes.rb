@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   resources :collections do
     resources :tweets, controller: 'collection_tweets'
+    resources :markdown_exports, as: :markdown
   end
 
   resources :users do

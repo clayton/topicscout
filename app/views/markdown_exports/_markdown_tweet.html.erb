@@ -1,0 +1,6 @@
+<% markdown_entities(tweet.text).split("\n").each do |line| %>
+> <%= line %>
+<% end %>
+
+By [@<%= tweet.username%>](https://twitter.com/<%= tweet.username %>) on [<%= tweet.tweeted_at %>](https://twitter.com/<%= tweet.username %>/status/<%= tweet.tweet_id %>)
+
