@@ -7,7 +7,7 @@ class TweetsController < AuthenticatedUserController
   def update
     @topic = Topic.find_by(id: params[:topic_id])
     @tweet = @topic.tweets.find_by(id: params[:id])
-    @tweet.update(tweet_params)
+    @tweet.update!(tweet_params)
 
     redirect_to topic_tweets_path(@topic)
   end

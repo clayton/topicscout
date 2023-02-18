@@ -25,6 +25,10 @@ Rails.application.routes.draw do
     resources :archived_urls
   end
 
+  resources :collections do
+    resources :tweets, controller: 'collection_tweets'
+  end
+
   resources :users do
     resources :email_verifications
   end

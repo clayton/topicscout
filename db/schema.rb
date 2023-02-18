@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_10_232805) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_18_164342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "collections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.boolean "archived"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id"
+    t.uuid "topic_id", null: false
+    t.index ["topic_id"], name: "index_collections_on_topic_id"
+  end
 
   create_table "email_authentications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "code"
@@ -125,6 +135,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_232805) do
     t.decimal "score", default: "0.0"
     t.boolean "saved", default: false
     t.boolean "archived", default: false
+    t.uuid "collection_id"
+    t.index ["collection_id"], name: "index_tweets_on_collection_id"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
@@ -194,6 +206,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_232805) do
     t.string "pay_customer_name"
   end
 
+  add_foreign_key "collections", "topics"
   add_foreign_key "email_verifications", "users"
   add_foreign_key "search_terms", "topics"
   add_foreign_key "topics", "users"

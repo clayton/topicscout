@@ -1,0 +1,2 @@
+module CollectionTweetsHelper
+end

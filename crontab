@@ -1,2 +1,1 @@
 00 * * * * bundle exec rails search:twitter
-00 15 * * * bundle exec rails digest:daily

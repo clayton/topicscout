@@ -8,6 +8,7 @@ class Tweet < ApplicationRecord
 
   belongs_to :twitter_search_result
   belongs_to :topic
+  belongs_to :collection, optional: true
 
   before_save :calculate_score
 
@@ -23,6 +24,7 @@ class Tweet < ApplicationRecord
   scope :qualified, ->(threshold) { where(['score > ?', threshold]) }
   scope :best, -> { order(score: :desc) }
   scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
+  scope :uncollected, -> { where(collection_id: nil) }
 
   def url
     "https://twitter.com/#{username}/status/#{tweet_id}"

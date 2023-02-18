@@ -23,7 +23,7 @@
     <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), "https://twitter.com/#{tweet.username}/status/#{tweet.tweet_id}", class: 'text-purple-500 underline text-xs') %></div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-    <%= tweet.score %>
+    <%= tweet.score.round %>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     <%= tweet.reply_count %>
@@ -41,9 +41,15 @@
     <%= tweet.impression_count %>
   </td>
   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-    <%= form_with model: [tweet.topic, tweet] do |f| %>
-      <%= f.hidden_field :saved, value: true %>
-      <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>    
-    <% end %>
+    <div class="flex justify-between space-x-2">
+      <%= form_with model: [tweet.topic, tweet] do |f| %>
+        <%= f.hidden_field :archived, value: true %>
+        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+      <% end %>
+      <%= form_with model: [tweet.topic, tweet] do |f| %>
+        <%= f.hidden_field :saved, value: true %>
+        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
+      <% end %>
+    </div>
   </td>
 </tr>

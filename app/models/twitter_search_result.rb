@@ -6,7 +6,7 @@ class TwitterSearchResult < ApplicationRecord
 
   after_create :search
 
-  after_update :send_digest
+  # after_update :send_digest
 
   scope :completed, -> { where(completed: true) }
 

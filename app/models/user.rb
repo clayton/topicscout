@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_one :subscription
   has_one :twitter_account
   has_many :topics
+  has_many :collections
   has_many :email_verifications, dependent: :destroy
   has_many :email_authentications, dependent: :destroy
 
