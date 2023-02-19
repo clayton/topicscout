@@ -45,5 +45,5 @@ Rails.application.routes.draw do
   get '/logout', to: 'sessions#destroy', as: 'logout'
   get '/checkouts/:checkout_session_id', to: 'checkouts#show'
 
-  root 'dashboard#show'
+  root 'topics#index'
 end

@@ -25,6 +25,7 @@ class Tweet < ApplicationRecord
   scope :best, -> { order(score: :desc) }
   scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
   scope :uncollected, -> { where(collection_id: nil) }
+  scope :collected, -> { where.not(collection_id: nil) }
 
   def url
     "https://twitter.com/#{username}/status/#{tweet_id}"

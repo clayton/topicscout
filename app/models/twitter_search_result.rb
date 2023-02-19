@@ -8,6 +8,7 @@ class TwitterSearchResult < ApplicationRecord
 
   # after_update :send_digest
 
+  scope :newest, -> { order(created_at: :desc) }
   scope :completed, -> { where(completed: true) }
 
   def search_phrase
