@@ -1,0 +1,2 @@
+module ArchivedUrlsHelper
+end
