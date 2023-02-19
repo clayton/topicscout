@@ -13,6 +13,7 @@
       <div>
         <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
           <%= f.hidden_field :author_id, value: tweet.author_id %>
+          <%= f.hidden_field :page, value: params[:page] %>
           <button type="submit" class="inline-flex w-full justify-center items-center px-2 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
         <% end %>
       </div>

@@ -15,7 +15,6 @@ class TwitterSearchJob < ApplicationJob
         is_not :retweet
       end
 
-      Rails.logger.debug("[TwitterSearchJob] results: #{results.count}")
       TwitterSearchResultParser.parse(results, twitter_search_result, nil)
       twitter_search_result.update(completed: true)
     rescue StandardError => e

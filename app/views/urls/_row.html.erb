@@ -3,6 +3,14 @@
     <div class="flex items-center">
       <div class="font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
     </div>
+    <div class="mt-2">
+      <%= form_with model: [url.tweet.topic, TweeterIgnoreRule.new] do |f| %>
+      <%= f.hidden_field :author_id, value: url.tweet.author_id %>
+      <%= f.hidden_field :return_to, value: 'urls' %>
+      <%= f.hidden_field :page, value: params[:page] %>
+      <button type="submit" class="inline-flex w-full justify-center items-center px-2 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
+    <% end %>
+    </div>
   </td>
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
     <div class="text-gray-900"><%= link_to(url.title, url.unwound_url, target: '_blank', class: 'text-purple-500 underline') %></div>
