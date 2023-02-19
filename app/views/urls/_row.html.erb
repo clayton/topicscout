@@ -1,11 +1,11 @@
 <tr>
   <td class="whitespace-wrap py-4 pl-4 pr-3 text-sm sm:pl-6">
     <div class="flex items-center">
-      <div class="font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", class: 'underline text-purple-500') %></div>
+      <div class="font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
     </div>
   </td>
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
-    <div class="text-gray-900"><%= link_to(url.title, url.unwound_url, class: 'text-purple-500 underline') %></div>
+    <div class="text-gray-900"><%= link_to(url.title, url.unwound_url, target: '_blank', class: 'text-purple-500 underline') %></div>
     <div class="text-gray-600 text-xs font-mono"><%= url.hostname %></div>
     <div class="text-gray-600 text-xs font-mono"><%= url.tweet.id %></div>
   </td>
