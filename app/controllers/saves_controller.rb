@@ -1,10 +1,22 @@
 class SavesController < AuthenticatedUserController
-  def index
-    @topic = Topic.find_by(id: params[:topic_id])
-    @collection = @topic.collections.newest.first || @topic.collections.create(name: "#{@topic.name} Collection #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}")
+  before_action :load_topic
+  before_action :load_collection
 
+  def index
     @pagy, @tweets = pagy(@topic.tweets.reviewing.uncollected.best.includes(:hashtags,
                                                                             :urls).where.not(urls: { title: nil,
                                                                                                      url: nil }))
+  end
+
+  def load_topic
+    @topic = Topic.find_by(id: params[:topic_id])
+  end
+
+  def load_collection
+    @collection = @topic.collections.newest.first
+
+    return if @collection.present?
+
+    @collection = @topic.collections.create!(user: @topic.user, name: "#{@topic.name} Collection #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}")
   end
 end

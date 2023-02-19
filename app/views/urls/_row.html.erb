@@ -6,7 +6,8 @@
   </td>
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
     <div class="text-gray-900"><%= link_to(url.title, url.unwound_url, class: 'text-purple-500 underline') %></div>
-    <div class="text-gray-600 text-xs font-mono"><%= url.unwound_url.truncate(50) %></div>
+    <div class="text-gray-600 text-xs font-mono"><%= url.hostname %></div>
+    <div class="text-gray-600 text-xs font-mono"><%= url.tweet.id %></div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     <%= url.tweet.score.round %>

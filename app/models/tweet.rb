@@ -21,7 +21,7 @@ class Tweet < ApplicationRecord
   scope :recent, -> { order(tweeted_at: :desc).limit(40) }
   scope :ignored, -> { where(ignored: true) }
   scope :relevant, -> { where(ignored: false) }
-  scope :qualified, ->(threshold) { where(['score > ?', threshold]) }
+  scope :qualified, ->(threshold) { where(['score >= ?', threshold]) }
   scope :best, -> { order(score: :desc) }
   scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
   scope :uncollected, -> { where(collection_id: nil) }
