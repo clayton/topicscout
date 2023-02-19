@@ -5,7 +5,7 @@ class Topic < ApplicationRecord
   has_many :search_terms, dependent: :destroy
   has_many :negative_search_terms, dependent: :destroy
   has_many :urls, through: :tweets
-  has_many :collections
+  has_many :collections, dependent: :destroy
 
   belongs_to :user
 

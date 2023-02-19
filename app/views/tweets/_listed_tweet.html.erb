@@ -21,7 +21,7 @@
   </td>
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
     <div class="text-gray-900"><%= display_entitites(tweet.text) %></div>
-    <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), "https://twitter.com/#{tweet.username}/status/#{tweet.tweet_id}", target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
+    <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
     <div class="flex flex-col text-gray-900">
