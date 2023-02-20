@@ -12,66 +12,66 @@
             <%= f.text_field :name, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
           </div>
         </div>
-        <% if @topic.persisted? %>
-          <div class="sm:col-span-4">
-            <%= f.label :topic, "Search phrase", class: "block text-sm font-medium text-gray-700"%>
-            <div class="mt-1">
-              <p class="text-pink-500 bg-gray-100 text-sm w-full p-2"><%= @topic.search_phrase %></p>
-            </div>
-          </div>
-        <% else %>
-          <div class="sm:col-span-4">
-            <%= f.label :topic, "Topic", class: "block text-sm font-medium text-gray-700"%>
-            <div class="mt-1">
-              <%= f.text_field :topic, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>              
-            </div>
-          </div>        
-        <% end %>
-      </div>
-    </div>
-    <div class="pt-8">
-      <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Scoring threshold</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="font-mono text-xs p-1 text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
-      </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
-          <%= f.label :threshold, "Minimum score", class: "block text-sm font-medium text-gray-700"%>
+          <%= f.label :topic, "Main keyword", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
-            <%= f.number_field :threshold, step: :any, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+            <%= f.text_field :topic, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+            <span class="text-gray-500 text-sm mt-1">The main search term for this topic.</span>
           </div>
         </div>
       </div>
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Search filters</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional filters that can help narrow the scope of your search.</p>
-      </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <div class="sm:col-span-4">
-          <%= f.label :filter_by_language, "Language filter", class: "block text-sm font-medium text-gray-700"%>
-          <div class="mt-1">
-            <%= f.select :filter_by_language, options_for_select([['All Languages', ''], ['English', 'en']], @topic.filter_by_language), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pt-8">
-      <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Search modifiers</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional modifiers that can help narrow the scope of your search.</p>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Additional keywords</h3>
+        <p class="mt-1 text-sm text-gray-500">Optional additional keywords to include in the search.</p>
       </div>
       <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
         <%= f.fields_for :search_terms do |term_form| %>
           <div class="sm:col-span-4">
             <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+            <div class="flex items-center mt-2 space-x-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= term_form.check_box :exact_match, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= term_form.label :exact_match, "Exact match", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= term_form.check_box :required, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= term_form.label :required, "Required", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+            </div>
           </div>
         <% end %>
         <% if @topic.persisted? %>
           <div class="sm:col-span-4">
             <%= f.fields_for @topic.search_terms.build do |new_term| %>
               <%= new_term.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+              <div class="flex items-center mt-2 space-x-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= new_term.check_box :exact_match, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= new_term.label :exact_match, "Exact match", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= new_term.check_box :required, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= new_term.label :required, "Required", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+            </div>
             <% end %>
           </div>
         <% else %>
@@ -80,10 +80,103 @@
               <%= f.fields_for :new_search_terms do |search_term_builder| %>
                 <%= search_term_builder.label 'Search Term', class: 'sr-only' %>
                 <%= search_term_builder.text_field '', class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+                <div class="flex items-center mt-2 space-x-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= search_term_builder.check_box :exact_match, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= search_term_builder.label :exact_match, "Exact match", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= search_term_builder.check_box :required, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= search_term_builder.label :required, "Required", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+            </div>
               <% end %>
             </div>
           <% end %>
         <% end %>
+      </div>
+    </div>
+    <div class="pt-8">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Search modifiers</h3>
+        <p class="mt-1 text-sm text-gray-500">Optional modifiers that can help narrow the scope of your search.</p>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= f.label :filter_by_language, "Language filter", class: "block text-sm font-medium text-gray-700"%>
+          <div class="mt-1">
+            <%= f.select :filter_by_language, options_for_select([['All Languages', ''], ['English', 'en']], @topic.filter_by_language), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+          </div>
+        </div>
+        <div class="sm:col-span-4">
+          <fieldset>
+            <legend class="sr-only">Required attributes</legend>
+            <div class="text-base font-medium text-gray-900" aria-hidden="true">Required attributes</div>
+            <div class="mt-4 space-y-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :require_links, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :require_links, "Require links", class: 'font-medium text-gray-700' %>
+                  <p class="text-gray-500">Require tweets to include links.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :require_images, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :require_images, "Require images", class: 'font-medium text-gray-700' %>
+                  <p class="text-gray-500">Require tweets to include images.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :require_media, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :require_media, "Require media", class: 'font-medium text-gray-700' %>
+                  <p class="text-gray-500">Require tweets to include a media object such as an image, GIF, or video.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :require_verified, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :require_verified, "Require verfied tweeters", class: 'font-medium text-gray-700' %>
+                  <p class="text-gray-500">Require tweets to be sent by verified Twitter users.</p>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="sm:col-span-4">
+          <fieldset>
+            <legend class="sr-only">Ignored attributes</legend>
+            <div class="text-base font-medium text-gray-900" aria-hidden="true">Ignored attributes</div>
+            <div class="mt-4 space-y-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :ignore_ads, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :ignore_ads, "Ignore ads", class: 'font-medium text-gray-700' %>
+                  <p class="text-gray-500">Ignore tweets that were sent as promotional tweets.</p>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
     <div class="pt-8">
@@ -117,52 +210,19 @@
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Search timing</h3>
-        <p class="mt-1 text-sm text-gray-500">Choose when searches happen for this topic.</p>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Scoring threshold</h3>
+        <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="font-mono text-xs p-1 text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
       </div>
       <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
-          <%= f.label :search_time_zone, "Time zone", class: 'block text-sm font-medium text-gray-700' %>
-          <%= time_zone_select :topic, :search_time_zone, ActiveSupport::TimeZone.us_zones, {default: "Pacific Time (US & Canada)", value: @topic.search_time_zone}, {class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'} %>
-        </div>
-        <div class="sm:col-span-4">
-          <%= f.label :search_time_hour, "Search time", class: 'block text-sm font-medium text-gray-700' %>
-          <%= f.select :search_time_hour, options_for_select(hour_options_array, @topic.search_time_hour), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
-        </div>
-      </div>
-    </div>
-    <div class="pt-8">
-      <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Notifications</h3>
-        <p class="mt-1 text-sm text-gray-500">Choose how to be notified about this topic.</p>
-      </div>
-      <div class="mt-6">
-        <fieldset>
-          <legend class="sr-only">By Email</legend>
-          <div class="text-base font-medium text-gray-900" aria-hidden="true">By Email</div>
-          <div class="mt-4 space-y-4">
-            <div class="relative flex items-start">
-              <div class="flex items-center h-5">
-                <%= f.check_box :daily_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-              </div>
-              <div class="ml-3 text-sm">
-                <%= f.label :daily_digest, "Daily Digest", class: 'font-medium text-gray-700' %>
-                <p class="text-gray-500">Receive a daily digest of new results for this topic.</p>
-              </div>
-            </div>
-            <div class="relative flex items-start">
-              <div class="flex items-center h-5">
-                <%= f.check_box :weekly_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-              </div>
-              <div class="ml-3 text-sm">
-                <%= f.label :weekly_digest, "Weekly Digest", class: 'font-medium text-gray-700' %>
-                <p class="text-gray-500">Receive a weekly summary of the results for this topic.</p>
-              </div>
-            </div>
+          <%= f.label :threshold, "Minimum score", class: "block text-sm font-medium text-gray-700"%>
+          <div class="mt-1">
+            <%= f.number_field :threshold, step: :any, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
           </div>
-        </fieldset>
+        </div>
       </div>
     </div>
+    
   </div>
   <div class="pt-5">
     <div class="flex justify-end">

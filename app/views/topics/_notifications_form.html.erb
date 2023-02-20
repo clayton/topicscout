@@ -1,0 +1,32 @@
+<div class="pt-8">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Notifications</h3>
+        <p class="mt-1 text-sm text-gray-500">Choose how to be notified about this topic.</p>
+      </div>
+      <div class="mt-6">
+        <fieldset>
+          <legend class="sr-only">By Email</legend>
+          <div class="text-base font-medium text-gray-900" aria-hidden="true">By Email</div>
+          <div class="mt-4 space-y-4">
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= f.check_box :daily_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= f.label :daily_digest, "Daily Digest", class: 'font-medium text-gray-700' %>
+                <p class="text-gray-500">Receive a daily digest of new results for this topic.</p>
+              </div>
+            </div>
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= f.check_box :weekly_digest, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= f.label :weekly_digest, "Weekly Digest", class: 'font-medium text-gray-700' %>
+                <p class="text-gray-500">Receive a weekly summary of the results for this topic.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>

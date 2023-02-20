@@ -13,6 +13,8 @@ class EmailAuthentication < ApplicationRecord
   def send_code
     # Require gem:
 
+    return Rails.logger.debug("Sending email to #{user.email} with code #{code}") if Rails.env.development?
+
     # Create an instance of Postmark::ApiClient:
     client = Postmark::ApiClient.new(Rails.application.credentials.postmark_api_token)
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_18_164342) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_20_002436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -71,6 +71,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_18_164342) do
     t.string "term"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "required"
+    t.boolean "exact_match"
     t.index ["topic_id"], name: "index_search_terms_on_topic_id"
   end
 
@@ -98,6 +100,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_18_164342) do
     t.integer "utc_search_hour", default: 14
     t.string "filter_by_language"
     t.decimal "threshold", default: "0.0"
+    t.boolean "require_links"
+    t.boolean "require_images"
+    t.boolean "require_media"
+    t.boolean "ignore_ads", default: false
+    t.boolean "require_verified"
     t.index ["user_id"], name: "index_topics_on_user_id"
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end

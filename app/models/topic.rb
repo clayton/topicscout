@@ -49,7 +49,7 @@ class Topic < ApplicationRecord
         search_term.destroy
         next
       end
-      search_term.update(term: term[:term])
+      search_term.update(term: term[:term], required: term[:required], exact_match: term[:exact_match])
     end
   end
 
@@ -60,7 +60,7 @@ class Topic < ApplicationRecord
     return if term.empty?
     return if term.downcase.strip.empty?
 
-    search_terms.find_or_create_by(term: term)
+    search_terms.find_or_create_by(term: term, required: attributes[:required], exact_match: attributes[:exact_match])
   end
 
   def new_negative_search_terms=(terms)
@@ -93,18 +93,59 @@ class Topic < ApplicationRecord
   end
 
   def search_phrase
-    optionals = search_terms.map { |search_term| %("#{search_term.term}") }.flatten.uniq.join(' OR ')
-    negatives = negative_search_terms.map { |search_term| %(-"#{search_term.term}") }.flatten.uniq.join(' ')
+    required_keywords = assemble_required_keywords
+    optional_keywords = assemble_optional_keywords
+    negative_keywords = assemble_negative_keywords
+    language_filters  = assemble_language_filters
+    attribute_filters = assemble_attribute_filters
 
-    hashtag_or_phrase = topic.starts_with?('#') ? topic : %("#{topic}")
+    keyword = topic.starts_with?('#') ? topic : %("#{topic}")
 
-    language_filter = "lang:#{filter_by_language}" if filter_by_language.present?
+    [keyword,
+     required_keywords,
+     optional_keywords,
+     negative_keywords,
+     language_filters,
+     attribute_filters].compact.join(' ')
+  end
 
-    query = [hashtag_or_phrase, language_filter].compact.join(' ')
+  def assemble_required_keywords
+    return if search_terms.where(required: true).empty?
 
-    return %(#{query} #{negatives} (#{optionals})) if optionals.present?
+    required_exact_keywords = search_terms.required.exact.map(&:to_query)
+    required_inexact_keywords = search_terms.required.fuzzy.map(&:to_query)
 
-    hashtag_or_phrase
+    (required_exact_keywords + required_inexact_keywords).flatten.join(' ')
+  end
+
+  def assemble_optional_keywords
+    return if search_terms.where(required: false).empty?
+
+    optional_exact_keywords = search_terms.optional.exact.map(&:to_query)
+    optional_inexact_keywords = search_terms.optional.fuzzy.map(&:to_query)
+
+    (optional_exact_keywords + optional_inexact_keywords).flatten.join(' OR ')
+  end
+
+  def assemble_language_filters
+    "lang:#{filter_by_language}" if filter_by_language.present?
+  end
+
+  def assemble_attribute_filters
+    filters = []
+    filters << 'has:images' if require_images
+    filters << 'has:media' if require_media
+    filters << 'has:links' if require_links
+    filters << 'is:verified' if require_verified
+    filters << '-is:nullcast' if ignore_ads
+
+    filters.join(' ')
+  end
+
+  def assemble_negative_keywords
+    return if negative_search_terms.empty?
+
+    negative_search_terms.map { |search_term| %(-"#{search_term.term}") }.flatten.uniq.join(' ')
   end
 
   def initial_search
