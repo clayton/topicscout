@@ -48,7 +48,37 @@
                 Hashtags
               </p>
               <% tweet.hashtags.map do |tag| %>
-                <span class="text-sm text-purple-400">#<%= tag.tag %></span>
+                <div class="text-sm text-purple-400 relative" data-controller='saved-hashtag'>
+                  <div class="bg-white rounded-md shadow-md absolute p-1 bottom-0 left-0 border-gray-200 border hidden" data-saved-hashtag-target="forms">
+                    <div class="relative p-4">
+                      <a data-action="click->saved-hashtag#close" href="#" class="text-gray-500 absolute top-0 right-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </a>
+                      <p class="text-gray-800 font-semibold pt-4">Modify topic:</p>
+                      <div class="mt-4 flex space-y-2 flex-col">
+                        <%= form_with model: [@topic, NegativeSearchTerm.new] do |f| %>
+                          <%= f.hidden_field :term, value: "##{tag.tag}" %>
+                          <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Exclude <%= "##{tag.tag}"%></button>
+                        <% end %>
+                        <%= form_with model: [@topic, SearchTerm.new] do |f| %>
+                          <%= f.hidden_field :term, value: "##{tag.tag}" %>
+                          <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Include <%= "##{tag.tag}"%></button>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-1">
+                    <% if @topic.negative_search_terms.where(term: "##{tag.tag.downcase}").present? %>
+                    <span class="inline-flex items-center rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">#<%= tag.tag %></span>
+                  <% elsif @topic.search_terms.where(term: "##{tag.tag}").present? %>
+                    <span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">#<%= tag.tag %></span>
+                  <% else %>
+                    <a href="#" data-action="click->saved-hashtag#open" class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">#<%= tag.tag %></a>
+                  <% end %>
+                  </div>
+                </div>
               <% end.join(' ') %>
             </div>
           </div>

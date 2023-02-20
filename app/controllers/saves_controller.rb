@@ -9,7 +9,7 @@ class SavesController < AuthenticatedUserController
   end
 
   def load_topic
-    @topic = Topic.find_by(id: params[:topic_id])
+    @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
   end
 
   def load_collection
@@ -17,6 +17,7 @@ class SavesController < AuthenticatedUserController
 
     return if @collection.present?
 
-    @collection = @topic.collections.create!(user: @topic.user, name: "#{@topic.name} Collection #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}")
+    @collection = @topic.collections.create!(user: @topic.user,
+                                             name: "#{@topic.name} Collection #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}")
   end
 end

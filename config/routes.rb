@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :topics do
     resources :twitter_search_results
     resources :search_terms
+    resources :negative_search_terms
     resources :tweets
     resources :tweeter_ignore_rules
     resources :urls
