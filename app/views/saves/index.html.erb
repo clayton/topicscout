@@ -48,7 +48,7 @@
                 Hashtags
               </p>
               <% tweet.hashtags.map do |tag| %>
-                <div class="text-sm text-purple-400 relative" data-controller='saved-hashtag'>
+                <div class="inline-block text-sm text-purple-400 relative" data-controller='saved-hashtag'>
                   <div class="bg-white rounded-md shadow-md absolute p-1 bottom-0 left-0 border-gray-200 border hidden" data-saved-hashtag-target="forms">
                     <div class="relative p-4">
                       <a data-action="click->saved-hashtag#close" href="#" class="text-gray-500 absolute top-0 right-0">

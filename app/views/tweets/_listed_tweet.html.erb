@@ -22,9 +22,9 @@
   <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500">
     <div class="text-gray-900"><%= display_entitites(tweet.text) %></div>
     <div class="mt-1"><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
-    <div class="flex space-x-2">
+    <div class="mt-1">
       <% tweet.hashtags.map do |tag| %>
-        <div class="text-sm text-purple-400 relative" data-controller='saved-hashtag'>
+        <div class="inline-block text-sm text-purple-400 relative mr-2" data-controller='saved-hashtag'>
           <div class="bg-white rounded-md shadow-md absolute p-1 bottom-0 left-0 border-gray-200 border hidden z-50" data-saved-hashtag-target="forms">
             <div class="relative p-4">
               <a data-action="click->saved-hashtag#close" href="#" class="text-gray-500 absolute top-0 right-0">
@@ -125,7 +125,7 @@
       </div>
     </div>
   </td>
-  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+  <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
     <div class="flex justify-between space-x-2">
       <%= form_with model: [tweet.topic, tweet] do |f| %>
         <%= f.hidden_field :page, value: params[:page] %>
