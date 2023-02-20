@@ -18,7 +18,10 @@ Rails.application.routes.draw do
     resources :twitter_search_results
     resources :search_terms
     resources :negative_search_terms
-    resources :tweets
+    resources :tweets do
+      resources :search_terms, controller: 'tweet_search_terms'
+      resources :negative_search_terms, controller: 'tweet_negative_search_terms'
+    end
     resources :tweeter_ignore_rules
     resources :urls
     resources :saves

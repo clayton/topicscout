@@ -1,0 +1,2 @@
+module TweetNegativeSearchTermsHelper
+end
