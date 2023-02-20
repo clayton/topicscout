@@ -134,7 +134,9 @@ class Topic < ApplicationRecord
     filters << 'has:media' if require_media
     filters << 'has:links' if require_links
     filters << 'is:verified' if require_verified
-    filters << '-is:nullcast' if ignore_ads
+    
+    # This next one doesn't work as expected and results in no tweets being found
+    # filters << '-is:nullcast' if ignore_ads 
 
     filters.join(' ')
   end
