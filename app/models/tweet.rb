@@ -14,7 +14,7 @@ class Tweet < ApplicationRecord
 
   # after_create :fetch_embed_html
 
-  after_create_commit :broadcast_create
+  # after_create_commit :broadcast_create
 
   scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(tweeted_at: :desc) }

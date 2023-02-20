@@ -7,4 +7,10 @@ class NegativeSearchTerm < ApplicationRecord
   def sanitize_term
     self.term = term.downcase.strip
   end
+
+  def to_query
+    keyword = term.downcase
+    keyword = "\"#{keyword}\"" if keyword.include?(' ')
+    "-#{keyword}"
+  end
 end

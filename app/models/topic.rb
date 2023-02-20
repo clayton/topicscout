@@ -121,7 +121,9 @@ class Topic < ApplicationRecord
     optional_exact_keywords = search_terms.optional.exact.map(&:to_query)
     optional_inexact_keywords = search_terms.optional.fuzzy.map(&:to_query)
 
-    (optional_exact_keywords + optional_inexact_keywords).flatten.join(' OR ')
+    keywords = (optional_exact_keywords + optional_inexact_keywords).flatten.join(' OR ')
+
+    "(#{keywords})"
   end
 
   def assemble_language_filters
@@ -145,7 +147,7 @@ class Topic < ApplicationRecord
   def assemble_negative_keywords
     return if negative_search_terms.empty?
 
-    negative_search_terms.map { |search_term| %(-"#{search_term.term}") }.flatten.uniq.join(' ')
+    negative_search_terms.map(&:to_query).flatten.uniq.join(' ')
   end
 
   def initial_search
