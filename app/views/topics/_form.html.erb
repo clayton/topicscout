@@ -12,19 +12,20 @@
             <%= f.text_field :name, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
           </div>
         </div>
-        <div class="sm:col-span-4">
-          <%= f.label :topic, "Main keyword", class: "block text-sm font-medium text-gray-700"%>
-          <div class="mt-1">
-            <%= f.text_field :topic, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-            <span class="text-gray-500 text-sm mt-1">The main search term for this topic.</span>
+        <% if @topic.persisted? %>
+          <div class="sm:col-span-4">
+            <%= label_tag :query, "Query", class: "block text-sm font-medium text-gray-700"%>
+            <div class="mt-1">
+              <span class="bg-gray-100 inline-block p-2 text-purple-500 font-mono w-full text-sm"><%= @topic.search_phrase %></span>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Additional keywords</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional additional keywords to include in the search.</p>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Keywords</h3>
+        <p class="mt-1 text-sm text-gray-500">Keywords to include in the search.</p>
       </div>
       <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
         <%= f.fields_for :search_terms do |term_form| %>
@@ -50,58 +51,7 @@
             </div>
           </div>
         <% end %>
-        <% if @topic.persisted? %>
-          <div class="sm:col-span-4">
-            <%= f.fields_for @topic.search_terms.build do |new_term| %>
-              <%= new_term.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-              <div class="flex items-center mt-2 space-x-4">
-              <div class="relative flex items-start">
-                <div class="flex items-center h-5">
-                  <%= new_term.check_box :exact_match, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-                </div>
-                <div class="ml-3 text-sm">
-                  <%= new_term.label :exact_match, "Exact match", class: 'font-medium text-gray-700' %>
-                </div>
-              </div>
-              <div class="relative flex items-start">
-                <div class="flex items-center h-5">
-                  <%= new_term.check_box :required, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-                </div>
-                <div class="ml-3 text-sm">
-                  <%= new_term.label :required, "Required", class: 'font-medium text-gray-700' %>
-                </div>
-              </div>
-            </div>
-            <% end %>
-          </div>
-        <% else %>
-          <% 3.times do %>
-            <div class="sm:col-span-4">
-              <%= f.fields_for :new_search_terms do |search_term_builder| %>
-                <%= search_term_builder.label 'Search Term', class: 'sr-only' %>
-                <%= search_term_builder.text_field '', class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-                <div class="flex items-center mt-2 space-x-4">
-              <div class="relative flex items-start">
-                <div class="flex items-center h-5">
-                  <%= search_term_builder.check_box :exact_match, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-                </div>
-                <div class="ml-3 text-sm">
-                  <%= search_term_builder.label :exact_match, "Exact match", class: 'font-medium text-gray-700' %>
-                </div>
-              </div>
-              <div class="relative flex items-start">
-                <div class="flex items-center h-5">
-                  <%= search_term_builder.check_box :required, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
-                </div>
-                <div class="ml-3 text-sm">
-                  <%= search_term_builder.label :required, "Required", class: 'font-medium text-gray-700' %>
-                </div>
-              </div>
-            </div>
-              <% end %>
-            </div>
-          <% end %>
-        <% end %>
+
       </div>
     </div>
     <div class="pt-8">
@@ -222,7 +172,6 @@
         </div>
       </div>
     </div>
-    
   </div>
   <div class="pt-5">
     <div class="flex justify-end">

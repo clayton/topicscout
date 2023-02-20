@@ -7,9 +7,11 @@ class TopicsController < AuthenticatedUserController
 
   def new
     @topic = Topic.new
+    3.times { @topic.search_terms.build }
   end
 
   def create
+    Rails.logger.debug("TOPIC PARAMS: #{topic_params.inspect}")
     @topic = current_user.topics.build(topic_params)
 
     if @topic.save!
@@ -23,6 +25,7 @@ class TopicsController < AuthenticatedUserController
 
   def edit
     @topic = Topic.find(params[:id])
+    3.times { @topic.search_terms.build }
   end
 
   def show
@@ -55,11 +58,11 @@ class TopicsController < AuthenticatedUserController
   private
 
   def topic_params
-    params.require(:topic).permit(:topic, :daily_digest, :filter_by_language, :threshold, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: [:term, :required, :exact_match],
-                                                                                                                                                       search_terms_attributes: %i[term id required exact_match],
-                                                                                                                                                       new_search_terms: [],
-                                                                                                                                                       negative_search_term: [:term],
-                                                                                                                                                       negative_search_terms_attributes: %i[term id],
-                                                                                                                                                       new_negative_search_terms: [])
+    params.require(:topic).permit(:topic, :require_links, :require_media, :require_images, :ignore_ads, :require_verified, :daily_digest, :filter_by_language, :threshold, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: %i[term required exact_match],
+                                                                                                                                                                                                                                        search_terms_attributes: %i[term id required exact_match],
+                                                                                                                                                                                                                                        new_search_terms: %i[term required exact_match],
+                                                                                                                                                                                                                                        negative_search_term: [:term],
+                                                                                                                                                                                                                                        negative_search_terms_attributes: %i[term id],
+                                                                                                                                                                                                                                        new_negative_search_terms: [])
   end
 end

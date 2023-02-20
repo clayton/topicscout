@@ -16,7 +16,6 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">Name</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last searched</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Recently added</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Unread tweets</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Unread links</th>
@@ -31,7 +30,6 @@
               <% @topics.each do |topic| %>
                 <tr>
                   <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900"><%= topic.name %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= distance_of_time_in_words(topic.twitter_search_results.completed.newest.first&.created_at, Time.current) %> ago</td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= number_with_delimiter(topic.twitter_search_results.completed.newest.first&.tweets&.qualified(topic.threshold)&.count) %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link_to(number_with_delimiter(number_with_delimiter(topic.unedited_tweets&.count) || 0), topic_tweets_path(topic), class: 'underline text-purple-500 hover:text-purple-900') %></td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link_to((number_with_delimiter(topic.unedited_urls&.count) || 0), topic_urls_path(topic), class: 'underline text-purple-500 hover:text-purple-900') %></td>
