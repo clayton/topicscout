@@ -130,6 +130,7 @@ class Topic < ApplicationRecord
 
   def assemble_attribute_filters
     filters = []
+    filters << '-is:retweet'
     filters << 'has:images' if require_images
     filters << 'has:media' if require_media
     filters << 'has:links' if require_links

@@ -12,7 +12,7 @@ class TwitterSearchJob < ApplicationJob
 
       Rails.logger.info("[TwitterSearchJob] query:#{twitter_search_result.search_phrase} \n options: #{options}\n\n")
       results = client.search(twitter_search_result.search_phrase, **options) do
-        is_not :retweet
+        
       end
 
       TwitterSearchResultParser.parse(results, twitter_search_result, nil)
