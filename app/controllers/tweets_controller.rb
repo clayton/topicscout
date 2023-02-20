@@ -1,6 +1,6 @@
 class TweetsController < AuthenticatedUserController
   def index
-    @topic = Topic.find_by(id: params[:topic_id])
+    @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
     @pagy, @tweets = pagy(@topic.unedited_tweets)
   end
 

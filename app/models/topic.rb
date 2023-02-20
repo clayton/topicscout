@@ -15,7 +15,7 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: proc { |attributes| attributes['term'].blank? }
 
   def unedited_tweets
-    tweets.qualified(threshold).relevant.unedited.best
+    tweets.includes(:hashtags).qualified(threshold).relevant.unedited.best
   end
 
   def unedited_urls
