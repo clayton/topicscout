@@ -11,8 +11,8 @@ class Topic < ApplicationRecord
 
   after_create :initial_search
 
-  accepts_nested_attributes_for :search_terms, allow_destroy: true, reject_if: proc { |attributes| attributes['term'].blank? }
-  accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: proc { |attributes| attributes['term'].blank? }
+  accepts_nested_attributes_for :search_terms, allow_destroy: true
+  accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
 
   def unedited_tweets
     tweets.includes(:hashtags).qualified(threshold).relevant.unedited.best
@@ -42,13 +42,16 @@ class Topic < ApplicationRecord
   def search_terms_attributes=(attributes)
     Rails.logger.debug("SEARCH TERMS ATTRIBUTES: #{attributes.inspect}")
     attributes.each do |_key, term|
-      next if term[:term].strip.blank?
-
       if term['id'].nil?
+        next if term[:term].strip.blank?
         persisted? ? search_terms.create!(term) : search_terms.build(term)
       else
         search_term = search_terms.find_by(id: term['id'])
-        search_term.update(term: term[:term], required: term[:required], exact_match: term[:exact_match])
+        if term[:term].blank?
+          search_term.destroy
+        else
+          search_term.update(term: term[:term], required: term[:required], exact_match: term[:exact_match])
+        end
       end
     end
   end
