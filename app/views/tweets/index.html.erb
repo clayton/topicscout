@@ -3,29 +3,39 @@
   <div class="flex-1 min-w-0">
     <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate"><%= @topic.name %></h2>
   </div>
-  <div class="mt-4 flex md:mt-0 md:ml-4">
+  <div class="flex mt-4 md:mt-0 md:ml-4">
     <%= form_with model: [@topic, @topic.twitter_search_results.new] do |f| %>
-      <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Search now</button>
+      <% if @topic.twitter_search_results.incomplete.exists? %>
+        <button type="button" disabled="disabled" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 animate-spin">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+
+          Processing
+        </button>
+      <% else %>
+        <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Search now</button>
+      <% end %>
     <% end %>
     <%= link_to 'Edit', edit_topic_path(@topic), class: 'ml-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
   </div>
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :tweets } %>
 <%= turbo_frame_tag dom_id(@topic, 'list') do %>
-  <div class="mt-8 grid grid-cols-1 space-y-4">
+  <div class="grid grid-cols-1 mt-8 space-y-4">
     <% @tweets.each do |tweet| %>
       <%= render partial: 'listed_tweet', locals: {tweet: tweet, topic: @topic} %>
     <% end %>
   </div>
-  <div class="py-8 flex items-center justify-between">
+  <div class="flex items-center justify-between py-8">
     <div>
       <%== pagy_nav(@pagy) %>
     </div>
     <div>
       <%= form_tag topic_archived_tweets_path(@topic), method: :post do %>
-        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+        <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
           <!-- Heroicon name: mini/envelope -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 w-5 h-5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
             <path fill-rule="evenodd" d="M2 3a1 1 0 00-1 1v1a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1H2zm0 4.5h16l-.811 7.71a2 2 0 01-1.99 1.79H4.802a2 2 0 01-1.99-1.79L2 7.5zM10 9a.75.75 0 01.75.75v2.546l.943-1.048a.75.75 0 111.114 1.004l-2.25 2.5a.75.75 0 01-1.114 0l-2.25-2.5a.75.75 0 111.114-1.004l.943 1.048V9.75A.75.75 0 0110 9z" clip-rule="evenodd" />
           </svg>
           Archive all

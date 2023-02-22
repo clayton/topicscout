@@ -10,6 +10,7 @@ class TwitterSearchResult < ApplicationRecord
 
   scope :newest, -> { order(created_at: :desc) }
   scope :completed, -> { where(completed: true) }
+  scope :incomplete, -> { where(completed: false) }
 
   def search_phrase
     topic.search_phrase
