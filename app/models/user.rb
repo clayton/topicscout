@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :collections
   has_many :email_verifications, dependent: :destroy
   has_many :email_authentications, dependent: :destroy
+  has_many :remembered_sessions, dependent: :destroy
 
   after_update :verify_email_update
   after_create :verify_email

@@ -16,18 +16,45 @@ class SessionsController < ApplicationController
       @topic&.update(user: @user)
     end
 
+    remember_user(@user)
     session[:user_id] = @user.id
     redirect_to root_path
   end
 
   def destroy
+    cleanup_remembered_session
+    @current_user = nil
+    @current_organization = nil
     session[:user_id] = nil
-    redirect_to root_path
+    cookies.encrypted[:user_id] = nil
+    reset_session
+    redirect_to login_url
   end
 
   private
 
+  def remember_user(_user)
+    return unless allowed_params[:remember_me]
+
+    @remembered_session = @user.remembered_sessions.create
+
+    cookies.encrypted[:remember_me] = {
+      value: @remembered_session.cookie_value,
+      expires: 30.days.from_now,
+      domain: request.host
+    }
+  end
+
+  def cleanup_remembered_session
+    remember_me = cookies.encrypted[:remember_me]
+    return if remember_me.nil? || remember_me.empty?
+
+    lookup, validator = remember_me.split('.')
+    RememberedSession.delete_by(lookup: lookup, validator: validator)
+    cookies.delete(:remember_me, domain: request.host)
+  end
+
   def allowed_params
-    params.permit(:authenticity_token, :code)
+    params.permit(:authenticity_token, :code, :remember_me)
   end
 end

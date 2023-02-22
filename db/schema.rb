@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_20_050116) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -62,6 +62,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_050116) do
   create_table "negative_search_terms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "term"
     t.uuid "topic_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "remembered_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.datetime "expires_at", precision: nil, null: false
+    t.string "lookup", null: false
+    t.string "validator", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

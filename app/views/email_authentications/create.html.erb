@@ -1,9 +1,9 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-md">
-<img class="mx-auto h-20 w-auto" src="<%= asset_path('topic-scout-mark.svg') %>" alt="Topic Scout">
-<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Verify your login</h2>
+<img class="w-auto h-20 mx-auto" src="<%= asset_path('topic-scout-mark.svg') %>" alt="Topic Scout">
+<h2 class="mt-6 text-3xl font-bold tracking-tight text-center text-gray-900">Verify your login</h2>
 </div>
 <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-  <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+  <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
     <%= form_tag verify_login_path, class: 'space-y-6' do |f| %>
       <div>
         <label for="code" class="block text-sm font-medium text-gray-700">Enter your login code</label>
@@ -11,8 +11,13 @@
           <%= text_field_tag :code, '', placeholder: '12345', required: true, class: 'block w-full text-lg appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-md' %>
         </div>
       </div>
+      <div class="flex items-center">
+          <input id="remember_me" checked="checked" value="1" name="remember_me" type="checkbox" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+          <label for="remember_me" class="block ml-2 text-sm text-gray-900">Remember me</label>
+        </div>
       <div>
-        <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-purple-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign in</button>
+      <div>
+        <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign in</button>
       </div>
     <% end %>
   </div>

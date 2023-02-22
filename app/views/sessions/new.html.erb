@@ -1,13 +1,13 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-md">
-<img class="mx-auto h-20 w-auto" src="<%= asset_path('topic-scout-mark.svg') %>" alt="Topic Scout">
-<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-<p class="mt-2 text-center text-sm text-gray-600">
+<img class="w-auto h-20 mx-auto" src="<%= asset_path('topic-scout-mark.svg') %>" alt="Topic Scout">
+<h2 class="mt-6 text-3xl font-bold tracking-tight text-center text-gray-900">Sign in to your account</h2>
+<p class="mt-2 text-sm text-center text-gray-600">
   Or
   <a href="https://www.topicscout.app" class="font-medium text-purple-600 hover:text-purple-500">start your 14-day free trial</a>
 </p>
 </div>
 <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-  <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+  <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
   
     <%= form_tag login_challenge_path, class: 'space-y-6', remote: false, turbo: false, data: {turbo: false} do |f| %>
       <div>
@@ -16,8 +16,8 @@
           <%= text_field_tag :email, nil, placeholder: 'me@example.com', type: 'email', autocomplete: 'email', required: true, class: 'block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm' %>
         </div>
       </div>
-      <div>
-        <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-purple-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Send me a Code</button>
+      
+        <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Send me a Code</button>
       </div>
     <% end %>
   </div>
