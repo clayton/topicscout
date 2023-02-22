@@ -11,7 +11,26 @@
   </div>
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :tweets } %>
-
 <%= turbo_frame_tag dom_id(@topic, 'list') do %>
-  <%= render partial: 'tweets/list', locals: {pagy: @pagy, tweets: @tweets, topic: @topic }%>
+  <div class="mt-8 grid grid-cols-1 space-y-4">
+    <% @tweets.each do |tweet| %>
+      <%= render partial: 'listed_tweet', locals: {tweet: tweet, topic: @topic} %>
+    <% end %>
+  </div>
+  <div class="py-8 flex items-center justify-between">
+    <div>
+      <%== pagy_nav(@pagy) %>
+    </div>
+    <div>
+      <%= form_tag topic_archived_tweets_path(@topic), method: :post do %>
+        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+          <!-- Heroicon name: mini/envelope -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 w-5 h-5">
+            <path fill-rule="evenodd" d="M2 3a1 1 0 00-1 1v1a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1H2zm0 4.5h16l-.811 7.71a2 2 0 01-1.99 1.79H4.802a2 2 0 01-1.99-1.79L2 7.5zM10 9a.75.75 0 01.75.75v2.546l.943-1.048a.75.75 0 111.114 1.004l-2.25 2.5a.75.75 0 01-1.114 0l-2.25-2.5a.75.75 0 111.114-1.004l.943 1.048V9.75A.75.75 0 0110 9z" clip-rule="evenodd" />
+          </svg>
+          Archive all
+        </button>
+      <% end %>
+    </div>
+  </div>
 <% end %>

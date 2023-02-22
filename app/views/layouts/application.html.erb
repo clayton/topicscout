@@ -14,7 +14,13 @@
   </head>
   <body class="h-full bg-gray-100">
     <% if Rails.env.development? %>
-      <div class="w-full py-2 text-white text-sm uppercase bg-red-500 text-center">Development</div>
+      <div class="p-1 text-xl font-bold text-gray-900 text-center uppercase bg-green-300 sm:bg-purple-300 md:bg-orange-300 lg:bg-blue-300 xl:bg-red-300">
+        <p class="sm:hidden"> &lt; Small </p>
+        <p class="hidden sm:block md:hidden"> Small </p>
+        <p class="hidden md:block lg:hidden"> Medium </p>
+        <p class="hidden lg:block xl:hidden"> Large </p>
+        <p class="hidden xl:block"> X-Large </p>
+      </div>
     <% end %>
     <div data-controller="navigation">
       <div class="relative z-40 md:hidden" role="dialog" aria-modal="true">
