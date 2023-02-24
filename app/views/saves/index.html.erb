@@ -6,14 +6,14 @@
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :saves } %>
 <%= turbo_frame_tag dom_id(@topic, 'saves') do %>
-  <div class="mt-8 flex flex-col space-y-6">
+  <div class="flex flex-col mt-8 space-y-6">
     <% @tweets.each do |tweet| %>
-      <div class="shadow-md border-gray-50 rounded-lg bg-white">
-        <div class="p-4 flex items-center space-x-4">
+      <div class="bg-white rounded-lg shadow-md border-gray-50" id="<%= dom_id(tweet, 'saved') %>">
+        <div class="flex items-center p-4 space-x-4">
           <div class="w-1/2">
             <div class="flex flex-col space-y-2">
               <div class="flex items-center">
-                <div class="h-10 w-10 flex-shrink-0">
+                <div class="flex-shrink-0 w-10 h-10">
                   <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
                 </div>
                 <div class="ml-4">
@@ -29,42 +29,42 @@
               </div>
             </div>
           </div>
-          <div class="w-1/3 flex flex-col space-y-2 justify-evenly">
+          <div class="flex flex-col w-1/3 space-y-2 justify-evenly">
             <div>
-              <span class="font-light text-sm tracking-tigher text-gray-600 uppercase">
+              <span class="text-sm font-light text-gray-600 uppercase tracking-tigher">
                 Links
               </span>
               <ul>
                 <% tweet.urls.each do |url| %>
                   <li class="inline-flex flex-col">
                     <%= link_to(url.title || url.display_url, url.unwound_url, class: 'text-purple-500 text-sm') %>
-                    <span class="text-gray-500 text-xs"><%= url.unwound_url&.gsub("https://","")&.truncate(40) %></span>
+                    <span class="text-xs text-gray-500"><%= url.unwound_url&.gsub("https://","")&.truncate(40) %></span>
                   </li>
                 <% end %>
               </ul>
             </div>
             <div>
-              <p class="font-light text-sm tracking-tigher text-gray-600 uppercase">
+              <p class="text-sm font-light text-gray-600 uppercase tracking-tigher">
                 Hashtags
               </p>
               <% tweet.hashtags.map do |tag| %>
-                <div class="inline-block text-sm text-purple-400 relative" data-controller='saved-hashtag'>
-                  <div class="bg-white rounded-md shadow-md absolute p-1 bottom-0 left-0 border-gray-200 border hidden" data-saved-hashtag-target="forms">
+                <div class="relative inline-block text-sm text-purple-400" data-controller='saved-hashtag'>
+                  <div class="absolute bottom-0 left-0 hidden p-1 bg-white border border-gray-200 rounded-md shadow-md" data-saved-hashtag-target="forms">
                     <div class="relative p-4">
-                      <a data-action="click->saved-hashtag#close" href="#" class="text-gray-500 absolute top-0 right-0">
+                      <a data-action="click->saved-hashtag#close" href="#" class="absolute top-0 right-0 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </a>
-                      <p class="text-gray-800 font-semibold pt-4">Modify topic:</p>
-                      <div class="mt-4 flex space-y-2 flex-col">
+                      <p class="pt-4 font-semibold text-gray-800">Modify topic:</p>
+                      <div class="flex flex-col mt-4 space-y-2">
                         <%= form_with model: [@topic, NegativeSearchTerm.new] do |f| %>
                           <%= f.hidden_field :term, value: "##{tag.tag}" %>
-                          <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Exclude <%= "##{tag.tag}"%></button>
+                          <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Exclude <%= "##{tag.tag}"%></button>
                         <% end %>
                         <%= form_with model: [@topic, SearchTerm.new] do |f| %>
                           <%= f.hidden_field :term, value: "##{tag.tag}" %>
-                          <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Include <%= "##{tag.tag}"%></button>
+                          <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Include <%= "##{tag.tag}"%></button>
                         <% end %>
                       </div>
                     </div>
@@ -82,15 +82,15 @@
               <% end.join(' ') %>
             </div>
           </div>
-          <div class="">
-            <div class="flex justify-between space-x-2">
+          <div class="flex flex-col">
+            <div class="flex justify-end w-full space-x-2">
               <%= form_with model: [@collection, tweet] do |f| %>
                 <%= f.hidden_field :archived, value: true %>
-                <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
               <% end %>
               <%= form_with model: [@collection, tweet] do |f| %>
                 <%= f.hidden_field :saved, value: true %>
-                <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Collect</button>
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Collect</button>
               <% end %>
             </div>
           </div>
@@ -139,15 +139,15 @@
       </div>
     <% end %>
   </div>
-  <div class="py-8 flex items-center justify-between">
+  <div class="flex items-center justify-between py-8">
     <div>
       <%== pagy_nav(@pagy) %>
     </div>
     <div>
       <%#= form_for topic_archived_tweets_path(@topic) do |f| %>
-        <%# <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+        <%# <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
           <!-- Heroicon name: mini/envelope -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 w-5 h-5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
             <path fill-rule="evenodd" d="M2 3a1 1 0 00-1 1v1a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1H2zm0 4.5h16l-.811 7.71a2 2 0 01-1.99 1.79H4.802a2 2 0 01-1.99-1.79L2 7.5zM10 9a.75.75 0 01.75.75v2.546l.943-1.048a.75.75 0 111.114 1.004l-2.25 2.5a.75.75 0 01-1.114 0l-2.25-2.5a.75.75 0 111.114-1.004l.943 1.048V9.75A.75.75 0 0110 9z" clip-rule="evenodd" />
           </svg>
           Archive all
