@@ -48,7 +48,7 @@ class Tweet < ApplicationRecord
   end
 
   def broadcast_create
-    return if twitter_search_results.count > 1
+    return if topic.twitter_search_results.count > 1
 
     broadcast_append_later_to topic, target: 'tweets', partial: 'tweets/tweet', locals: { tweet: self }
   end
