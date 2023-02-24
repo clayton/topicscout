@@ -1,4 +1,5 @@
 class TweetsController < AuthenticatedUserController
+  include ActionView::RecordIdentifier
   before_action :determine_sort
 
   def index
@@ -11,7 +12,10 @@ class TweetsController < AuthenticatedUserController
     @tweet = @topic.tweets.find_by(id: params[:id])
     @tweet.update!(tweet_params.except(:page))
 
-    redirect_to topic_tweets_path(@topic, page: tweet_params[:page])
+    respond_to do |format|
+      format.html { redirect_to topic_tweets_url(@topic, page: tweet_params[:page], sort: determine_sort) }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@tweet, 'listed')) }
+    end
   end
 
   def tweet_params
