@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html class="h-full bg-gray-100">
   <head>
-    <title>Topic Scout – Simple Twitter Alerts</title>
+    <title>Topic Scout – Track Topics on Twitter</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= render partial: 'shared/favicon' %>
     <% if Rails.env.production? %>
       <%= render partial: 'shared/analytics' %>
     <% end %>
   </head>
   <body class="h-full">
-    <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="flex flex-col justify-center min-h-full py-12 sm:px-6 lg:px-8">
       <%= yield %>
     </div>
   </body>
