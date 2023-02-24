@@ -31,6 +31,10 @@ class Topic < ApplicationRecord
         .order(Tweet.arel_table[:score].desc)
   end
 
+  def search_in_progress?
+    twitter_search_results.incomplete.any?
+  end
+
   def latest_result
     twitter_search_results.completed.order(created_at: :desc).first
   end

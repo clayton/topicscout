@@ -1,0 +1,43 @@
+<div class="px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900">Searches for <%= @topic.name %></h1>
+      <p class="mt-2 text-sm text-gray-700">A list of recent searches for this topic.</p>
+    </div>
+    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <%= form_with model: [@topic, @topic.twitter_search_results.build] do |f| %>
+        <% if @topic.twitter_search_results.newest&.first&.completed? %>
+          <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Search now</button>
+        <% else %>
+          <button type="button" disabled="disabled" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Searching...</button>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="flow-root mt-8">
+    <div class="-mx-6 -my-2 overflow-x-auto lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">Search Time</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tweets found</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @twitter_search_results.each do |result| %>
+                <tr>
+                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= local_time(result.created_at) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= number_with_delimiter(result.results_count) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= result.completed? ? 'Completed' : 'In progress' %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
