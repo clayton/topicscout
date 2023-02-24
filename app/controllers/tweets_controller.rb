@@ -1,7 +1,9 @@
 class TweetsController < AuthenticatedUserController
+  before_action :determine_sort
+
   def index
     @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
-    @pagy, @tweets = pagy(@topic.unedited_tweets)
+    @pagy, @tweets = pagy(params[:sort] == 'newest' ? @topic.newest_unedited_tweets : @topic.unedited_tweets)
   end
 
   def update
@@ -14,5 +16,12 @@ class TweetsController < AuthenticatedUserController
 
   def tweet_params
     params.require(:tweet).permit(:ignored, :saved, :archived, :page)
+  end
+
+  def determine_sort
+    return 'score' unless params[:sort].present?
+    return 'score' unless params[:sort].in? %w[score newest]
+
+    params[:sort]
   end
 end

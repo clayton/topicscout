@@ -12,6 +12,10 @@ class TwitterSearchResult < ApplicationRecord
   scope :completed, -> { where(completed: true) }
   scope :incomplete, -> { where(completed: false) }
 
+  def incomplete?
+    !completed?
+  end
+
   def search_phrase
     topic.search_phrase
   end

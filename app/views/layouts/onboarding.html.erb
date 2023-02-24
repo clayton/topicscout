@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html class="h-full bg-violet-gray-100">
   <head>
-    <title>Topic Scout – Simple Twitter Alerts</title>
+    <title>Topic Scout – Track Topics on Twitter</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= render partial: 'shared/favicon' %>
     <% if Rails.env.production? %>
       <%= render partial: 'shared/analytics' %>
     <% end %>
   </head>
   <body class="h-full">
     <header class="bg-violet-600">
-      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-        <div class="w-full py-6 flex items-center justify-between border-b border-violet-500 lg:border-none">
+      <nav class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8" aria-label="Top">
+        <div class="flex items-center justify-between w-full py-6 border-b border-violet-500 lg:border-none">
           <div class="flex items-center">
             <%= link_to root_path do %>
               <span class="sr-only">Topic Scout</span>

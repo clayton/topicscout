@@ -19,6 +19,10 @@ class Topic < ApplicationRecord
     tweets.includes(:hashtags).qualified(threshold).relevant.unedited.best
   end
 
+  def newest_unedited_tweets
+    tweets.includes(:hashtags).qualified(threshold).relevant.unedited.newest
+  end
+
   def unedited_urls
     urls.includes(:tweet)
         .where(tweets: { saved: false, ignored: false, archived: false })

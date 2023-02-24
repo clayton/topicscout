@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
-      <div class=""><%= link_to(tweet.tweeted_at.in_time_zone(topic.search_time_zone).strftime("%b %-d %Y %-l:%m%P %Z"), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
+      <div class=""><%= link_to(local_time(tweet.tweeted_at), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
       <div class="mt-1 text-gray-900"><%= display_entitites(tweet.text) %></div>
       <div class="mt-1">
         <% tweet.hashtags.map do |tag| %>

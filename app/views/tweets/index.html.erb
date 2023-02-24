@@ -2,21 +2,16 @@
 <div class="md:flex md:items-center md:justify-between">
   <div class="flex-1 min-w-0">
     <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate"><%= @topic.name %></h2>
+    <% if @topic.twitter_search_results.newest&.first&.incomplete? %>
+      <span class="mt-2 inline-flex items-center rounded-md bg-yellow-100 px-2.5 py-0.5 text-sm font-medium text-yellow-800">
+        <svg class="animate-pulse -ml-0.5 mr-1.5 h-2 w-2 text-yellow-400" fill="currentColor" viewBox="0 0 8 8">
+          <circle cx="4" cy="4" r="3" />
+        </svg>
+        Search in progress
+      </span>
+    <% end %>
   </div>
   <div class="flex mt-4 md:mt-0 md:ml-4">
-    <%= form_with model: [@topic, @topic.twitter_search_results.new] do |f| %>
-      <% if @topic.twitter_search_results.incomplete.exists? %>
-        <button type="button" disabled="disabled" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 animate-spin">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-          </svg>
-
-          Processing
-        </button>
-      <% else %>
-        <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Search now</button>
-      <% end %>
-    <% end %>
     <%= link_to 'Edit', edit_topic_path(@topic), class: 'ml-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
   </div>
 </div>
