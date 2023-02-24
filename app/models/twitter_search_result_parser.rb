@@ -25,13 +25,7 @@ class TwitterSearchResultParser
 
     save_tweets(@results)
 
-    if @twitter_search_result.limited?
-      Rails.logger.info "TwitterSearchResultParser: Limited search result for #{@twitter_search_result.id} of #{@results_count} tweets"
-      @twitter_search_result.update(results_count: @results_count, completed: true)
-      return self
-    end
-
-    while @results.meta&.data&.fetch('next_token', nil)
+    while @results.meta&.data&.fetch('next_token', nil) && @results_count < @twitter_search_result.max_results
       save_tweets(@results)
       @results.next_page
     end
