@@ -26,6 +26,7 @@ class TwitterSearchResultParser
     save_tweets(@results)
 
     if @twitter_search_result.limited?
+      Rails.logger.info "TwitterSearchResultParser: Limited search result for #{@twitter_search_result.id} of #{@results_count} tweets"
       @twitter_search_result.update(results_count: @results_count, completed: true)
       return self
     end
@@ -34,6 +35,8 @@ class TwitterSearchResultParser
       save_tweets(@results)
       @results.next_page
     end
+
+    Rails.logger.info("TwitterSearchResultParser: Completed search result for #{@twitter_search_result.id} of #{@results_count} tweets")
 
     @twitter_search_result.update(results_count: @results_count, completed: true)
 
