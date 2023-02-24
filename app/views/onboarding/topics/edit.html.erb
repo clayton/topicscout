@@ -1,29 +1,29 @@
-<div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+<div class="px-4 py-16 mx-auto max-w-7xl sm:py-24 sm:px-6 lg:px-8">
   <div class="text-center">
-    <h2 class="text-base font-semibold text-violet-600 tracking-wide uppercase">Refine results</h2>
+    <h2 class="text-base font-semibold tracking-wide uppercase text-violet-600">Refine results</h2>
     <p class="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">"<%= @topic.name %>"</p>
-    <p class="max-w-xl mt-5 mx-auto text-xl text-gray-500">Here's a sample of what we found. You can optionally add some modifying keywords to help refine your results.</p>
+    <p class="max-w-xl mx-auto mt-5 text-xl text-gray-500">Here's a sample of what we found. You can optionally add some modifying keywords to help refine your results.</p>
   </div>
   <nav aria-label="Progress" class="py-16">
     <ol role="list" class="space-y-4 md:flex md:space-y-0 md:space-x-8">
       <li class="md:flex-1">
         <!-- Completed Step -->
         <%= link_to onboarding_start_path, class: 'group pl-4 py-2 flex flex-col border-l-4 border-violet-600 hover:border-violet-800 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4' do %>
-          <span class="text-xs text-violet-600 font-semibold tracking-wide uppercase group-hover:text-violet-800">Step 1</span>
+          <span class="text-xs font-semibold tracking-wide uppercase text-violet-600 group-hover:text-violet-800">Step 1</span>
           <span class="text-sm font-medium">Get started</span>
         <% end %>
       </li>
       <li class="md:flex-1">
         <!-- Current Step -->
         <%= link_to onboarding_refine_path(@topic), class: 'pl-4 py-2 flex flex-col border-l-4 border-violet-600 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4', 'aria-current' => 'step' do %>
-          <span class="text-xs text-violet-600 font-semibold tracking-wide uppercase">Step 2</span>
+          <span class="text-xs font-semibold tracking-wide uppercase text-violet-600">Step 2</span>
           <span class="text-sm font-medium">Add optional modifiers</span>
         <% end %>
       </li>
       <li class="md:flex-1">
         <!-- Upcoming Step -->
-        <a href="#" class="group pl-4 py-2 flex flex-col border-l-4 border-gray-200 hover:border-gray-300 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
-          <span class="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray-700">Step 3</span>
+        <a href="#" class="flex flex-col py-2 pl-4 border-l-4 border-gray-200 group hover:border-gray-300 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
+          <span class="text-xs font-semibold tracking-wide text-gray-500 uppercase group-hover:text-gray-700">Step 3</span>
           <span class="text-sm font-medium">Get notified</span>
         </a>
       </li>
@@ -34,8 +34,8 @@
     <div class="grid grid-cols-2 gap-4 py-8">
       <div class="col-span-1 space-y-8">
         <div>
-          <h2 class="font-semibold text-gray-800 text-2xl">Here are a few recent tweets</h2>
-          <p class="text-gray-500 text-base">See if these are relevant, or add some more topics.</p>
+          <h2 class="text-2xl font-semibold text-gray-800">Here are a few recent tweets</h2>
+          <p class="text-base text-gray-500">See if these are relevant, or add some more topics.</p>
         </div>
         <div id="tweets" class="space-y-4">
           <% @recent_tweets.each do |tweet| %>
@@ -45,8 +45,8 @@
       </div>
       <div class="col-span-1 space-y-8">
         <div>
-          <h2 class="font-semibold text-gray-800 text-2xl">Let's get a little more specific</h2>
-          <p class="text-gray-500 text-base">Optionally, add some modifiers to help narrow the scope of your search. <span class="italic">examples: "best" or "recommended" or "reviews"</span></p>
+          <h2 class="text-2xl font-semibold text-gray-800">Let's get a little more specific</h2>
+          <p class="text-base text-gray-500">Optionally, add some other related keywords to find more relevent tweets.</p>
         </div>
         <%= form_with model: [:onboarding, @topic], class: 'space-y-4' do |form| %>
           <div class="space-y-2">
@@ -55,7 +55,7 @@
             <%= render partial: 'search_terms/form', locals: {form: form }%>
           </div>
           <div>
-            <button type="submit" class="inline-flex justify-center w-full items-center px-6 py-3 border border-transparent sm:text-base font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Continue</button>
+            <button type="submit" class="inline-flex items-center justify-center w-full px-6 py-3 font-medium text-white border border-transparent rounded-md shadow-sm sm:text-base bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Continue</button>
           </div>
           <div>
             <div class="relative">
@@ -63,12 +63,12 @@
                 <div class="w-full border-t border-gray-300"></div>
               </div>
               <div class="relative flex justify-center">
-                <span class="px-2 bg-white text-sm text-gray-500"> OR </span>
+                <span class="px-2 text-sm text-gray-500 bg-white"> OR </span>
               </div>
             </div>
           </div>
           <div>
-            <button type="submit" class="inline-flex justify-center w-full items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Skip this for now</button>
+            <button type="submit" class="inline-flex items-center justify-center w-full px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Skip this for now</button>
           </div>
         <% end %>
       </div>

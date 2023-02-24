@@ -43,15 +43,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
     t.index ["user_id"], name: "index_email_verifications_on_user_id"
   end
 
-  create_table "hashtag_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "hashtag_id"
-    t.uuid "tweet_id"
-    t.uuid "topic_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["topic_id"], name: "index_hashtag_entities_on_topic_id"
-  end
-
   create_table "hashtags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "tag"
     t.datetime "created_at", null: false
@@ -183,16 +174,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
     t.datetime "updated_at", null: false
     t.boolean "manual_search", default: false
     t.index ["topic_id"], name: "index_twitter_search_results_on_topic_id"
-  end
-
-  create_table "url_entities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "tweet_id"
-    t.uuid "url_id"
-    t.uuid "topic_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["topic_id"], name: "index_url_entities_on_topic_id"
-    t.index ["tweet_id"], name: "index_url_entities_on_tweet_id"
   end
 
   create_table "urls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

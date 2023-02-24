@@ -14,7 +14,7 @@ class Tweet < ApplicationRecord
 
   # after_create :fetch_embed_html
 
-  # after_create_commit :broadcast_create
+  after_create_commit :broadcast_create
 
   scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(tweeted_at: :desc) }
@@ -49,10 +49,5 @@ class Tweet < ApplicationRecord
 
   def broadcast_create
     broadcast_append_later_to topic, target: 'tweets', partial: 'tweets/tweet', locals: { tweet: self }
-
-    return unless score > topic.threshold
-
-    broadcast_prepend_later_to dom_id(topic, 'managed'), target: dom_id(topic, 'managed_tweets'), partial: 'tweets/listed_tweet',
-                                                         locals: { tweet: self, topic: topic }
   end
 end

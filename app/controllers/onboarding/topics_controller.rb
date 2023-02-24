@@ -7,6 +7,14 @@ class Onboarding::TopicsController < AuthenticatedUserController
   def new
     Rails.logger.debug("Subscription: #{session[:subscription_id]}")
     @topic = Topic.new
+    @placeholders = [
+      'weeknight cooking',
+      '#3dprinting',
+      'crossfit workouts',
+      'ruby on rails',
+      '#CyberSecurity',
+      'writing online'
+    ]
   end
 
   def create

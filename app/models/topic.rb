@@ -9,7 +9,8 @@ class Topic < ApplicationRecord
 
   belongs_to :user
 
-  after_create :initial_search
+  after_create :create_search_term
+  after_create_commit :initial_search
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
@@ -33,6 +34,7 @@ class Topic < ApplicationRecord
   def new_search_terms=(search_terms)
     Rails.logger.debug("NEW SEARCH TERMS: #{search_terms.inspect}")
     search_terms.each do |search_term|
+      next if search_term['term'].nil?
       next if search_term['term'].strip.blank?
 
       search_terms << SearchTerm.new(search_term)
@@ -44,6 +46,7 @@ class Topic < ApplicationRecord
     attributes.each do |_key, term|
       if term['id'].nil?
         next if term[:term].strip.blank?
+
         persisted? ? search_terms.create!(term) : search_terms.build(term)
       else
         search_term = search_terms.find_by(id: term['id'])
@@ -77,6 +80,8 @@ class Topic < ApplicationRecord
   def negative_search_terms_attributes=(attributes)
     attributes.each do |_key, term|
       negative_search_term = negative_search_terms.find_by(id: term['id'])
+      next if term[:term].nil?
+
       if term[:term].strip.blank?
         negative_search_term.destroy
         next
@@ -151,6 +156,10 @@ class Topic < ApplicationRecord
     return if negative_search_terms.empty?
 
     negative_search_terms.map(&:to_query).flatten.uniq.join(' ')
+  end
+
+  def create_search_term
+    search_terms.create(term: topic, required: true, exact_match: true)
   end
 
   def initial_search
