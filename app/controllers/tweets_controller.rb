@@ -4,7 +4,7 @@ class TweetsController < AuthenticatedUserController
 
   def index
     @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
-    @pagy, @tweets = pagy(params[:sort] == 'newest' ? @topic.newest_unedited_tweets : @topic.unedited_tweets)
+    @pagy, @tweets = pagy(@topic.unedited_tweets(params[:sort], params[:time_filter]))
   end
 
   def update
@@ -27,5 +27,12 @@ class TweetsController < AuthenticatedUserController
     return 'score' unless params[:sort].in? %w[score newest]
 
     params[:sort]
+  end
+
+  def determine_time_filter
+    return 'all' unless params[:time_filter].present?
+    return 'all' unless params[:time_filter].in? %w[all hour day week]
+
+    params[:time_filter]
   end
 end

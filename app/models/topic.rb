@@ -15,12 +15,14 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :search_terms, allow_destroy: true
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
 
-  def unedited_tweets
-    tweets.includes(:hashtags).qualified(threshold).relevant.unedited.best
-  end
-
-  def newest_unedited_tweets
-    tweets.includes(:hashtags).qualified(threshold).relevant.unedited.newest
+  def unedited_tweets(sort = 'score', time_filter = 'all')
+    results = tweets.includes(:hashtags).qualified(threshold).relevant.unedited
+    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
+    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
+    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
+    results = results.order(score: :desc) if sort == 'score'
+    results = results.order(tweeted_at: :desc) if sort == 'newest'
+    results
   end
 
   def unedited_urls
