@@ -6,7 +6,8 @@ kill_timeout = 5
 
 [processes]
   web = "bin/rails fly:server"
-  worker = "env TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7 QUEUE=* bundle exec rake resque:work"
+  priority_worker = "env TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7 QUEUE=priority bundle exec rake resque:work"
+  worker = "env TERM_CHILD=1 RESQUE_TERM_TIMEOUT=7 QUEUE=default bundle exec rake resque:work"
   cron = "supercronic /app/crontab"
 
 

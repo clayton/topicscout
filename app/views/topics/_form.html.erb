@@ -2,10 +2,10 @@
   <div class="space-y-8 divide-y divide-gray-200">
     <div>
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Details</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Details</h3>
         <p class="mt-1 text-sm text-gray-500">The details about this particular topic.</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
           <%= f.label :name, "Name", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
@@ -16,7 +16,7 @@
           <div class="sm:col-span-4">
             <%= label_tag :query, "Query", class: "block text-sm font-medium text-gray-700"%>
             <div class="mt-1">
-              <span class="bg-gray-100 inline-block p-2 text-purple-500 font-mono w-full text-sm"><%= @topic.search_phrase %></span>
+              <span class="inline-block w-full p-2 font-mono text-sm text-purple-500 bg-gray-100"><%= @topic.search_phrase %></span>
             </div>
           </div>
         <% end %>
@@ -24,10 +24,25 @@
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Keywords</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Twitter lists</h3>
+        <p class="mt-1 text-sm text-gray-500">Fetch tweets from twitter lists in addition to searching.</p>
+        <span class="text-xs text-gray-500">Example: https://twitter.com/i/lists/<span class="bg-yellow-200">1617772739917647876</span></span>
+      </div>
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <%= f.fields_for :twitter_lists do |list_form| %>
+          <div class="sm:col-span-4">
+            <%= list_form.label :twitter_list_id, 'List ID', class: 'block text-sm font-medium text-gray-700' %>
+            <%= list_form.text_field :twitter_list_id, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="pt-8">
+      <div>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Keywords</h3>
         <p class="mt-1 text-sm text-gray-500">Keywords to include in the search.</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <%= f.fields_for :search_terms do |term_form| %>
           <div class="sm:col-span-4">
             <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
@@ -56,10 +71,10 @@
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Search modifiers</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Search modifiers</h3>
         <p class="mt-1 text-sm text-gray-500">Optional modifiers that can help narrow the scope of your search.</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
           <%= f.label :filter_by_language, "Language filter", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
@@ -114,10 +129,10 @@
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Negative keywords</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Negative keywords</h3>
         <p class="mt-1 text-sm text-gray-500">Optional negative keywords to help restrict irrelevant search results.</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <%= f.fields_for :negative_search_terms do |term_form| %>
           <div class="sm:col-span-4">
             <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
@@ -143,10 +158,10 @@
     </div>
     <div class="pt-8">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Scoring threshold</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="font-mono text-xs p-1 text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Scoring threshold</h3>
+        <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="p-1 font-mono text-xs text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
           <%= f.label :threshold, "Minimum score", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
@@ -159,7 +174,7 @@
   <div class="pt-5">
     <div class="flex justify-end">
       <%= link_to "Cancel", cancel_link, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
-      <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
+      <button type="submit" class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
     </div>
   </div>
 <% end %>

@@ -20,7 +20,15 @@ class TwitterSearchResult < ApplicationRecord
     topic.search_phrase
   end
 
+  def list_id
+    twitter_list&.twitter_list_id
+  end
+
   def search
+    topic.twitter_lists.each do |list|
+      TwitterListSearchJob.perform_later(self, list, topic.user_auth_token)
+    end
+
     TwitterSearchJob.perform_later(self)
   end
 

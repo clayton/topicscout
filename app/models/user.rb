@@ -11,7 +11,11 @@ class User < ApplicationRecord
   after_create :verify_email
 
   scope :verified, -> { where(email_verified: true) }
-  
+
+  def auth_token
+    twitter_account.auth_token
+  end
+
   def email=(email)
     return unless email
 
@@ -20,6 +24,7 @@ class User < ApplicationRecord
 
   def verify_email_update
     return unless saved_change_to_email?
+
     verify_email
   end
 

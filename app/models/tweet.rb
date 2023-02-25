@@ -9,6 +9,7 @@ class Tweet < ApplicationRecord
   belongs_to :twitter_search_result
   belongs_to :topic
   belongs_to :collection, optional: true
+  belongs_to :twitter_list, optional: true
 
   before_save :calculate_score
 

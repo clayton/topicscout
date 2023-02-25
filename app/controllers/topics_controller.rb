@@ -25,6 +25,7 @@ class TopicsController < AuthenticatedUserController
 
   def edit
     @topic = Topic.find(params[:id])
+    @topic.twitter_lists.build
     3.times { @topic.search_terms.build }
   end
 
@@ -63,6 +64,7 @@ class TopicsController < AuthenticatedUserController
                                                                                                                                                                                                                                         new_search_terms: %i[term required exact_match],
                                                                                                                                                                                                                                         negative_search_term: [:term],
                                                                                                                                                                                                                                         negative_search_terms_attributes: %i[term id],
-                                                                                                                                                                                                                                        new_negative_search_terms: [])
+                                                                                                                                                                                                                                        new_negative_search_terms: [],
+                                                                                                                                                                                                                                        twitter_lists_attributes: %i[id name twitter_list_id _destroy])
   end
 end

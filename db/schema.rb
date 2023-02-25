@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_25_183730) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -143,6 +143,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
     t.boolean "saved", default: false
     t.boolean "archived", default: false
     t.uuid "collection_id"
+    t.string "twitter_list_id"
     t.index ["collection_id"], name: "index_tweets_on_collection_id"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
@@ -159,6 +160,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
     t.string "username"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "auth_token"
+    t.string "refresh_token"
+    t.datetime "auth_token_expires_at"
+  end
+
+  create_table "twitter_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.boolean "private"
+    t.string "twitter_list_id"
+    t.uuid "topic_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_twitter_lists_on_topic_id"
   end
 
   create_table "twitter_search_results", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -210,5 +225,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_045505) do
   add_foreign_key "tweeter_ignore_rules", "topics"
   add_foreign_key "tweets", "topics"
   add_foreign_key "tweets", "twitter_search_results"
+  add_foreign_key "twitter_lists", "topics"
   add_foreign_key "twitter_search_results", "topics"
 end

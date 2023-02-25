@@ -6,6 +6,7 @@ class Topic < ApplicationRecord
   has_many :negative_search_terms, dependent: :destroy
   has_many :urls, through: :tweets
   has_many :collections, dependent: :destroy
+  has_many :twitter_lists, dependent: :destroy
 
   belongs_to :user
 
@@ -14,6 +15,11 @@ class Topic < ApplicationRecord
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
+  accepts_nested_attributes_for :twitter_lists, allow_destroy: true
+
+  def user_auth_token
+    user.auth_token
+  end
 
   def unedited_tweets(sort = 'score', time_filter = 'all')
     results = tweets.includes(:hashtags).qualified(threshold).relevant.unedited

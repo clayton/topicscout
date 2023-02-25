@@ -16,6 +16,7 @@ class TwitterAccountsController < AuthenticatedUserController
   end
 
   def auth_hash
+    Rails.logger.debug("AUTH HASH: #{request.env['omniauth.auth'].inspect}")
     request.env['omniauth.auth']
   end
 end
