@@ -20,8 +20,8 @@ class Topic < ApplicationRecord
     results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
-    results = results.order(score: :desc) if sort == 'score'
     results = results.order(tweeted_at: :desc) if sort == 'newest'
+    results = results.order(score: :desc) if sort == 'score' || sort.nil?    
     results
   end
 
