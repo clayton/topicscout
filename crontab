@@ -1,1 +1,2 @@
 00 * * * * bundle exec rails search:twitter
+*/15 * * * * bundle exec rails tokens:refresh
