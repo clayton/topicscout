@@ -6,7 +6,7 @@ class TwitterListSearchJob < ApplicationJob
     return unless list
     return unless twitter_search_result
 
-    body = { 'tweet.fields' => 'created_at,entities, lang,public_metrics', 'expansions' => 'author_id',
+    body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics', 'expansions' => 'author_id',
              'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
     headers = { 'Authorization' => "Bearer #{token}" }
 
