@@ -1,7 +1,7 @@
 class TwitterListSearchResultParser
   def self.parse(results, twitter_search_result, list, intent = nil)
     return unless results
-    return unless results.tweets
+    return unless results.fetch(:tweets, nil)
     return if results.tweets.nil?
     return if results.tweets.empty?
 
