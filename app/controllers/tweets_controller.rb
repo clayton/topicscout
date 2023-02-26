@@ -19,7 +19,7 @@ class TweetsController < AuthenticatedUserController
   end
 
   def tweet_params
-    params.require(:tweet).permit(:ignored, :saved, :archived, :page)
+    params.require(:tweet).permit(:ignored, :saved, :archived, :page, :topic_id)
   end
 
   def determine_sort

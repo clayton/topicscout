@@ -12,6 +12,7 @@ class Topic < ApplicationRecord
 
   after_create :create_search_term
   after_create_commit :initial_search
+  after_create_commit :create_list_on_twitter
 
   accepts_nested_attributes_for :search_terms, allow_destroy: true
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true
@@ -27,7 +28,7 @@ class Topic < ApplicationRecord
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
     results = results.order(tweeted_at: :desc) if sort == 'newest'
-    results = results.order(score: :desc) if sort == 'score' || sort.nil?    
+    results = results.order(score: :desc) if sort == 'score' || sort.nil?
     results
   end
 
@@ -161,9 +162,9 @@ class Topic < ApplicationRecord
     filters << 'has:media' if require_media
     filters << 'has:links' if require_links
     filters << 'is:verified' if require_verified
-    
+
     # This next one doesn't work as expected and results in no tweets being found
-    # filters << '-is:nullcast' if ignore_ads 
+    # filters << '-is:nullcast' if ignore_ads
 
     filters.join(' ')
   end
@@ -184,5 +185,13 @@ class Topic < ApplicationRecord
       limited: true,
       start_time: DateTime.yesterday.beginning_of_day
     )
+  end
+
+  def create_list_on_twitter
+    named = "TS #{name}".truncate(25, omission: '')
+    description = "A list of tweets about #{name} curated by Topic Scout."
+    token = user_auth_token
+
+    CreateTwitterListJob.perform_later(named, description, token, id)
   end
 end

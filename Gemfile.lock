@@ -328,6 +328,7 @@ DEPENDENCIES
   bootsnap
   brakeman (~> 5.0)
   debug
+  dotenv (~> 2.8)
   dotenv-rails
   faraday (~> 1.10)
   honeybadger (~> 4.0)

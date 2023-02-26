@@ -90,3 +90,5 @@ gem "stripe", "~> 8.1"
 
 gem 'htmlbeautifier'
 gem "local_time", "~> 2.1"
+
+gem "dotenv", "~> 2.8"

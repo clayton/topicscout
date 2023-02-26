@@ -14,6 +14,12 @@ class TwitterListSearchJob < ApplicationJob
 
     results = Faraday.get(url, body, headers)
 
+    unless results.success?
+      Rails.logger.debug("[TwitterListSearchJob] #{results.body}")
+      Honeybadger.notify("TwitterListSearchJob: #{results.body}")
+      return
+    end
+
     data = JSON.parse(results.body)
 
     Rails.logger.info("[TwitterListSearchJob] List: #{url} \n options: #{body}\n\n")

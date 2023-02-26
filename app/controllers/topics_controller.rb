@@ -7,6 +7,7 @@ class TopicsController < AuthenticatedUserController
 
   def new
     @topic = Topic.new
+    @topic.twitter_lists.build
     3.times { @topic.search_terms.build }
   end
 
