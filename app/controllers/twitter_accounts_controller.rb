@@ -9,6 +9,11 @@ class TwitterAccountsController < AuthenticatedUserController
   end
 
   def destroy
+    if params['message']
+      flash[:error] = 'There was a problem authenticating with Twitter.'
+      Honeybadger.notify(params['message'])
+    end
+    
     @twitter_account = current_user.twitter_account
     @twitter_account.destroy
 

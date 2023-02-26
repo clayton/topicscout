@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   post '/login', to: 'email_authentications#create', as: 'login_challenge'
   post '/login/verify', to: 'sessions#create', as: 'verify_login'
   get '/auth/:provider/callback', to: 'twitter_accounts#create'
+  get '/auth/failure', to: 'twitter_accounts#destroy'
   get '/logout', to: 'sessions#destroy', as: 'logout'
   get '/checkouts/:checkout_session_id', to: 'checkouts#show'
 
