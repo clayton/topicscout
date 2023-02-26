@@ -15,8 +15,8 @@ class TwitterListSearchJob < ApplicationJob
     results = Faraday.get(url, body, headers)
 
     unless results.success?
-      Rails.logger.debug("[TwitterListSearchJob] #{results.body}")
-      Honeybadger.notify("TwitterListSearchJob: #{results.body}")
+      Rails.logger.debug("[TwitterListSearchJob] for list #{list.twitter_list_id} failed with #{results.body}")
+      Honeybadger.notify("[TwitterListSearchJob] for list #{list.twitter_list_id} failed with #{results.body}")
       return
     end
 

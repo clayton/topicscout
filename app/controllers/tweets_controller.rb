@@ -4,7 +4,12 @@ class TweetsController < AuthenticatedUserController
 
   def index
     @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
-    @pagy, @tweets = pagy(@topic.unedited_tweets(params[:sort], params[:time_filter]))
+    begin
+      @pagy, @tweets = pagy(@topic.unedited_tweets(params[:sort], params[:time_filter]))
+    rescue Pagy::OverflowError
+      params[:page] = 1
+      @pagy, @tweets = pagy(@topic.unedited_tweets(params[:sort], params[:time_filter]))
+    end
   end
 
   def update
