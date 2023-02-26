@@ -2,10 +2,12 @@ class TwitterListSearchJob < ApplicationJob
   queue_as :default
 
   def perform(twitter_search_result, list, token)
+    return unless twitter_search_result
     return unless token
     return unless list
-    return unless twitter_search_result
-
+    return unless list.twitter_list_id
+    return if list.twitter_list_id.blank?
+    
     body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics', 'expansions' => 'author_id',
              'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
     headers = { 'Authorization' => "Bearer #{token}" }
