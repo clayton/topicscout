@@ -63,7 +63,7 @@ class TwitterSearchResult < ApplicationRecord
     begin
       url_hostname = URI.parse(url).hostname
     rescue StandardError => e
-      Honeybadger.notify(e)
+      Honeybadger.notify("#{e.message} - #{url}")
       return false
     end
 
