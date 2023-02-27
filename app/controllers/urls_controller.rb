@@ -11,7 +11,7 @@ class UrlsController < AuthenticatedUserController
   def update
     @topic = Topic.find_by(id: params[:topic_id])
     @url = Url.includes(:tweet).find_by(id: params[:id])
-    @url.tweet&.update(url_params)
+    @url.tweet&.update(url_params.except(:page, :topic_id))
 
     respond_to do |format|
       format.html { redirect_to topic_urls_url(@topic, page: tweet_params[:page], sort: determine_sort) }
