@@ -86,6 +86,8 @@ class TwitterListSearchResultParser
     return [] unless entities
 
     entities.fetch('urls', []).map do |url|
+      next if @twitter_search_result.ignored_hostname?(url.unwound_url)
+
       { status: url.fetch('status', nil), title: url.fetch('title', nil), display_url: url.fetch('display_url', nil),
         unwound_url: url.fetch('unwound_url', nil) }
     end

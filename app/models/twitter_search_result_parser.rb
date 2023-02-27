@@ -90,6 +90,8 @@ class TwitterSearchResultParser
     return [] unless entities.urls.urls
 
     entities.urls.urls.map do |url|
+      next if @twitter_search_result.ignored_hostname?(url.unwound_url)
+
       { status: url.status, title: url.title, display_url: url.display_url, unwound_url: url.unwound_url }
     end
   end

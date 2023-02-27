@@ -57,6 +57,19 @@ class TwitterSearchResult < ApplicationRecord
     topic.tweeter_ignore_rules.map(&:author_id)
   end
 
+  def ignored_hostname?(url)
+    ignores = topic.hostname_ignore_rules.map(&:hostname)
+
+    begin
+      url_hostname = URI.parse(url).hostname
+    rescue StandardError => e
+      Honeybadger.notify(e)
+      return false
+    end
+
+    ignores.include?(url_hostname)
+  end
+
   def send_digest
     return unless saved_change_to_completed? && completed?
     return if manual_search

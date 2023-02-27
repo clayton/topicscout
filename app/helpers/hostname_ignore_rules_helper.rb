@@ -1,0 +1,2 @@
+module HostnameIgnoreRulesHelper
+end

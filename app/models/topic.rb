@@ -1,5 +1,6 @@
 class Topic < ApplicationRecord
   has_many :tweeter_ignore_rules, dependent: :destroy
+  has_many :hostname_ignore_rules, dependent: :destroy
   has_many :twitter_search_results, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
@@ -23,7 +24,7 @@ class Topic < ApplicationRecord
   end
 
   def unedited_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.includes(:hashtags).qualified(threshold).relevant.unedited
+    results = tweets.joins(:hashtags).qualified(threshold).relevant.unedited
     results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
@@ -32,12 +33,15 @@ class Topic < ApplicationRecord
     results
   end
 
-  def unedited_urls
-    urls.includes(:tweet)
-        .where(tweets: { saved: false, ignored: false, archived: false })
-        .where.not(urls: { title: nil })
-        .where(Tweet.arel_table[:score].gteq(threshold))
-        .order(Tweet.arel_table[:score].desc)
+  def unedited_urls(sort = 'score', time_filter = 'all')
+    results = urls.joins(:tweet).relevant.titled.qualified(threshold)
+    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
+    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
+    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
+    results = results.order(Tweet.arel_table[:tweeted_at].desc) if sort == 'newest'
+    results = results.order(Tweet.arel_table[:score].desc) if sort == 'score' || sort.nil?
+
+    results
   end
 
   def search_in_progress?

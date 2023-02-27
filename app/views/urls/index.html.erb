@@ -5,48 +5,16 @@
   </div>
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :urls } %>
+<%= render partial: 'topics/filters', locals: {topic: @topic, params: params, list_path: 'topic_urls_url'} %>
 <%= turbo_frame_tag dom_id(@topic, 'urls') do %>
-  <div class="mt-8 flex flex-col">
-    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Tweet Authors</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Link</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Stats
-                </th>
-                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                  <span class="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white" id="<%= dom_id(@topic, 'urls') %>">
-              <% @urls.each do |url| %>
-                <%= render partial: 'row', locals: { topic: @topic, url: url } %>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+  <div class="grid grid-cols-1 space-y-4">
+    <% @urls.each do |url| %>
+      <%= render partial: 'row', locals: { topic: @topic, url: url } %>
+    <% end %>
   </div>
-  <div class="py-8 flex items-center justify-between">
+  <div class="flex items-center justify-between py-8">
     <div>
       <%== pagy_nav(@pagy) %>
-    </div>
-    <div>
-      <%# form_tag topic_archived_urls_path(@topic), method: :post do %>
-        <%# <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
-          <!-- Heroicon name: mini/envelope -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 w-5 h-5">
-            <path fill-rule="evenodd" d="M2 3a1 1 0 00-1 1v1a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1H2zm0 4.5h16l-.811 7.71a2 2 0 01-1.99 1.79H4.802a2 2 0 01-1.99-1.79L2 7.5zM10 9a.75.75 0 01.75.75v2.546l.943-1.048a.75.75 0 111.114 1.004l-2.25 2.5a.75.75 0 01-1.114 0l-2.25-2.5a.75.75 0 111.114-1.004l.943 1.048V9.75A.75.75 0 0110 9z" clip-rule="evenodd" />
-          </svg>
-          Archive all
-        </button> %>
-      <%# end %>
     </div>
   </div>
 <% end %>

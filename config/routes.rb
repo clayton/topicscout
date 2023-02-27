@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get '/onboarding/topics/:topic_id/finish', to: 'onboarding/users#edit', as: :onboarding_finish
 
   resources :topics do
+    resources :hostname_ignore_rules
     resources :twitter_search_results
     resources :search_terms
     resources :negative_search_terms
