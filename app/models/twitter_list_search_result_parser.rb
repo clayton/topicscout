@@ -20,7 +20,6 @@ class TwitterListSearchResultParser
   end
 
   def parse
-
     save_tweets(@results)
 
     while @results.fetch('meta', {}).fetch('next_token', nil) && @results_count < @twitter_search_result.max_results
@@ -58,7 +57,9 @@ class TwitterListSearchResultParser
         t.twitter_list_id = @list.twitter_list_id
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('name', nil)
-        t.profile_image_url = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('profile_image_url', nil)
+        t.profile_image_url = users.find do |user|
+          user.fetch('id', nil) == tweet_author_id
+        end.fetch('profile_image_url', nil)
         t.username = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('username', nil)
         t.twitter_search_result = @twitter_search_result
         t.text = tweet.fetch('text', nil)
@@ -68,8 +69,8 @@ class TwitterListSearchResultParser
         t.tweeted_at = tweet.fetch('created_at', nil)
         t.public_metrics = tweet.fetch('public_metrics', {})
         t.lang = tweet.fetch('lang', nil)
-        t.hashtags << hashtags.map { |hashtag| t.hashtags.build(tag: hashtag) }
-        t.urls << urls.map { |url| t.urls.build(url) }
+        t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
+        t.urls << urls.compact.map { |url| t.urls.build(url) }
       end
 
       @newest_id = tweet.fetch('id', nil)
@@ -86,10 +87,19 @@ class TwitterListSearchResultParser
     return [] unless entities
 
     entities.fetch('urls', []).map do |url|
+      next unless url.fetch('title', nil)
+      next if url.fetch('title', nil).empty?
+      next unless url.fetch('unwound_url', nil)
+      next if url.fetch('unwound_url', nil).empty?
       next if @twitter_search_result.ignored_hostname?(url.unwound_url)
 
-      { status: url.fetch('status', nil), title: url.fetch('title', nil), display_url: url.fetch('display_url', nil),
-        unwound_url: url.fetch('unwound_url', nil) }
+      {
+        topic_id: @topic.id,
+        status: url.fetch('status', nil),
+        title: url.fetch('title', nil),
+        display_url: url.fetch('display_url', nil),
+        unwound_url: url.fetch('unwound_url', nil)
+      }
     end
   end
 end

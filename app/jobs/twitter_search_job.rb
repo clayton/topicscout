@@ -2,7 +2,6 @@ class TwitterSearchJob < ApplicationJob
   queue_as :default
 
   def perform(twitter_search_result)
-    Rails.logger.debug(Rails.application.credentials.inspect)
     client = Tweetkit::Client.new(bearer_token: Rails.application.credentials.twitter.bearer_token)
 
     options = { 'expansions' => 'author_id', 'tweet.fields' => 'created_at,entities,lang,public_metrics',

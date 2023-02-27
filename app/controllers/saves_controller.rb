@@ -3,9 +3,13 @@ class SavesController < AuthenticatedUserController
   before_action :load_collection
 
   def index
-    @pagy, @tweets = pagy(@topic.tweets.reviewing.uncollected.best.includes(:hashtags,
-                                                                            :urls).where.not(urls: { title: nil,
-                                                                                                     url: nil }))
+    begin
+      @pagy, @tweets = pagy(@topic.saved_tweets(params[:sort], params[:time_filter]))
+    rescue Pagy::OverflowError
+      params[:page] = 1
+      @pagy, @tweets = pagy(@topic.saved_tweets(params[:sort], params[:time_filter]))
+    end
+    
   end
 
   def load_topic

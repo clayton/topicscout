@@ -5,7 +5,13 @@ class UrlsController < AuthenticatedUserController
 
   def index
     @topic = Topic.find_by(id: params[:topic_id])
-    @pagy, @urls = pagy(@topic.unedited_urls(params[:sort], params[:time_filter]))
+
+    begin
+      @pagy, @urls = pagy(@topic.unedited_urls(params[:sort], params[:time_filter]))
+    rescue Pagy::OverflowError
+      params[:page] = 1
+      @pagy, @urls = pagy(@topic.unedited_urls(params[:sort], params[:time_filter]))
+    end
   end
 
   def update

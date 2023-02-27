@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_27_004526) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_27_191532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -63,6 +63,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_004526) do
     t.uuid "topic_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "tweet_id", null: false
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tweet_id"], name: "index_photos_on_tweet_id"
   end
 
   create_table "remembered_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -208,6 +216,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_004526) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "tweet_id"
+    t.uuid "topic_id"
+    t.index ["topic_id"], name: "index_urls_on_topic_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -229,6 +239,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_004526) do
   add_foreign_key "collections", "topics"
   add_foreign_key "email_verifications", "users"
   add_foreign_key "hostname_ignore_rules", "topics"
+  add_foreign_key "photos", "tweets"
   add_foreign_key "search_terms", "topics"
   add_foreign_key "topics", "users"
   add_foreign_key "tweeter_ignore_rules", "topics"

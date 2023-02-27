@@ -1,8 +1,9 @@
 class Url < ApplicationRecord
   belongs_to :tweet
 
-  scope :relevant, -> { where(tweets: { saved: false, ignored: false, archived: false }) }
-  scope :titled, -> { where.not(urls: { title: nil }) }
+  scope :unique, -> { distinct('unwound_url') }
+  scope :unedited, -> { where(tweets: { saved: false, archived: false }) }
+  scope :relevant, -> { where(tweets: { ignored: false }) }
   scope :qualified, ->(threshold) { where(Tweet.arel_table[:score].gteq(threshold)) }
 
   def hostname

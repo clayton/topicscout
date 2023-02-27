@@ -54,8 +54,6 @@ class TwitterSearchResultParser
       hashtags = parse_hashtags(tweet.entities)
       urls = parse_urls(tweet.entities)
 
-      
-
       @topic.tweets.find_or_create_by(tweet_id: tweet.id) do |t|
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.id == tweet.author_id }.name
@@ -69,8 +67,8 @@ class TwitterSearchResultParser
         t.tweeted_at = tweet.created_at
         t.public_metrics = tweet.data['public_metrics'] || {}
         t.lang = tweet.lang
-        t.hashtags << hashtags.map { |hashtag| t.hashtags.build(tag: hashtag) }
-        t.urls << urls.map { |url| t.urls.build(url) }
+        t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
+        t.urls << urls.compact.map { |url| t.urls.build(url) }
       end
 
     end
@@ -90,9 +88,12 @@ class TwitterSearchResultParser
     return [] unless entities.urls.urls
 
     entities.urls.urls.map do |url|
+      next unless url.title
+      next if url.title.empty?
+      next if url.unwound_url.empty?
       next if @twitter_search_result.ignored_hostname?(url.unwound_url)
 
-      { status: url.status, title: url.title, display_url: url.display_url, unwound_url: url.unwound_url }
+      { topic_id: @topic.id, status: url.status, title: url.title, display_url: url.display_url, unwound_url: url.unwound_url }
     end
   end
 end

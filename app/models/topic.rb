@@ -5,7 +5,7 @@ class Topic < ApplicationRecord
   has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
   has_many :negative_search_terms, dependent: :destroy
-  has_many :urls, through: :tweets
+  has_many :urls
   has_many :collections, dependent: :destroy
   has_many :twitter_lists, dependent: :destroy
 
@@ -23,18 +23,42 @@ class Topic < ApplicationRecord
     user.auth_token
   end
 
+  def latest_results_count
+    twitter_search_results.completed.newest.first&.results_count
+  end
+
   def unedited_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.joins(:hashtags).qualified(threshold).relevant.unedited
-    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
-    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
-    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
-    results = results.order(tweeted_at: :desc) if sort == 'newest'
-    results = results.order(score: :desc) if sort == 'score' || sort.nil?
-    results
+    results = tweets.includes(:hashtags).relevant.unedited.qualified(threshold)
+    filtered_and_sorted_results(results, sort, time_filter)
   end
 
   def unedited_urls(sort = 'score', time_filter = 'all')
-    results = urls.joins(:tweet).relevant.titled.qualified(threshold)
+    results = urls.includes(:tweet).relevant.unedited.qualified(threshold)
+    filtered_and_sorted_results(results, sort, time_filter)
+  end
+
+  def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all')
+    results = filtered_results(results, time_filter)
+    sorted_results(results, sort)
+  end
+
+  def filtered_results(results, time_filter = 'all')
+    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
+    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
+    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
+
+    results
+  end
+
+  def sorted_results(results, sort = 'score')
+    results = results.order(Tweet.arel_table[:tweeted_at].desc) if sort == 'newest'
+    results = results.order(Tweet.arel_table[:score].desc) if sort == 'score' || sort.nil?
+
+    results
+  end
+
+  def saved_tweets(sort = 'score', time_filter = 'all')
+    results = tweets.includes(:hashtags, :urls).reviewing.uncollected
     results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
