@@ -12,10 +12,6 @@ export default class extends Controller {
   }  
 
   connect() {
-    console.log("connected")
-    console.log(this.tweetsValue)
-    console.log(this.urlsValue)
-    console.log(this.savesValue)
   }
 
   navigate(event) {
