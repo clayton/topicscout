@@ -1,4 +1,6 @@
 class CollectionTweetsController < AuthenticatedUserController
+  include ActionView::RecordIdentifier
+
   def update
     @collection = current_user.collections.find(params[:collection_id])
     @tweet = Tweet.find(params[:id])
@@ -7,7 +9,10 @@ class CollectionTweetsController < AuthenticatedUserController
 
     @tweet.update!(archived: true, collection: nil) if tweet_params[:archived] == 'true'
 
-    redirect_to topic_saves_path(@tweet.topic)
+    respond_to do |format|
+      format.html { redirect_to redirect_to topic_saves_path(@tweet.topic) }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@tweet, 'saved')) }
+    end
   end
 
   def tweet_params
