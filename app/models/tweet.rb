@@ -59,10 +59,14 @@ class Tweet < ApplicationRecord
 
   def promote_to_list
     return unless saved? && saved_change_to_collection_id?
+    
+    list_id = topic.twitter_lists.managed.first&.twitter_list_id
+
+    return if list_id.blank?
 
     PromoteUserToListJob.perform_later(
       topic.user_auth_token,
-      topic.twitter_lists.managed.first&.twitter_list_id,
+      list_id,
       author_id
     )
   end
