@@ -2,25 +2,10 @@ class CreateTwitterListJob < ApplicationJob
   queue_as :priority
 
   def perform(name, description, token, topic_id)
-    client = Faraday.new(url: 'https://api.twitter.com') do |f|
-      f.adapter Faraday.default_adapter
-      f.request :json
-      f.response :json
-      f.request :authorization, 'Bearer', token
-    end
 
-    body = {
-      name: name,
-      description: description,
-      private: true
-    }.to_json
+    client = Birder::Client.new(token)
 
-    response = client.post('/2/lists', body, {})
-
-    unless response.success?
-      Honeybadger.notify("CreateTwitterListJob: #{response.body}")
-      return
-    end
+    response = client.list.create(name, { description: description, private: true })
 
     topic = Topic.find_by(id: topic_id)
     return if topic.nil?
@@ -29,8 +14,8 @@ class CreateTwitterListJob < ApplicationJob
       name: name,
       description: description,
       twitter_list_id: response.body['data']['id'],
-      private: true
+      private: true,
+      managed: true
     )
-    
   end
 end

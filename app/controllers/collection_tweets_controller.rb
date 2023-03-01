@@ -9,6 +9,8 @@ class CollectionTweetsController < AuthenticatedUserController
 
     @tweet.update!(archived: true, collection: nil) if tweet_params[:archived] == 'true'
 
+    
+
     respond_to do |format|
       format.html { redirect_to redirect_to topic_saves_path(@tweet.topic) }
       format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@tweet, 'saved')) }

@@ -23,6 +23,24 @@ module Birder
       @client = client
     end
 
+    def create(name, options = {})
+      body = { 'name' => name }
+      body.merge!('description' => options.fetch(:description, nil)) if options.fetch(:description, nil)
+      body.merge!('private' => options.fetch(:private, nil)) if options.fetch(:private, nil)
+
+      path = '/2/lists'
+
+      @client.post(path, body.to_json, {})
+    end
+
+    def promote(list_id, user_id)
+      body = { 'user_id' => user_id }
+
+      path = "/2/lists/#{list_id}/members"
+
+      @client.post(path, body.to_json, {})
+    end
+
     def tweets(list_id)
       body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics', 'expansions' => 'author_id,edit_history_tweet_ids',
                'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
@@ -85,6 +103,16 @@ module Birder
       @headers = {}
     end
 
+    def post(path, body = {}, headers = {})
+      @path = path
+      @body = body
+      @headers = headers
+
+      response = @client.post(path, body, headers)
+
+      handle_response(response)
+    end
+
     def get(path, body = {}, headers = {})
       @path = path
       @body = body
@@ -92,8 +120,12 @@ module Birder
 
       response = @client.get(path, body, headers)
 
+      handle_response(response)
+    end
+
+    def handle_response(response)
       case response.status
-      when 200..299
+      when 200..399
         response.body
       when 401
         raise Birder::Unauthorized, response.body
@@ -134,11 +166,11 @@ module Birder
   end
 
   class Error < StandardError; end
-  class Unauthorized < StandardError; end
-  class NotFound < StandardError; end
-  class BadRequest < StandardError; end
-  class InternalServerError < StandardError; end
-  class ServiceUnavailable < StandardError; end
-  class TooManyRequests < StandardError; end
-  class MissingTokenError < StandardError; end
+  class Unauthorized < Error; end
+  class NotFound < Error; end
+  class BadRequest < Error; end
+  class InternalServerError < Error; end
+  class ServiceUnavailable < Error; end
+  class TooManyRequests < Error; end
+  class MissingTokenError < Error; end
 end

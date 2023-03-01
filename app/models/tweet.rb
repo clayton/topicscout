@@ -17,6 +17,8 @@ class Tweet < ApplicationRecord
 
   after_create_commit :broadcast_create
 
+  after_save_commit :promote_to_list
+
   scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(tweeted_at: :desc) }
   scope :recent, -> { order(tweeted_at: :desc).limit(40) }
@@ -53,6 +55,16 @@ class Tweet < ApplicationRecord
     return if topic.twitter_search_results.count > 1
 
     broadcast_append_later_to topic, target: 'tweets', partial: 'tweets/tweet', locals: { tweet: self }
+  end
+
+  def promote_to_list
+    return unless saved? && saved_change_to_collection_id?
+
+    PromoteUserToListJob.perform_later(
+      topic.user_auth_token,
+      topic.twitter_lists.managed.first&.twitter_list_id,
+      author_id
+    )
   end
 
   def edited_tweet_ids=(tweet_ids)
