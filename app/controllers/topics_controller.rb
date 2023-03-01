@@ -2,7 +2,7 @@ class TopicsController < AuthenticatedUserController
   before_action :check_for_new_user
 
   def index
-    @topics = current_user.topics.order(:name)
+    @topics = current_user.topics.order(:deleted).order(:name)
   end
 
   def new
@@ -47,8 +47,9 @@ class TopicsController < AuthenticatedUserController
     @topic = Topic.find_by(id: params[:id])
 
     if params[:delete] && params[:delete] == '1'
-      @topic.destroy
-      flash[:success] = 'Your topic has been deleted.'
+      @topic.update(deleted: true)
+      DeleteTopicJob.perform_later(@topic)
+      flash[:success] = 'Your topic has been scheduled for deletion.'
 
       redirect_to root_url
     else

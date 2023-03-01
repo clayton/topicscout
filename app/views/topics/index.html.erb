@@ -28,17 +28,11 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <% @topics.each do |topic| %>
-                <tr>
-                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= topic.name %></td>
-                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= link_to(number_with_delimiter(topic.latest_results_count), topic_twitter_search_results_path(topic), class:'underline text-purple-500') %></td>
-                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= link_to(number_with_delimiter(number_with_delimiter(topic.unedited_tweets&.count) || 0), topic_tweets_path(topic), class: 'underline text-purple-500 hover:text-purple-900') %></td>
-                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= link_to((number_with_delimiter(topic.unedited_urls&.count) || 0), topic_urls_path(topic), class: 'underline text-purple-500 hover:text-purple-900') %></td>
-                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= link_to((number_with_delimiter(topic.tweets.reviewing&.count) || 0), topic_saves_path(topic), class: 'underline text-purple-500 hover:text-purple-900') %></td>
-                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= number_with_delimiter(topic.tweets.collected&.count) || 0 %></td>
-                  <td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-nowrap">
-                    <%= link_to "Edit", edit_topic_path(topic), class: 'text-purple-600 hover:text-purple-900' %>
-                  </td>
-                </tr>
+                <% if topic.deleted? %>
+                  <%= render partial: 'deleted_topic_row', locals: { topic: topic } %>
+                <% else %>
+                  <%= render partial: 'topic_row', locals: { topic: topic }%>
+                <% end %>
               <% end %>
             </tbody>
           </table>

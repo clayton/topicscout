@@ -19,6 +19,8 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :twitter_lists, allow_destroy: true, reject_if: :all_blank
 
+  scope :undeleted, -> { where(deleted: false) }
+
   def user_auth_token
     user.auth_token
   end
