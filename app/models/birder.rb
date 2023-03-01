@@ -1,4 +1,15 @@
 module Birder
+  module Twitter
+    class List
+      attr_reader :id, :name
+
+      def initialize(id, name)
+        @id = id
+        @name = name
+      end
+    end
+  end
+
   class Search
     def initialize(client: Birder::Client.new)
       @client = client
@@ -30,7 +41,8 @@ module Birder
 
       path = '/2/lists'
 
-      @client.post(path, body.to_json, {})
+      response = @client.post(path, body.to_json, {})
+      Birder::Twitter::List.new(response['data']['id'], response['data']['name'])
     end
 
     def promote(list_id, user_id)
