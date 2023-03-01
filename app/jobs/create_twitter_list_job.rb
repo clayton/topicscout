@@ -13,7 +13,7 @@ class CreateTwitterListJob < ApplicationJob
     topic.twitter_lists.create(
       name: name,
       description: description,
-      twitter_list_id: response.body['data']['id'],
+      twitter_list_id: response['data']['id'],
       private: true,
       managed: true
     )

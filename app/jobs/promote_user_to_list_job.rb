@@ -3,7 +3,7 @@ class PromoteUserToListJob < ApplicationJob
 
   def perform(token, list_id, user_id)
     client = Birder::Client.new(token)
-    
+
     begin
       client.list.promote(list_id, user_id)
     rescue Birder::Error => e
