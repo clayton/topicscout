@@ -21,11 +21,6 @@ class TweetsParser
 
   def parse
     save_tweets(@results.to_h) while (@results = @results.next) && @twitter_search_result.under_limit(@added_count)
-
-    Rails.logger.debug("\n\n\n\nTweetsParser: #{@results_count} tweets parsed\n\n\n\n")
-    Rails.logger.debug("\n\n\n\nTweetsParser: #{@ignored_count} tweets ignored\n\n\n\n")
-    Rails.logger.debug("\n\n\n\nTweetsParser: #{@added_count} tweets added\n\n\n\n")
-
     yield self if block_given?
   rescue StandardError => e
     Rails.logger.debug "TweetsParser: #{e} \n #{e.backtrace.join('\n')}"
@@ -34,8 +29,6 @@ class TweetsParser
 
   def save_tweets(results)
     return unless results.fetch('data', nil)
-
-    Rails.logger.debug("\n\n\n\nTweetsParser: #{results.fetch('data', []).count} tweets found\n\n\n\n")
 
     users = results.fetch('includes', {}).fetch('users', [])
 

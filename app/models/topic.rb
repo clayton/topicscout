@@ -77,7 +77,6 @@ class Topic < ApplicationRecord
   end
 
   def new_search_terms=(search_terms)
-    Rails.logger.debug("NEW SEARCH TERMS: #{search_terms.inspect}")
     search_terms.each do |search_term|
       next if search_term['term'].nil?
       next if search_term['term'].strip.blank?
@@ -87,7 +86,6 @@ class Topic < ApplicationRecord
   end
 
   def search_terms_attributes=(attributes)
-    Rails.logger.debug("SEARCH TERMS ATTRIBUTES: #{attributes.inspect}")
     attributes.each do |_key, term|
       if term['id'].nil?
         next if term[:term].strip.blank?

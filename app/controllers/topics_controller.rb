@@ -12,7 +12,6 @@ class TopicsController < AuthenticatedUserController
   end
 
   def create
-    Rails.logger.debug("TOPIC PARAMS: #{topic_params.inspect}")
     @topic = current_user.topics.build(topic_params)
 
     if @topic.save!

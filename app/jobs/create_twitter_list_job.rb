@@ -18,7 +18,6 @@ class CreateTwitterListJob < ApplicationJob
     response = client.post('/2/lists', body, {})
 
     unless response.success?
-      Rails.logger.debug("CreateTwitterListJob: #{response.body}")
       Honeybadger.notify("CreateTwitterListJob: #{response.body}")
       return
     end

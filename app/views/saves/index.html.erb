@@ -9,33 +9,33 @@
   <div class="grid grid-cols-1 mt-8 space-y-4">
     <% @tweets.each do |tweet| %>
       <div class="col-span-1 p-2 bg-white rounded-lg shadow-md border-gray-50" id="<%= dom_id(tweet, 'saved') %>">
-        <div class="grid grid-cols-3 gap-4 xl:grid-cols-8">
+        <div class="grid grid-cols-3 gap-6 xl:grid-cols-10">
           <div class="col-span-2 xl:order-1">
             <div class="flex flex-col space-y-2">
-              <div class="flex items-center">
+              <div class="flex flex-col items-center lg:flex-row">
                 <div class="flex-shrink-0 w-10 h-10">
                   <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
                 </div>
-                <div class="ml-4">
-                  <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", class: 'underline text-purple-500') %></div>
+                <div class="lg:ml-4">
+                  <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
                   <div class="text-gray-500"><%= tweet.name %></div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-span-1 xl:order-4">
-            <div class="flex flex-col items-end justify-end space-y-2 md:flex-row md:space-x-2">
-              <%= form_with model: [@collection, tweet] do |f| %>
+          <div class="col-span-1 xl:col-span-2 xl:order-4">
+            <div class="flex flex-col items-center justify-between h-full space-y-12 xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
+              <%= form_with model: [@collection, tweet], class: 'w-full xl:w-auto' do |f| %>
                 <%= f.hidden_field :archived, value: true %>
-                <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+                <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
               <% end %>
-              <%= form_with model: [@collection, tweet] do |f| %>
+              <%= form_with model: [@collection, tweet], class: 'w-full xl:w-auto' do |f| %>
                 <%= f.hidden_field :saved, value: true %>
-                <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Collect</button>
+                <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Collect</button>
               <% end %>
             </div>
           </div>
-          <div class="col-span-3 xl:col-span-4 xl:order-2">
+          <div class="col-span-3 xl:col-span-5 xl:order-2">
             <div class=""><%= link_to(local_time(tweet.tweeted_at), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
             <div class="mt-1 text-gray-900"><%= display_entitites(tweet.text) %></div>
           </div>

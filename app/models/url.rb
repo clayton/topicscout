@@ -3,6 +3,7 @@ class Url < ApplicationRecord
 
   scope :unique, -> { distinct('unwound_url') }
   scope :unedited, -> { where(tweets: { saved: false, archived: false }) }
+  scope :uncollected, -> { where(tweets: { collection_id: nil }) }
   scope :relevant, -> { where(tweets: { ignored: false }) }
   scope :qualified, ->(threshold) { where(Tweet.arel_table[:score].gteq(threshold)) }
 

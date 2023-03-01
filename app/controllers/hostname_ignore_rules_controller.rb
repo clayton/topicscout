@@ -6,7 +6,7 @@ class HostnameIgnoreRulesController < ApplicationController
     @tweet = @topic.tweets.includes(:urls).find_by(id: rule_params[:tweet_id])
     @url = @tweet.urls.find_by(id: rule_params[:url_id])
 
-    @topic.hostname_ignore_rules.create(hostname: rule_params[:hostname])
+    @topic.hostname_ignore_rules.find_or_create_by(hostname: @url.hostname)
     
     @tweet.update(ignored: true, archived: true)
 

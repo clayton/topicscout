@@ -8,7 +8,6 @@ class TwitterListSearchJob < ApplicationJob
     return unless list_id
     return if list_id.blank?
 
-    Rails.logger.debug("\n\n\t[TwitterListSearchJob] #{twitter_search_result.topic.name} #{list_id}\n\n\n")
 
     topic = twitter_search_result.topic
 
