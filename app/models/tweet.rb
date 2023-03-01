@@ -27,6 +27,7 @@ class Tweet < ApplicationRecord
   scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
   scope :uncollected, -> { where(collection_id: nil) }
   scope :collected, -> { where.not(collection_id: nil) }
+  scope :unsaved, -> { where(saved: false) }
 
   def url
     "https://twitter.com/#{username}/status/#{tweet_id}"
@@ -52,5 +53,11 @@ class Tweet < ApplicationRecord
     return if topic.twitter_search_results.count > 1
 
     broadcast_append_later_to topic, target: 'tweets', partial: 'tweets/tweet', locals: { tweet: self }
+  end
+
+  def edited_tweet_ids=(tweet_ids)
+    tweet_ids.each do |id|
+      Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
+    end
   end
 end

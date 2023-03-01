@@ -24,7 +24,7 @@ class Topic < ApplicationRecord
   end
 
   def latest_results_count
-    twitter_search_results.completed.newest.first&.results_count
+    twitter_search_results.completed.newest.first&.results_count || 0
   end
 
   def unedited_tweets(sort = 'score', time_filter = 'all')
@@ -143,6 +143,10 @@ class Topic < ApplicationRecord
     return if term.downcase.strip.empty?
 
     negative_search_terms.find_or_create_by(term: term)
+  end
+
+  def to_query
+    search_phrase
   end
 
   def search_phrase

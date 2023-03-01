@@ -2,19 +2,24 @@ class TwitterSearchJob < ApplicationJob
   queue_as :default
 
   def perform(twitter_search_result)
-    client = Tweetkit::Client.new(bearer_token: Rails.application.credentials.twitter.bearer_token)
+    client = Birder::Client.new(Rails.application.credentials.twitter.bearer_token)
 
-    options = { 'expansions' => 'author_id', 'tweet.fields' => 'created_at,entities,lang,public_metrics',
-                'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type', 'max_results' => 100 }
-    options.merge!('since_id' => twitter_search_result.since_id) if twitter_search_result.since_id
-    options.merge!('start_time' => twitter_search_result.parsed_start_time) if twitter_search_result.start_time
+    topic = twitter_search_result.topic
+    query = topic.to_query
 
-    Rails.logger.info("[TwitterSearchJob] query:#{twitter_search_result.search_phrase} \n options: #{options}\n\n")
-    results = client.search(twitter_search_result.search_phrase, **options) do
+    Rails.logger.debug("\n\n\t[TwitterSearchJob] #{topic.name} #{query}\n\n\n")
+
+    raw = client.search.tweets(query, start_time: twitter_search_result.parsed_start_time)
+
+    TweetsParser.parse(raw, twitter_search_result, nil) do |parser|
+      twitter_search_result.update!(completed: true)
+
+      twitter_search_result.increment!(:results_count, parser.results_count)
+      twitter_search_result.increment!(:ignored_count, parser.ignored_count)
+      twitter_search_result.increment!(:added_count, parser.added_count)
+
+      Rails.logger.debug("\n\n\t[TwitterSearchJob] #{topic.name} #{query} #{twitter_search_result.results_count} #{twitter_search_result.ignored_count} #{twitter_search_result.added_count}\n\n\n")
     end
-
-    TwitterSearchResultParser.parse(results, twitter_search_result, nil)
-    twitter_search_result.update(completed: true)
   rescue StandardError => e
     Rails.logger.debug("[TwitterSearchJob] #{e.message} #{e.backtrace}}")
     Honeybadger.notify(e)

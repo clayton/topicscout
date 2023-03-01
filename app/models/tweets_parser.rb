@@ -1,44 +1,41 @@
-class TwitterListSearchResultParser
-  def self.parse(results, twitter_search_result, list, intent = nil)
-    return unless results
-    return unless results.fetch(:tweets, nil)
-    return if results.tweets.nil?
-    return if results.tweets.empty?
+class TweetsParser
+  attr_reader :results_count, :ignored_count, :added_count
 
-    parser = TwitterListSearchResultParser.new(results, twitter_search_result, list, intent)
+  def self.parse(results, twitter_search_result, list, intent = nil)
+    parser = TweetsParser.new(results, twitter_search_result, list, intent)
     parser.parse
+    yield parser if block_given?
   end
 
-  def initialize(results, twitter_search_result, list, intent)
-    @results = results
+  def initialize(results, twitter_search_result, list_id, intent)
+    @results = results || {}
     @twitter_search_result = twitter_search_result
     @intent = intent
     @results_count = 0
+    @ignored_count = 0
+    @added_count = 0
     @topic = @twitter_search_result.topic
     @newest_id = nil
-    @list = list
+    @list_id = list_id || nil
   end
 
   def parse
-    save_tweets(@results)
+    save_tweets(@results.to_h) while (@results = @results.next) && @twitter_search_result.under_limit(@added_count)
 
-    while @results.fetch('meta', {}).fetch('next_token', nil) && @results_count < @twitter_search_result.max_results
-      save_tweets(@results)
-      @results.next_page
-    end
+    Rails.logger.debug("\n\n\n\nTweetsParser: #{@results_count} tweets parsed\n\n\n\n")
+    Rails.logger.debug("\n\n\n\nTweetsParser: #{@ignored_count} tweets ignored\n\n\n\n")
+    Rails.logger.debug("\n\n\n\nTweetsParser: #{@added_count} tweets added\n\n\n\n")
 
-    Rails.logger.info("TwitterListSearchResultParser: Completed search result for #{@twitter_search_result.id} of #{@results_count} tweets")
-
-    @twitter_search_result.update(results_count: @results_count, completed: true)
-
-    self
+    yield self if block_given?
   rescue StandardError => e
-    Rails.logger.debug "TwitterListSearchResultParser: #{e} \n #{e.backtrace.join('\n')}"
+    Rails.logger.debug "TweetsParser: #{e} \n #{e.backtrace.join('\n')}"
     Honeybadger.notify(e)
   end
 
   def save_tweets(results)
     return unless results.fetch('data', nil)
+
+    Rails.logger.debug("\n\n\n\nTweetsParser: #{results.fetch('data', []).count} tweets found\n\n\n\n")
 
     users = results.fetch('includes', {}).fetch('users', [])
 
@@ -47,14 +44,18 @@ class TwitterListSearchResultParser
 
     found_tweets.each do |tweet|
       tweet_author_id = tweet.fetch('author_id', nil)
-      next if @twitter_search_result.ignored_authors.include?(tweet_author_id)
+      if @twitter_search_result.ignored_authors.include?(tweet_author_id)
+        @ignored_count += 1
+        next
+      end
 
       entities = tweet.fetch('entities', {})
       hashtags = parse_hashtags(entities)
       urls = parse_urls(entities)
+      edited_tweets = parse_edited_tweets(tweet)
 
       @topic.tweets.find_or_create_by(tweet_id: tweet.fetch('id', nil)) do |t|
-        t.twitter_list_id = @list.twitter_list_id
+        t.twitter_list_id = @list_id
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('name', nil)
         t.profile_image_url = users.find do |user|
@@ -71,10 +72,19 @@ class TwitterListSearchResultParser
         t.lang = tweet.fetch('lang', nil)
         t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
         t.urls << urls.compact.map { |url| t.urls.build(url) }
+        t.edited_tweet_ids = edited_tweets
       end
+
+      @added_count += 1
 
       @newest_id = tweet.fetch('id', nil)
     end
+  end
+
+  def parse_edited_tweets(tweet)
+    history = tweet.fetch('edit_history_tweet_ids', [])
+    history.shift # remove the original tweet
+    history || []
   end
 
   def parse_hashtags(entities)
@@ -91,7 +101,7 @@ class TwitterListSearchResultParser
       next if url.fetch('title', nil).empty?
       next unless url.fetch('unwound_url', nil)
       next if url.fetch('unwound_url', nil).empty?
-      next if @twitter_search_result.ignored_hostname?(url.unwound_url)
+      next if @twitter_search_result.ignored_hostname?(url.fetch('unwound_url', nil))
 
       {
         topic_id: @topic.id,

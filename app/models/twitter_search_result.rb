@@ -24,9 +24,15 @@ class TwitterSearchResult < ApplicationRecord
     twitter_list&.twitter_list_id
   end
 
+  def under_limit(count)
+    return true unless limited?
+
+    count < max_results
+  end
+
   def search
-    topic.twitter_lists.each do |list|
-      TwitterListSearchJob.perform_later(self, list, topic.user_auth_token)
+    topic.twitter_lists.map(&:twitter_list_id).compact.each do |list_id|
+      TwitterListSearchJob.perform_later(self, list_id, topic.user_auth_token)
     end
 
     TwitterSearchJob.perform_later(self)
@@ -37,7 +43,7 @@ class TwitterSearchResult < ApplicationRecord
   end
 
   def parsed_start_time
-    start_time&.rfc3339
+    topic.twitter_search_results.completed.order(created_at: :desc).first&.created_at&.rfc3339
   end
 
   def digest

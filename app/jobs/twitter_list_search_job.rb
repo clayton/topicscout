@@ -1,33 +1,26 @@
 class TwitterListSearchJob < ApplicationJob
   queue_as :default
 
-  def perform(twitter_search_result, list, token)
+  def perform(twitter_search_result, list_id, token)
     return unless twitter_search_result
+    return unless twitter_search_result.topic
     return unless token
-    return unless list
-    return unless list.twitter_list_id
-    return if list.twitter_list_id.blank?
-    
-    body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics', 'expansions' => 'author_id',
-             'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
-    headers = { 'Authorization' => "Bearer #{token}" }
+    return unless list_id
+    return if list_id.blank?
 
-    url = "https://api.twitter.com/2/lists/#{list.twitter_list_id}/tweets"
+    Rails.logger.debug("\n\n\t[TwitterListSearchJob] #{twitter_search_result.topic.name} #{list_id}\n\n\n")
 
-    results = Faraday.get(url, body, headers)
+    topic = twitter_search_result.topic
 
-    unless results.success?
-      Rails.logger.debug("[TwitterListSearchJob] for list #{list.twitter_list_id} failed with #{results.body}")
-      Honeybadger.notify("[TwitterListSearchJob] for list #{list.twitter_list_id} failed with #{results.body}")
-      return
+    client = Birder::Client.new(topic.user_auth_token)
+
+    raw = client.list.tweets(list_id)
+
+    TweetsParser.parse(raw, twitter_search_result, list_id) do |parser|
+      twitter_search_result.increment!(:results_count, parser.results_count)
+      twitter_search_result.increment!(:ignored_count, parser.ignored_count)
+      twitter_search_result.increment!(:added_count, parser.added_count)
     end
-
-    data = JSON.parse(results.body)
-
-    Rails.logger.info("[TwitterListSearchJob] List: #{url} \n options: #{body}\n\n")
-
-    TwitterListSearchResultParser.parse(data, twitter_search_result, list, nil)
-    
   rescue StandardError => e
     Rails.logger.debug("[TwitterSearchJob] #{e.message} #{e.backtrace}}")
     Honeybadger.notify(e)

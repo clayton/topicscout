@@ -70,8 +70,6 @@ group :development do
   # gem "spring"
 end
 
-gem "tweetkit", git: 'https://github.com/clayton/tweetkit'
-
 gem "omniauth-twitter2", "~> 0.1.0"
 gem 'omniauth-rails_csrf_protection'
 

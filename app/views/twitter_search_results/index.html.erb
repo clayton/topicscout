@@ -23,6 +23,8 @@
               <tr>
                 <th scope="col" class="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">Search Time</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tweets found</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tweets added</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tweets ignored</th>
                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
               </tr>
             </thead>
@@ -31,6 +33,8 @@
                 <tr>
                   <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= local_time(result.created_at) %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= number_with_delimiter(result.results_count) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= number_with_delimiter(result.added_count) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= number_with_delimiter(result.ignored_count) %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= result.completed? ? 'Completed' : 'In progress' %></td>
                 </tr>
               <% end %>
