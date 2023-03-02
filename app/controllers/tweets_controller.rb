@@ -1,7 +1,6 @@
-class TweetsController < AuthenticatedUserController
+class TweetsController < FilteredListController
   include ActionView::RecordIdentifier
-  before_action :determine_sort
-
+  
   def index
     @topic = Topic.where(id: params[:topic_id]).includes(:search_terms, :negative_search_terms).first
 
@@ -26,19 +25,5 @@ class TweetsController < AuthenticatedUserController
 
   def tweet_params
     params.require(:tweet).permit(:ignored, :saved, :archived, :page, :topic_id)
-  end
-
-  def determine_sort
-    return 'score' unless params[:sort].present?
-    return 'score' unless params[:sort].in? %w[score newest]
-
-    params[:sort]
-  end
-
-  def determine_time_filter
-    return 'all' unless params[:time_filter].present?
-    return 'all' unless params[:time_filter].in? %w[all hour day week]
-
-    params[:time_filter]
   end
 end

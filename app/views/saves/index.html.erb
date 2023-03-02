@@ -5,6 +5,8 @@
   </div>
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :saves } %>
+<%= render partial: 'topics/filters', locals: {topic: @topic, params: params.permit(:page, :sort, :time_filter, :topic_id), list_path: 'topic_saves_url',} %>
+
 <%= turbo_frame_tag dom_id(@topic, 'saves') do %>
   <div class="grid grid-cols-1 mt-8 space-y-4">
     <% @tweets.each do |tweet| %>

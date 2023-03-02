@@ -88,8 +88,8 @@
 
           class="absolute left-0 z-10 hidden w-40 mt-2 origin-top-left bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="mobile-menu-button" tabindex="-1">
             <div class="py-1" role="none">
-              <%= link_to "Highest scoring", self.send(list_path, topic, params.permit(:page, :sort, :time_filter).merge!(sort: 'score')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{params[:sort] == 'score' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
-              <%= link_to "Newest", self.send(list_path, topic, params.permit(:page, :sort, :time_filter).merge!(sort: 'newest')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{params[:sort] == 'newest' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
+              <%= link_to "Highest scoring", self.send(list_path, topic, params.merge!(sort: 'score')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'score' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
+              <%= link_to "Newest", self.send(list_path, topic, params.merge!(sort: 'newest')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'newest' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@
               <button type="button" data-action="click->tweet-filters#toggleDesktopTimingFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
                 <span>Timing filter</span>
 
-                <% if params[:time_filter].present? && params[:time_filter].in?(%w[hour day week]) %>
+                <% if @time_filter %>
                   <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>    
                 <% end %>
                 <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -119,22 +119,26 @@
               data-transition-leave-end="transform opacity-0 scale-95"
               class="absolute right-0 z-10 hidden p-4 mt-2 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
               <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'timingForm'} do %>
-                <%= hidden_field_tag 'sort', params[:sort] || 'score' %>
+                <%= hidden_field_tag 'sort', @sort || 'score' %>
                 <%= hidden_field_tag 'page', params[:page] || 1 %>
                 <div class="flex items-center">
-                  <%= radio_button_tag 'time_filter', 'hour', (params[:time_filter].present? && params[:time_filter] == 'hour'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
+                  <%= radio_button_tag 'time_filter', 'hour', (@time_filter == 'hour'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_hour", "Last hour", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
                 </div>
                 <div class="flex items-center">
-                  <%= radio_button_tag 'time_filter', 'day', (params[:time_filter].present? && params[:time_filter] == 'day'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
+                  <%= radio_button_tag 'time_filter', 'day', (@time_filter == 'day'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_day", "Today", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
                 </div>
                 <div class="flex items-center">
-                  <%= radio_button_tag 'time_filter', 'week', (params[:time_filter].present? && params[:time_filter] == 'week'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
+                  <%= radio_button_tag 'time_filter', 'yesterday', (@time_filter == 'yesterday'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
+                  <%= label_tag "time_filter_yesterday", "Yesterday", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                </div>
+                <div class="flex items-center">
+                  <%= radio_button_tag 'time_filter', 'week', (@time_filter == 'week'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_week", "This week", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
                 </div>
                 <div class="flex items-center">
-                  <%= radio_button_tag 'time_filter', 'all', (params[:time_filter].present? && params[:time_filter] == 'all'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
+                  <%= radio_button_tag 'time_filter', 'all', (@time_filter == 'all'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_all", "All", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
                 </div>
               <% end %>

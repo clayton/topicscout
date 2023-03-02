@@ -47,6 +47,7 @@ class Topic < ApplicationRecord
   def filtered_results(results, time_filter = 'all')
     results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
+    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'yesterday'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
 
     results
@@ -63,6 +64,7 @@ class Topic < ApplicationRecord
     results = tweets.includes(:hashtags, :urls).reviewing.uncollected
     results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
+    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'yesterday'
     results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
     results = results.order(Tweet.arel_table[:tweeted_at].desc) if sort == 'newest'
     results = results.order(Tweet.arel_table[:score].desc) if sort == 'score' || sort.nil?
