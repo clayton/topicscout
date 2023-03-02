@@ -57,7 +57,6 @@ class Topic < ApplicationRecord
     yesterday_end_time = day_time
     week_time = (now.beginning_of_day - 1.week).in_time_zone('UTC')
 
-
     results = results.where('tweets.tweeted_at > ?', hour_time) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', day_time) if time_filter == 'day'
     if time_filter == 'yesterday'
