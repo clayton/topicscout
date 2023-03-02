@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_01_212333) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -238,6 +238,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_212333) do
     t.string "first_name"
     t.string "last_name"
     t.string "pay_customer_name"
+    t.string "timezone", default: "UTC"
   end
 
   add_foreign_key "collections", "topics"

@@ -18,7 +18,7 @@ class UsersController < AuthenticatedUserController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name)
+    params.require(:user).permit(:email, :name, :timezone)
   end
 
   def verify_email

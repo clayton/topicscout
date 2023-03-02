@@ -50,10 +50,15 @@ class Topic < ApplicationRecord
   end
 
   def filtered_results(results, time_filter = 'all')
-    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
-    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
-    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'yesterday'
-    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
+    now = Time.current.in_time_zone(user.timezone)
+
+    results = results.where('tweets.tweeted_at > ?', now - 1.hour) if time_filter == 'hour'
+    results = results.where('tweets.tweeted_at > ?', now - 1.day) if time_filter == 'day'
+    if time_filter == 'yesterday'
+      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', now - 2.days,
+                               now - 1.day])
+    end
+    results = results.where('tweets.tweeted_at > ?', now - 1.week) if time_filter == 'week'
 
     results
   end
@@ -64,8 +69,6 @@ class Topic < ApplicationRecord
 
     results
   end
-
-
 
   def search_in_progress?
     twitter_search_results.incomplete.any?
