@@ -51,14 +51,19 @@ class Topic < ApplicationRecord
 
   def filtered_results(results, time_filter = 'all')
     now = Time.current.in_time_zone(user.timezone)
+    hour_time = (now - 1.hour).in_time_zone('UTC')
+    day_time = now.beginning_of_day.in_time_zone('UTC')
+    yesterday_start_time = (now.beginning_of_day - 1.day).in_time_zone('UTC')
+    yesterday_end_time = day_time
+    week_time = (now.beginning_of_day - 1.week).in_time_zone('UTC')
 
-    results = results.where('tweets.tweeted_at > ?', now - 1.hour) if time_filter == 'hour'
-    results = results.where('tweets.tweeted_at > ?', now - 1.day) if time_filter == 'day'
+
+    results = results.where('tweets.tweeted_at > ?', hour_time) if time_filter == 'hour'
+    results = results.where('tweets.tweeted_at > ?', day_time) if time_filter == 'day'
     if time_filter == 'yesterday'
-      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', now - 2.days,
-                               now - 1.day])
+      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', yesterday_start_time, yesterday_end_time])
     end
-    results = results.where('tweets.tweeted_at > ?', now - 1.week) if time_filter == 'week'
+    results = results.where('tweets.tweeted_at > ?', week_time) if time_filter == 'week'
 
     results
   end

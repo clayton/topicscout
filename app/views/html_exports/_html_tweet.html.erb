@@ -1,0 +1,9 @@
+<% if tweet.embed_html.blank? %>
+<blockquote>
+  <%= tweet.text %>
+  <cite><a href="https://twitter.com/<%= tweet.username %>">@<%= tweet.username %></a></cite>
+</blockquote>
+<span><a href="<%= tweet.url %>"><%= tweet.tweeted_at %></a></span>
+<% else %>
+<%= tweet.embed_html %>
+<% end %>

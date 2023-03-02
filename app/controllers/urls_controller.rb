@@ -18,12 +18,12 @@ class UrlsController < FilteredListController
     @url.tweet&.update(url_params.except(:page, :topic_id))
 
     respond_to do |format|
-      format.html { redirect_to topic_urls_url(@topic, page: tweet_params[:page], sort: determine_sort) }
+      format.html { redirect_to topic_urls_url(@topic, page: url_params[:page], sort: @sort) }
       format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@url)) }
     end
   end
 
   def url_params
-    params.require(:url).permit(:saved, :archived, :page, :topic_id)
+    params.require(:url).permit(:saved, :archived, :page, :topic_id, )
   end
 end

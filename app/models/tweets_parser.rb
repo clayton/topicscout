@@ -36,7 +36,6 @@ class TweetsParser
     @results_count += found_tweets.count
 
     found_tweets.each do |tweet|
-      Rails.logger.debug("\n\n #{tweet.fetch('created_at', nil)}\n\n")
       tweet_author_id = tweet.fetch('author_id', nil)
       if @twitter_search_result.ignored_authors.include?(tweet_author_id)
         @ignored_count += 1
