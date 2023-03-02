@@ -10,7 +10,11 @@ class Url < ApplicationRecord
   def hostname
     return unless unwound_url
 
-    URI.parse(unwound_url).host
+    begin
+      URI.parse(unwound_url).host
+    rescue StandardError
+      unwound_url.truncate(20)
+    end
   end
 
   def populate_editorial_fields!
