@@ -39,6 +39,11 @@ class Topic < ApplicationRecord
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
+  def saved_tweets(sort = 'score', time_filter = 'all')
+    results = tweets.includes(:hashtags, :urls).reviewing.uncollected
+    filtered_and_sorted_results(results, sort, time_filter)
+  end
+
   def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all')
     results = filtered_results(results, time_filter)
     sorted_results(results, sort)
@@ -60,17 +65,7 @@ class Topic < ApplicationRecord
     results
   end
 
-  def saved_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.includes(:hashtags, :urls).reviewing.uncollected
-    results = results.where('tweets.tweeted_at > ?', 1.hour.ago) if time_filter == 'hour'
-    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'day'
-    results = results.where('tweets.tweeted_at > ?', 1.day.ago) if time_filter == 'yesterday'
-    results = results.where('tweets.tweeted_at > ?', 1.week.ago) if time_filter == 'week'
-    results = results.order(Tweet.arel_table[:tweeted_at].desc) if sort == 'newest'
-    results = results.order(Tweet.arel_table[:score].desc) if sort == 'score' || sort.nil?
 
-    results
-  end
 
   def search_in_progress?
     twitter_search_results.incomplete.any?
