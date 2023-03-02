@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_02_200249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -65,14 +65,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "tweet_id", null: false
-    t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tweet_id"], name: "index_photos_on_tweet_id"
-  end
-
   create_table "remembered_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.datetime "expires_at", precision: nil, null: false
@@ -121,7 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
     t.boolean "require_media"
     t.boolean "ignore_ads", default: false
     t.boolean "require_verified"
-    t.boolean "deleted"
+    t.boolean "deleted", default: false
     t.index ["user_id"], name: "index_topics_on_user_id"
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
@@ -221,6 +213,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
     t.datetime "updated_at", null: false
     t.uuid "tweet_id"
     t.uuid "topic_id"
+    t.string "editorial_title"
+    t.string "editorial_url"
+    t.text "editorial_description"
     t.index ["topic_id"], name: "index_urls_on_topic_id"
   end
 
@@ -244,7 +239,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_190842) do
   add_foreign_key "collections", "topics"
   add_foreign_key "email_verifications", "users"
   add_foreign_key "hostname_ignore_rules", "topics"
-  add_foreign_key "photos", "tweets"
   add_foreign_key "search_terms", "topics"
   add_foreign_key "topics", "users"
   add_foreign_key "tweeter_ignore_rules", "topics"

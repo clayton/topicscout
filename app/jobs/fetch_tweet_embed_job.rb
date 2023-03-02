@@ -13,7 +13,7 @@ class FetchTweetEmbedJob < ApplicationJob
       f.request :retry
       f.response :json
       f.adapter :net_http
-      f.request :authorization, 'Bearer', ENV.fetch('TWITTER_BEARER_TOKEN', nil)
+      f.request :authorization, 'Bearer', Rails.application.credentials.twitter.bearer_token
     end
 
     begin

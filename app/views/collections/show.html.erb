@@ -6,10 +6,44 @@
     </div>
   </div>
   <%= render partial: 'collections/tab_nav', locals: {collection: @collection, active: :show } %>  
-  <div class="mt-8 flow-root">
-    <div class="-my-2 -mx-6 overflow-x-auto lg:-mx-8">
+  <div class="flow-root mt-8">
+    <div class="-mx-6 -my-2 overflow-x-auto lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-        <h2 class="font-semibold text-lg text-gray-800 mt-4 mb-2">Tweets</h2>
+        <h2 class="mt-8 mb-2 text-lg font-semibold text-gray-800">Links</h2>
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">  
+          <table class="min-w-full divide-y divide-gray-300 table-auto">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">Details</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 w-2/3">Content</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Score</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-6">
+                  <span class="sr-only">View on Twitter</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @urls.each do |url| %>
+                <tr id="<%= dom_id(url, 'collected')%>">
+                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-normal">
+                    <p><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></p>
+                    <%= local_time(url.tweet.tweeted_at) %>
+                  </td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap grow">
+                    <%= render partial: 'editorial_form', locals: {collection: @collection, url: url } %>
+                  </td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-normal"><%= url.tweet.score.round %></td>
+                  <td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-normal">
+                    <%= link_to 'View', url.unwound_url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
+                  </td>
+                </tr>
+              <% end %>
+
+              <!-- More people... -->
+            </tbody>
+          </table>
+        </div>
+        <h2 class="mt-4 mb-2 text-lg font-semibold text-gray-800">Tweets</h2>
         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">  
           <table class="min-w-full divide-y divide-gray-300">
             <thead class="bg-gray-50">
@@ -23,14 +57,14 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
+            <tbody class="bg-white divide-y divide-gray-200">
               <% @tweets.each do |tweet| %>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></td>
-                  <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500"><%= display_entitites(tweet.text) %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= local_time(tweet.tweeted_at) %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= tweet.score.round %></td>
-                  <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
+                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-wrap"><%= display_entitites(tweet.text) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= local_time(tweet.tweeted_at) %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= tweet.score.round %></td>
+                  <td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-nowrap">
                     <%= link_to 'View on Twitter', tweet.url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
                   </td>
                 </tr>
@@ -40,39 +74,7 @@
             </tbody>
           </table>
         </div>
-        <h2 class="font-semibold text-lg text-gray-800 mt-8 mb-2">Links</h2>
-        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">  
-          <table class="min-w-full divide-y divide-gray-300">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">Author</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Link</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Host</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tweeted at</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Score</th>
-                <th scope="col" class="relative py-3.5 pl-3 pr-6">
-                  <span class="sr-only">View on Twitter</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-              <% @urls.each do |url| %>
-                <tr>
-                  <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></td>
-                  <td class="whitespace-wrap px-3 py-4 text-sm text-gray-500"><%= url.title %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= url.hostname %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= local_time(url.tweet.tweeted_at) %></td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= url.tweet.score.round %></td>
-                  <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
-                    <%= link_to 'View', url.unwound_url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
-                  </td>
-                </tr>
-              <% end %>
 
-              <!-- More people... -->
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   </div>

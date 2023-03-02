@@ -13,11 +13,11 @@ class Tweet < ApplicationRecord
 
   before_save :calculate_score
 
-  # after_create :fetch_embed_html
-
   after_create_commit :broadcast_create
 
+  after_save_commit :populate_url_editorial_fields
   after_save_commit :promote_to_list
+  after_save_commit :fetch_embed_html
 
   scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(tweeted_at: :desc) }
@@ -33,10 +33,6 @@ class Tweet < ApplicationRecord
 
   def url
     "https://twitter.com/#{username}/status/#{tweet_id}"
-  end
-
-  def fetch_embed_html
-    FetchTweetEmbedJob.perform_later(self)
   end
 
   def public_metrics=(metrics)
@@ -57,9 +53,16 @@ class Tweet < ApplicationRecord
     broadcast_append_later_to topic, target: 'tweets', partial: 'tweets/tweet', locals: { tweet: self }
   end
 
+  def populate_url_editorial_fields
+    return unless saved? && saved_change_to_collection_id?
+
+    Rails.logger.debug("Populating editorial fields for #{urls.count} URLs")
+    urls.each(&:populate_editorial_fields!)
+  end
+
   def promote_to_list
     return unless saved? && saved_change_to_collection_id?
-    
+
     list_id = topic.twitter_lists.managed.first&.twitter_list_id
 
     return if list_id.blank?
@@ -70,6 +73,14 @@ class Tweet < ApplicationRecord
       author_id
     )
   end
+
+  def fetch_embed_html
+    return if embed_html.present?
+    return unless saved? && saved_change_to_collection_id?
+    
+    FetchTweetEmbedJob.perform_later(self)
+  end
+
 
   def edited_tweet_ids=(tweet_ids)
     tweet_ids.each do |id|
