@@ -45,6 +45,10 @@ Rails.application.routes.draw do
 
   resources :twitter_accounts
 
+  namespace :admin do
+    resources :users
+  end
+
   get '/dashboard', to: 'dashboard#show', as: :dashboard
   get '/profile', to: 'users#edit', as: :profile
   get '/login', to: 'email_authentications#new', as: 'login'

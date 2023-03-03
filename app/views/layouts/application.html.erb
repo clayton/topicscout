@@ -23,6 +23,11 @@
         <p class="hidden xl:block"> X-Large </p>
       </div>
     <% end %>
+    <% if session[:admin_id] %>
+      <div class="p-1 text-xl font-bold text-center text-gray-900 uppercase bg-yellow-200">
+        ADMIN
+      </div>
+    <% end %>
     <div data-controller="navigation">
       <div class="relative z-40 md:hidden" role="dialog" aria-modal="true">
         <div 

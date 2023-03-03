@@ -13,7 +13,7 @@ class User < ApplicationRecord
   scope :verified, -> { where(email_verified: true) }
 
   def auth_token
-    twitter_account.auth_token
+    twitter_account&.auth_token
   end
 
   def email=(email)
