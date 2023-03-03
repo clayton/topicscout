@@ -1,0 +1,56 @@
+<div class="px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <%= link_to "Back", topic_twitter_search_results_path(@topic), class: 'text-purple-500 hover:text-purple-900' %>
+    </div>
+  </div>
+  <div class="flow-root mt-8">
+    <div class="-mx-6 -my-2 overflow-x-auto lg:-mx-8">
+      <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-base font-semibold leading-6 text-gray-900">Search Result</h3>
+          <p class="max-w-2xl mt-1 text-sm text-gray-500">Details about this search.</p>
+        </div>
+        <div class="px-4 py-5 border-t border-gray-200 sm:p-0">
+          <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Status</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @result.status %></dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Searched at</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= local_time(@result.created_at) %></dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Tweets found</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @result.results_count %></dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Tweets added</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @result.added_count %></dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Tweets ignored</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @result.ignored_count %></dd>
+            </div>            
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Query used</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><%= @result.query %></dd>
+            </div>
+            <% if @result.errored? %>
+              <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Error message</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><code class="font-mono text-sm"><%= @result.error_message %></code></dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500">Error description</dt>
+              <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0"><code class="font-mono text-sm"><%= @result.error_description %></code></dd>
+            </div>
+            <% end %>
+
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

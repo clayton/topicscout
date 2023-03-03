@@ -7,7 +7,6 @@ class TwitterSearchJob < ApplicationJob
     topic = twitter_search_result.topic
     query = topic.to_query
 
-
     raw = client.search.tweets(query, start_time: twitter_search_result.parsed_start_time)
 
     TweetsParser.parse(raw, twitter_search_result, nil) do |parser|
@@ -19,6 +18,7 @@ class TwitterSearchJob < ApplicationJob
     end
   rescue StandardError => e
     Rails.logger.debug("[TwitterSearchJob] #{e.message} #{e.backtrace}}")
+    twitter_search_result.update(errored: true, completed: true, error_message: e.message)
     Honeybadger.notify(e)
   end
 end

@@ -5,6 +5,11 @@ class TwitterSearchResultsController < ApplicationController
     @twitter_search_results = @topic.twitter_search_results.newest.limit(30)
   end
 
+  def show
+    @topic = Topic.find_by(id: params[:topic_id])
+    @result = TwitterSearchResult.find_by(id: params[:id])
+  end
+
   def create
     @topic = Topic.find_by(id: params[:topic_id])
 

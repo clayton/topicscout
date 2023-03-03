@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_02_200249) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_03_040634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -200,6 +200,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_200249) do
     t.boolean "manual_search", default: false
     t.integer "ignored_count", default: 0
     t.integer "added_count", default: 0
+    t.boolean "errored", default: false
+    t.string "error_message"
+    t.text "error_description"
+    t.text "query"
     t.index ["topic_id"], name: "index_twitter_search_results_on_topic_id"
   end
 

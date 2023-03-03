@@ -22,6 +22,7 @@ class TwitterListSearchJob < ApplicationJob
     end
   rescue StandardError => e
     Rails.logger.debug("[TwitterSearchJob] #{e.message} #{e.backtrace}}")
+    twitter_search_result.update(errored: true, completed: true, error_message: e.message)
     Honeybadger.notify(e)
   end
 end

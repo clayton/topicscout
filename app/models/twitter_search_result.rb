@@ -36,6 +36,7 @@ class TwitterSearchResult < ApplicationRecord
     end
 
     TwitterSearchJob.perform_later(self)
+    update(query: topic.to_query)
   end
 
   def since_id
@@ -44,6 +45,13 @@ class TwitterSearchResult < ApplicationRecord
 
   def parsed_start_time
     topic.twitter_search_results.completed.order(created_at: :desc).first&.created_at&.rfc3339
+  end
+
+  def status
+    return 'Errored' if errored?
+    return 'Completed' if completed?
+    
+    'In progress'
   end
 
   def digest

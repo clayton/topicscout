@@ -24,6 +24,7 @@ class TweetsParser
     yield self if block_given?
   rescue StandardError => e
     Rails.logger.debug "TweetsParser: #{e} \n #{e.backtrace.join('\n')}"
+    @twitter_search_result.update(errored: true, completed: true, error_message: e.message)
     Honeybadger.notify(e)
   end
 
@@ -47,7 +48,7 @@ class TweetsParser
       urls = parse_urls(entities)
       edited_tweets = parse_edited_tweets(tweet)
 
-      @topic.tweets.find_or_create_by(tweet_id: tweet.fetch('id', nil)) do |t|
+      @topic.tweets.find_or_create_by!(tweet_id: tweet.fetch('id', nil)) do |t|
         t.twitter_list_id = @list_id
         t.twitter_search_result = @twitter_search_result
         t.name = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('name', nil)
