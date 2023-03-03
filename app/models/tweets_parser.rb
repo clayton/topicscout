@@ -20,7 +20,10 @@ class TweetsParser
   end
 
   def parse
+    save_tweets(@results.to_h)
+
     save_tweets(@results.to_h) while (@results = @results.next) && @twitter_search_result.under_limit(@added_count)
+
     yield self if block_given?
   rescue StandardError => e
     Rails.logger.debug "TweetsParser: #{e} \n #{e.backtrace.join('\n')}"
