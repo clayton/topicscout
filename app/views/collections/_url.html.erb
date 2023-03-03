@@ -1,0 +1,11 @@
+<td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-normal">
+  <p><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></p>
+  <%= local_time(url.tweet.tweeted_at) %>
+</td>
+<td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap grow">
+  <%= render partial: 'collections/editorial_form', locals: {collection: collection, url: url } %>
+</td>
+<td class="px-3 py-4 text-sm text-gray-500 whitespace-normal"><%= url.tweet.score.round %></td>
+<td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-normal">
+  <%= link_to 'View', url.unwound_url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
+</td>

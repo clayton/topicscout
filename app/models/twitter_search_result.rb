@@ -11,6 +11,8 @@ class TwitterSearchResult < ApplicationRecord
   scope :newest, -> { order(created_at: :desc) }
   scope :completed, -> { where(completed: true) }
   scope :incomplete, -> { where(completed: false) }
+  scope :successful, -> { where(errored: false, completed: true) }
+  scope :errored, -> { where(errored: true) }
 
   def incomplete?
     !completed?

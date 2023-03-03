@@ -5,7 +5,10 @@ class CollectionUrlsController < ApplicationController
 
     @url.update(url_params)
 
-    redirect_to(collection_path(@collection))
+    respond_to do |format|
+      format.html { redirect_to collection_path(@collection) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@url, partial: 'collections/url', locals: { collection: @collection, url: @url }) }
+    end
   end
 
   def url_params
