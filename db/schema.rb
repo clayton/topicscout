@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_03_175635) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_03_182934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -21,6 +21,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_03_175635) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_category_templates_on_topic_id"
+  end
+
+  create_table "collection_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "collection_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_collection_categories_on_collection_id"
   end
 
   create_table "collections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -228,6 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_03_175635) do
     t.string "editorial_title"
     t.string "editorial_url"
     t.text "editorial_description"
+    t.string "editorial_category"
     t.index ["topic_id"], name: "index_urls_on_topic_id"
   end
 
@@ -249,6 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_03_175635) do
   end
 
   add_foreign_key "category_templates", "topics"
+  add_foreign_key "collection_categories", "collections"
   add_foreign_key "collections", "topics"
   add_foreign_key "email_verifications", "users"
   add_foreign_key "hostname_ignore_rules", "topics"

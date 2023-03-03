@@ -12,6 +12,6 @@ class CollectionUrlsController < ApplicationController
   end
 
   def url_params
-    params.require(:url).permit(:editorial_title, :editorial_url, :editorial_description)
+    params.require(:url).permit(:editorial_title, :editorial_url, :editorial_description, :editorial_category)
   end
 end
