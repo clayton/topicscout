@@ -46,13 +46,19 @@ class TwitterSearchResult < ApplicationRecord
   end
 
   def parsed_start_time
-    topic.twitter_search_results.completed.order(created_at: :desc).first&.created_at&.rfc3339
+    last_search = topic.twitter_search_results.completed.successful.order(created_at: :desc).first
+
+    last_search_time = last_search&.created_at || Time.current - 1.hour
+
+    adjusted_search_time = last_search_time - 15.minutes
+
+    adjusted_search_time&.rfc3339
   end
 
   def status
     return 'Errored' if errored?
     return 'Completed' if completed?
-    
+
     'In progress'
   end
 

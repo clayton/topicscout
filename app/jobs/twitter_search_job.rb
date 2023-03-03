@@ -7,7 +7,7 @@ class TwitterSearchJob < ApplicationJob
     topic = twitter_search_result.topic
     query = topic.to_query
 
-    raw = client.search.tweets(query, {})
+    raw = client.search.tweets(query, start_time: twitter_search_result.parsed_start_time)
 
     TweetsParser.parse(raw, twitter_search_result, nil) do |parser|
       twitter_search_result.update!(completed: true)
