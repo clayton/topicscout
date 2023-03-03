@@ -21,6 +21,10 @@ class Url < ApplicationRecord
     update!(editorial_title: title, editorial_url: strip_utm(unwound_url))
   end
 
+  def tweet_score
+    tweet.score
+  end
+
   private
 
   def strip_utm(url)

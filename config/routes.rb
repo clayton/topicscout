@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :markdown_exports, as: :markdown
     resources :html_exports, as: :html
     resources :plain_text_exports, as: :plain_text
+    resources :rendered_exports, as: :rendered
     resources :urls, controller: 'collection_urls'
   end
 

@@ -1,0 +1,31 @@
+<div class="px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900"><%= @collection.name %></h1>
+      <p class="mt-2 text-sm text-gray-700">A list of tweets from this collection.</p>
+    </div>
+  </div>
+  <%= render partial: 'collections/tab_nav', locals: {collection: @collection, active: :rendered } %>
+  <div class="flow-root mt-8">
+    <div class="-mx-6 -my-2 overflow-x-auto lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div class="mt-1">
+            <div class="prose prose-gray max-w-none">
+              <% @urls.group_by(&:editorial_category).each do |category, category_urls| %>
+                <h3><%= category %></h3>
+                <ul>
+                  <% category_urls.sort_by(&:tweet_score).reverse.each do |category_url| %>
+                    <li>
+                      <a href="<%= category_url.editorial_url %>"><%= category_url.editorial_title %></a> (<%= category_url.tweet_score %>)
+                      <br>
+                      <span><%= category_url.hostname %></span>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
