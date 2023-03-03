@@ -171,6 +171,19 @@
       </div>
     </div>
   </div>
+  <div class="pt-8">
+      <div>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Topic categories</h3>
+        <p class="mt-1 text-sm text-gray-500">Categories for this topic to better organize tweets.</p>
+      </div>
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <%= f.fields_for :category_templates do |term_form| %>
+          <div class="sm:col-span-4">
+            <%= term_form.text_field :name, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <div class="pt-5">
     <div class="flex justify-end">
       <%= link_to "Cancel", cancel_link, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>

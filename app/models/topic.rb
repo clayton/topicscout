@@ -8,6 +8,7 @@ class Topic < ApplicationRecord
   has_many :urls
   has_many :collections, dependent: :destroy
   has_many :twitter_lists, dependent: :destroy
+  has_many :category_templates, dependent: :destroy
 
   belongs_to :user
 
@@ -18,6 +19,7 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :search_terms, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :twitter_lists, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :category_templates, allow_destroy: true, reject_if: :all_blank
 
   scope :undeleted, -> { where(deleted: false) }
 

@@ -9,6 +9,7 @@ class TopicsController < AuthenticatedUserController
     @topic = Topic.new
     @topic.twitter_lists.build
     3.times { @topic.search_terms.build }
+    3.times { @topic.category_templates.build }
   end
 
   def create
@@ -27,6 +28,7 @@ class TopicsController < AuthenticatedUserController
     @topic = Topic.find(params[:id])
     @topic.twitter_lists.build
     3.times { @topic.search_terms.build }
+    @topic.category_templates.build
   end
 
   def show
@@ -66,6 +68,7 @@ class TopicsController < AuthenticatedUserController
                                                                                                                                                                                                                                         negative_search_term: [:term],
                                                                                                                                                                                                                                         negative_search_terms_attributes: %i[term id],
                                                                                                                                                                                                                                         new_negative_search_terms: [],
-                                                                                                                                                                                                                                        twitter_lists_attributes: %i[id name twitter_list_id _destroy])
+                                                                                                                                                                                                                                        twitter_lists_attributes: %i[id name twitter_list_id _destroy],
+                                                                                                                                                                                                                                        category_templates_attributes: %i[id name _destroy])
   end
 end

@@ -46,13 +46,7 @@ class TwitterSearchResult < ApplicationRecord
   end
 
   def parsed_start_time
-    last_search = topic.twitter_search_results.completed.successful.order(created_at: :desc).first
-
-    last_search_time = last_search&.created_at || Time.current - 1.hour
-
-    adjusted_search_time = last_search_time - 15.minutes
-
-    adjusted_search_time&.rfc3339
+    (Time.current - 48.hours).rfc3339
   end
 
   def status
