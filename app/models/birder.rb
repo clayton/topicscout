@@ -24,6 +24,8 @@ module Birder
 
       path = '/2/tweets/search/recent'
 
+      Rails.logger.info "Birder::Search.tweets: #{path} #{body}"
+
       Birder::Results.new(@client.get(path, body), @client,
                           request: { path: path, body: body, page: 'next_token' })
     end
@@ -58,6 +60,8 @@ module Birder
                'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
 
       path = "/2/lists/#{list_id}/tweets"
+
+      Rails.logger.info "Birder::List.tweets: #{path} #{body}"
 
       Birder::Results.new(@client.get(path, body), @client,
                           request: { path: path, body: body, page: 'pagination_token' })
