@@ -84,7 +84,7 @@ class Tweet < ApplicationRecord
 
   def edited_tweet_ids=(tweet_ids)
     tweet_ids.each do |id|
-      Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
+      #Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
     end
   end
 end
