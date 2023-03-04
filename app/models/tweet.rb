@@ -77,14 +77,35 @@ class Tweet < ApplicationRecord
   def fetch_embed_html
     return if embed_html.present?
     return unless saved? && saved_change_to_collection_id?
-    
+
     FetchTweetEmbedJob.perform_later(self)
   end
 
-
   def edited_tweet_ids=(tweet_ids)
     tweet_ids.each do |id|
-      #Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
+      Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
+    end
+  end
+
+  def raw_urls=(urls)
+    urls.each do |url|
+      hash = Digest::SHA2.hexdigest(url[:unwound_url])
+
+      existing = Url.find_by(uri_hash: hash, topic_id: topic_id)
+
+      if existing
+        update(archived: true, ignored: true)
+      else
+        Url.create do |u|
+          u.topic_id = topic_id
+          u.uri_hash = hash
+          u.unwound_url = url[:unwound_url]
+          u.tweet = self
+          u.status = url[:status]
+          u.title = url[:title]
+          u.display_url = url[:display_url]
+        end
+      end
     end
   end
 end

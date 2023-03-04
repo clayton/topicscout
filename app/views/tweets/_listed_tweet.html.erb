@@ -8,7 +8,7 @@
           </div>
           <div class="lg:ml-4">
             <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
-            <div class="text-gray-500"><%= tweet.name %></div>
+            <div class="text-gray-500"><%= kill_mastadon(tweet.name) %></div>
           </div>
         </div>
         <div>

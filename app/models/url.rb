@@ -7,6 +7,9 @@ class Url < ApplicationRecord
   scope :relevant, -> { where(tweets: { ignored: false }) }
   scope :qualified, ->(threshold) { where(Tweet.arel_table[:score].gteq(threshold)) }
 
+  before_create :cleanup_unwound_url
+  before_create :calculate_uri_hash
+
   def hostname
     return unless unwound_url
 
@@ -39,5 +42,18 @@ class Url < ApplicationRecord
     rescue StandardError
       url
     end
+  end
+
+  def cleanup_unwound_url
+    return unless unwound_url
+    
+    self.unwound_url = strip_utm(unwound_url)
+  end
+
+  def calculate_uri_hash
+    return unless unwound_url
+    return if uri_hash.present?
+
+    self.uri_hash = Digest::SHA2.hexdigest(unwound_url)
   end
 end

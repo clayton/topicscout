@@ -68,7 +68,7 @@ class TweetsParser
         t.public_metrics = tweet.fetch('public_metrics', {})
         t.lang = tweet.fetch('lang', nil)
         t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
-        t.urls << urls.compact.map { |url| t.urls.build(url) }
+        t.raw_urls = urls.compact.map { |url| t.urls.build(url) }
         t.edited_tweet_ids = edited_tweets
       end
 
@@ -101,7 +101,6 @@ class TweetsParser
       next if @twitter_search_result.ignored_hostname?(url.fetch('unwound_url', nil))
 
       {
-        topic_id: @topic.id,
         status: url.fetch('status', nil),
         title: url.fetch('title', nil),
         display_url: url.fetch('display_url', nil),
