@@ -6,25 +6,39 @@ databases:
 
 services:
   - type: redis
-    name: resque-redis
+    name: topicscout-redis
     region: oregon
     maxmemoryPolicy: noeviction
     ipAllowList: [] # only allow internal connections
 
   - type: worker
-    name: resque-worker
+    name: worker
     env: ruby
     region: oregon
     buildCommand: bundle install
-    startCommand: bundle exec resque
+    startCommand: QUEUE=priority rails resque:work
     envVars:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: resque-redis
+          name: topicscout-redis
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
+  - type: worker
+      name: priority-worker
+      env: ruby
+      region: oregon
+      buildCommand: bundle install
+      startCommand: QUEUE=default rails resque:work
+      envVars:
+        - key: REDIS_URL
+          fromService:
+            type: redis
+            name: topicscout-redis
+            property: connectionString
+        - key: RAILS_MASTER_KEY
+          sync: false        
   - type: web
     name: rails-web
     env: ruby
@@ -35,7 +49,7 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: resque-redis
+          name: topicscout-redis
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
