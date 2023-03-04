@@ -15,7 +15,7 @@ services:
     name: search_cron
     env: ruby
     region: oregon
-    buildCommand: "true"
+    buildCommand: "./bin/render-build.sh"
     startCommand: "bundle exec rails search:twitter"
     schedule: "00 * * * *"
     envVars:
@@ -35,7 +35,7 @@ services:
     name: token_cron
     env: ruby
     region: oregon
-    buildCommand: "true"
+    buildCommand: "./bin/render-build.sh"
     startCommand: "bundle exec rails tokens:refresh"
     schedule: "0/15 * * * *"
     envVars:
