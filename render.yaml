@@ -1,0 +1,41 @@
+databases:
+  - name: topicscout-db
+    databaseName: topicscout_db
+    user: topicscout_db_user
+
+
+services:
+  - type: redis
+    name: resque-redis
+    region: oregon
+    maxmemoryPolicy: noeviction
+    ipAllowList: [] # only allow internal connections
+
+  - type: worker
+    name: resque-worker
+    env: ruby
+    region: oregon
+    buildCommand: bundle install
+    startCommand: bundle exec resque
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: resque-redis
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+  - type: web
+    name: rails-web
+    env: ruby
+    region: oregon
+    buildCommand: bundle install; bundle exec rake assets:precompile; bundle exec rake assets:clean;
+    startCommand: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: resque-redis
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
