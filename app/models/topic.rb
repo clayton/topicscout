@@ -31,12 +31,12 @@ class Topic < ApplicationRecord
     twitter_search_results.completed.newest.first&.results_count || 0
   end
 
-  def unedited_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.includes(:hashtags).relevant.unedited.qualified(threshold)
-    filtered_and_sorted_results(results, sort, time_filter)
+  def unedited_tweets(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
+    results = tweets.includes(:hashtags).unedited.qualified(threshold)
+    filtered_and_sorted_results(results, sort, time_filter, visibility_filter)
   end
 
-  def unedited_urls(sort = 'score', time_filter = 'all')
+  def unedited_urls(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
     results = urls.includes(:tweet).relevant.unedited.qualified(threshold)
     filtered_and_sorted_results(results, sort, time_filter)
   end
@@ -46,12 +46,19 @@ class Topic < ApplicationRecord
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
-  def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all')
-    results = filtered_results(results, time_filter)
+  def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
+    results = visible_results(results, visibility_filter)
+    results = timely_results(results, time_filter)
     sorted_results(results, sort)
   end
 
-  def filtered_results(results, time_filter = 'all')
+  def visible_results(results, visibility_filter = 'relevant')
+    return results if visibility_filter == 'all'
+
+    results.relevant
+  end
+
+  def timely_results(results, time_filter = 'all')
     now = Time.current.in_time_zone(user.timezone)
     hour_time = (now - 1.hour).in_time_zone('UTC')
     day_time = now.beginning_of_day.in_time_zone('UTC')
@@ -62,7 +69,8 @@ class Topic < ApplicationRecord
     results = results.where('tweets.tweeted_at > ?', hour_time) if time_filter == 'hour'
     results = results.where('tweets.tweeted_at > ?', day_time) if time_filter == 'day'
     if time_filter == 'yesterday'
-      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', yesterday_start_time, yesterday_end_time])
+      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', yesterday_start_time,
+                               yesterday_end_time])
     end
     results = results.where('tweets.tweeted_at > ?', week_time) if time_filter == 'week'
 

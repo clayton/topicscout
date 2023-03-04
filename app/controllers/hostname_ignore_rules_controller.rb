@@ -8,7 +8,7 @@ class HostnameIgnoreRulesController < ApplicationController
 
     @topic.hostname_ignore_rules.find_or_create_by(hostname: @url.hostname)
     
-    @tweet.update(ignored: true, archived: true)
+    @tweet.update(ignored: true)
 
     respond_to do |format|
       format.html { redirect_to topic_urls_url(@topic) }

@@ -94,7 +94,7 @@ class Tweet < ApplicationRecord
       existing = Url.find_by(uri_hash: hash, topic_id: topic_id)
 
       if existing
-        update(archived: true, ignored: true)
+        update(ignored: true)
       else
         Url.create do |u|
           u.topic_id = topic_id
