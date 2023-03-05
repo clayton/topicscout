@@ -9,7 +9,7 @@
         <% end %>
         <div class="flex flex-col items-center lg:flex-row">
           <div class="flex-shrink-0 w-10 h-10">
-            <%= image_tag first_influencer&.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+            <%= image_tag first_influencer.try(:profile_image_url, ''), class: 'h-10 w-10 rounded-full' %>
           </div>
           <div class="lg:ml-4">
             <div class="font-medium text-gray-900"><%= link_to("@#{first_influencer&.username}", "https://twitter.com/#{first_influencer&.username}", target: '_blank', class: 'underline text-purple-500') %></div>
