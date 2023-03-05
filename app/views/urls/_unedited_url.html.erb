@@ -34,7 +34,7 @@
     <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
       <div class="flex flex-col justify-between h-full space-y-4">
         <div>
-          <%= link_to(local_time(url.published_at), url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-xs') %>
+          <%= link_to(local_time(url.published_at || url.created_at), url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-xs') %>
         </div>
         <div class="flex-grow">
           <p><%= link_to(url.title, url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-lg') %></p>
