@@ -18,7 +18,7 @@ class Url < ApplicationRecord
   scope :relevant, -> { where(ignored: false) }
   scope :qualified, ->(threshold) { where(['score >= ?', threshold]) }
   scope :best, -> { order(score: :desc) }
-  scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
+  scope :reviewing, -> { where(ignored: false, saved: true, archived: false, collection_id: nil) }
   scope :uncollected, -> { where(collection_id: nil) }
   scope :collected, -> { where.not(collection_id: nil) }
   scope :unsaved, -> { where(saved: false) }
