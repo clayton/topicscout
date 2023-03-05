@@ -56,7 +56,7 @@ services:
     env: ruby
     region: oregon
     buildCommand: bundle install
-    startCommand: QUEUE=priority rails resque:work
+    startCommand: QUEUE=default rails resque:work
     envVars:
       - key: REDIS_URL
         fromService:
@@ -74,7 +74,7 @@ services:
     env: ruby
     region: oregon
     buildCommand: bundle install
-    startCommand: QUEUE=priority rails resque:work
+    startCommand: QUEUE=default rails resque:work
     envVars:
       - key: REDIS_URL
         fromService:
@@ -92,7 +92,7 @@ services:
     env: ruby
     region: oregon
     buildCommand: bundle install
-    startCommand: QUEUE=priority rails resque:work
+    startCommand: QUEUE=default rails resque:work
     envVars:
       - key: REDIS_URL
         fromService:
@@ -110,7 +110,7 @@ services:
     env: ruby
     region: oregon
     buildCommand: bundle install
-    startCommand: QUEUE=default rails resque:work
+    startCommand: QUEUE=priority rails resque:work
     envVars:
       - key: REDIS_URL
         fromService:
