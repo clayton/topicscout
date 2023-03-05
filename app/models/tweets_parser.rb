@@ -67,7 +67,7 @@ class TweetsParser
         t.urls << urls
       end
 
-      urls.each { |url| url.increment!(score: created_tweet.score) }
+      urls.each { |url| url.increment!(:score, created_tweet.score) }
 
       influencer.increment!(:influenced_count)
 
