@@ -17,6 +17,8 @@ module TweetsHelper
   end
 
   def kill_mastodon(name)
+    return "" unless name
+    
     name.gsub(/@mastodon\.\S+/, '')
   end
 end
