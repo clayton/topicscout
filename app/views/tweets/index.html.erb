@@ -31,6 +31,7 @@
       <%= form_tag topic_archived_tweets_path(@topic), method: :post do %>
         <%= hidden_field_tag :sort, @sort %>
         <%= hidden_field_tag :time_filter, @time_filter %>
+        <%= hidden_field_tag :visibility_filter, @visibility_filter %>
         <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md shadow-sm hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
           <!-- Heroicon name: mini/envelope -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
