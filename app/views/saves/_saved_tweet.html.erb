@@ -1,45 +1,34 @@
-<div class="col-span-1" id="<%= dom_id(url) %>">
-  <div class="grid grid-cols-3 bg-white rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
-    <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
+<div class="col-span-1 p-2 bg-white rounded-lg shadow-md border-gray-50" id="<%= dom_id(tweet) %>">
+  <div class="grid grid-cols-3 gap-6 xl:grid-cols-10">
+    <div class="col-span-2 xl:order-1">
       <div class="flex flex-col space-y-2">
         <div class="flex flex-col items-center lg:flex-row">
           <div class="flex-shrink-0 w-10 h-10">
-            <%= image_tag url.tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+            <%= image_tag tweet.profile_image_url, class: 'h-10 w-10 rounded-full' %>
           </div>
           <div class="lg:ml-4">
-            <div class="font-medium text-gray-900"><%= link_to("@#{url.tweet.username}", "https://twitter.com/#{url.tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
-            <div class="text-gray-500"><%= url.tweet.name %></div>
+            <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
+            <div class="text-gray-500"><%= kill_mastodon(tweet.name) %></div>
           </div>
         </div>
-        <div>
-          <%= form_with model: [url.tweet.topic, TweeterIgnoreRule.new] do |f| %>
-            <%= f.hidden_field :author_id, value: url.tweet.author_id %>
-            <%= f.hidden_field :return_to, value: 'urls' %>
-            <%= f.hidden_field :page, value: params[:page] %>
-            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore @<%= url.tweet.username %></button>
-          <% end %>
-        </div>
       </div>
     </div>
-    <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
-      <div class="flex flex-col justify-between h-full space-y-4">
-        <div>
-          <%= link_to(local_time(url.tweet.tweeted_at), url.tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %>
-        </div>
-        <div class="flex-grow">
-          <p><%= link_to(url.title, url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-lg') %></p>
-          <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800"><%= url.hostname %></span>
-        </div>
-        <div>
-          <%= form_with model: [topic, topic.hostname_ignore_rules.build] do |f| %>
-            <%= f.hidden_field :tweet_id, value: url.tweet.id %>
-            <%= f.hidden_field :url_id, value: url.id %>
-            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore <%= url.hostname %></button>
-          <% end %>
-        </div>
+    <div class="col-span-1 xl:col-span-2 xl:order-4">
+      <div class="flex flex-col items-center justify-between h-full space-y-12 xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
+        <%= form_with url: topic_archived_tweet_path(topic, tweet), method: :patch, class: 'w-full xl:w-auto' do |f| %>
+          <%= f.hidden_field :archived, value: true %>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+        <% end %>
+        <%= form_with url: collection_collected_tweet_path(collection, tweet), method: :patch, class: 'w-full xl:w-auto' do |f| %>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Collect</button>
+        <% end %>
       </div>
     </div>
-    <div class="order-last col-span-3 p-2 text-sm text-gray-500 xl:order-3 md:col-span-8 xl:col-span-1">
+    <div class="col-span-3 xl:col-span-5 xl:order-2">
+      <div class=""><%= link_to(local_time(tweet.published_at), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
+      <div class="mt-1 text-gray-900"><%= display_entitites(tweet.text) %></div>
+    </div>
+    <div class="col-span-3 xl:col-span-1 xl:order-3">
       <div class="flex items-center justify-between w-full text-gray-700 xl:items-start xl:flex-col">
         <div class="flex items-center space-x-1">
           <div class="text-gray-400">
@@ -47,7 +36,7 @@
               <path d="M15.5 2A1.5 1.5 0 0014 3.5v13a1.5 1.5 0 001.5 1.5h1a1.5 1.5 0 001.5-1.5v-13A1.5 1.5 0 0016.5 2h-1zM9.5 6A1.5 1.5 0 008 7.5v9A1.5 1.5 0 009.5 18h1a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0010.5 6h-1zM3.5 10A1.5 1.5 0 002 11.5v5A1.5 1.5 0 003.5 18h1A1.5 1.5 0 006 16.5v-5A1.5 1.5 0 004.5 10h-1z" />
             </svg>
           </div>
-          <div ><%= number_with_delimiter(url.tweet.score.round) %></div>
+          <div ><%= number_with_delimiter(tweet.score.round) %></div>
         </div>
         <div class="flex items-center space-x-1">
           <div class="text-gray-400">
@@ -56,7 +45,7 @@
             </svg>
           </div>
           <div >
-            <%= number_with_delimiter(url.tweet.reply_count) %>
+            <%= number_with_delimiter(tweet.reply_count) %>
           </div>
         </div>
         <div class="flex items-center space-x-1">
@@ -66,7 +55,7 @@
             </svg>
           </div>
           <div >
-            <%= number_with_delimiter(url.tweet.retweet_count) %>
+            <%= number_with_delimiter(tweet.retweet_count) %>
           </div>
         </div>
         <div class="flex items-center space-x-1">
@@ -76,7 +65,7 @@
             </svg>
           </div>
           <div >
-            <%= number_with_delimiter(url.tweet.like_count) %>
+            <%= number_with_delimiter(tweet.like_count) %>
           </div>
         </div>
         <div class="flex items-center space-x-1">
@@ -87,7 +76,7 @@
             </svg>
           </div>
           <div >
-            <%= number_with_delimiter(url.tweet.quote_count) %>
+            <%= number_with_delimiter(tweet.quote_count) %>
           </div>
         </div>
         <div class="flex items-center space-x-1">
@@ -98,23 +87,9 @@
             </svg>
           </div>
           <div >
-            <%= number_with_delimiter(url.tweet.impression_count) %>
+            <%= number_with_delimiter(tweet.impression_count) %>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
-      <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
-        <%= form_with model: [topic, url], class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <%= f.hidden_field :page, value: params[:page] %>
-          <%= f.hidden_field :archived, value: true %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
-        <% end %>
-        <%= form_with model: [topic, url], class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <%= f.hidden_field :page, value: params[:page] %>
-          <%= f.hidden_field :saved, value: true %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
-        <% end %>
       </div>
     </div>
   </div>

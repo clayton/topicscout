@@ -1,9 +1,13 @@
 class ArchivedTweetsController < ApplicationController
-  def create
-    @topic = Topic.find(params[:topic_id])
-    permitted = params.permit(:sort, :time_filter)
-    @topic.unedited_tweets(permitted[:sort], permitted[:time_filter]).update_all(archived: true)
+  include ActionView::RecordIdentifier
 
-    redirect_to topic_tweets_path(@topic)
+  def update
+    @topic = Topic.find(params[:topic_id])
+    @tweet = @topic.tweets.find(params[:id])
+    @tweet.update(archived: true)
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@tweet)) }
+    end
   end
 end

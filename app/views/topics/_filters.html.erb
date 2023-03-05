@@ -123,9 +123,10 @@
               data-transition-leave-start="transform opacity-100 scale-100"
               data-transition-leave-end="transform opacity-0 scale-95"
               class="absolute right-0 z-10 hidden p-4 mt-2 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'timingForm'} do %>
-                <%= hidden_field_tag 'sort', @sort || 'score' %>
-                <%= hidden_field_tag 'page', params[:page] || 1 %>
+              <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'visibilityForm'} do %>
+                <%= hidden_field_tag 'sort', @sort %>
+                <%= hidden_field_tag 'page', @page %>
+                <%= hidden_field_tag 'time_filter', @time_filter %>
                 <div class="flex items-center">
                   <%= check_box_tag 'visibility_filter', 'all', (@visibility_filter == 'all'), class: 'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeVisibilityFilter' } %>
                   <%= label_tag "visibility_filter_ignored", "Show ignored", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
@@ -156,8 +157,9 @@
               data-transition-leave-end="transform opacity-0 scale-95"
               class="absolute right-0 z-10 hidden p-4 mt-2 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
               <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'timingForm'} do %>
-                <%= hidden_field_tag 'sort', @sort || 'score' %>
-                <%= hidden_field_tag 'page', params[:page] || 1 %>
+                <%= hidden_field_tag 'sort', @sort %>
+                <%= hidden_field_tag 'page', @page %>
+                <%= hidden_field_tag 'visibility_filter', @visibility_filter %>
                 <div class="flex items-center">
                   <%= radio_button_tag 'time_filter', 'hour', (@time_filter == 'hour'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_hour", "Last hour", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>

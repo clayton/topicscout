@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'archived_tweets/create'
-  get 'urls/index'
   namespace :onboarding do
     get 'email_verifications/edit'
     resources :topics
@@ -24,19 +22,24 @@ Rails.application.routes.draw do
       resources :negative_search_terms, controller: 'tweet_negative_search_terms'
     end
     resources :tweeter_ignore_rules
+    resources :influencer_ignore_rules
     resources :urls
     resources :saves
     resources :archived_tweets
     resources :archived_urls
+    resources :saved_tweets
+    resources :saved_urls
   end
 
   resources :collections do
-    resources :tweets, controller: 'collection_tweets'
+    resources :urls, controller: :collection_urls
+    resources :tweets, controller: :collection_tweets
     resources :markdown_exports, as: :markdown
     resources :html_exports, as: :html
     resources :plain_text_exports, as: :plain_text
     resources :rendered_exports, as: :rendered
-    resources :urls, controller: 'collection_urls'
+    resources :collected_tweets
+    resources :collected_urls
   end
 
   resources :users do
@@ -58,6 +61,8 @@ Rails.application.routes.draw do
   get '/auth/failure', to: 'twitter_accounts#destroy'
   get '/logout', to: 'sessions#destroy', as: 'logout'
   get '/checkouts/:checkout_session_id', to: 'checkouts#show'
+
+  get '/up', to: 'health#show'
 
   root 'topics#index'
 end

@@ -1,12 +1,13 @@
 class ArchivedUrlsController < AuthenticatedUserController
-  def create
+  include ActionView::RecordIdentifier
+  
+  def update
     @topic = Topic.find(params[:topic_id])
-    permitted = params.permit(:sort, :time_filter)
+    @url = @topic.urls.find(params[:id])
+    @url.update(archived: true)
 
-    @topic.unedited_urls(permitted[:sort], permitted[:time_filter]).each do |url|
-      url.tweet.update(archived: true)
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@url)) }
     end
-
-    redirect_to topic_urls_path(@topic)
   end
 end

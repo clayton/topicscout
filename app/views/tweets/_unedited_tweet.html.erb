@@ -1,4 +1,4 @@
-<div class="col-span-1" id="<%= dom_id(tweet, 'listed') %>">
+<div class="col-span-1" id="<%= dom_id(tweet) %>">
   <div class="grid grid-cols-3 bg-white rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
     <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
       <div class="flex flex-col space-y-2">
@@ -8,14 +8,14 @@
           </div>
           <div class="lg:ml-4">
             <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
-            <div class="text-gray-500"><%= kill_mastadon(tweet.name) %></div>
+            <div class="text-gray-500"><%= kill_mastodon(tweet.name) %></div>
           </div>
         </div>
         <div>
           <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
             <%= f.hidden_field :author_id, value: tweet.author_id %>
             <%= f.hidden_field :page, value: params[:page] %>
-            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore user</button>
+            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Ignore @<%= tweet.username %></button>
           <% end %>
         </div>
       </div>
@@ -127,14 +127,10 @@
     </div>
     <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
       <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
-        <%= form_with model: [tweet.topic, tweet], class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <%= f.hidden_field :page, value: params[:page] %>
-          <%= f.hidden_field :archived, value: true %>
+        <%= form_with url: topic_archived_tweet_path(topic, tweet), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
           <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
         <% end %>
-        <%= form_with model: [tweet.topic, tweet], class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <%= f.hidden_field :page, value: params[:page] %>
-          <%= f.hidden_field :saved, value: true %>
+        <%= form_with url: topic_saved_tweet_path(topic, tweet), method: :patch, class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
           <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
         <% end %>
       </div>

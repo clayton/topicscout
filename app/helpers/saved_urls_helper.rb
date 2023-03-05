@@ -1,0 +1,2 @@
+module SavedUrlsHelper
+end

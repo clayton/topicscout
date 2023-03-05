@@ -11,6 +11,7 @@ export default class extends Controller {
     "timingExpander",
     "desktopTimingFilter",
     "timingForm",
+    "visibilityForm",
     "desktopVisibilityFilter",
   ];
 
@@ -67,6 +68,6 @@ export default class extends Controller {
   }
 
   changeVisibilityFilter(event) {
-    this.timingFormTarget.submit();
+    this.visibilityFormTarget.submit();
   }
 }

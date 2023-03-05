@@ -20,7 +20,7 @@
 <%= turbo_frame_tag dom_id(@topic, 'list') do %>
   <div class="grid grid-cols-1 space-y-4">
     <% @tweets.each do |tweet| %>
-      <%= render partial: 'listed_tweet', locals: {tweet: tweet, topic: @topic} %>
+      <%= render partial: 'unedited_tweet', locals: {tweet: tweet, topic: @topic} %>
     <% end %>
   </div>
   <div class="flex flex-col items-center justify-between py-8 space-y-4 sm:flex-row sm:space-y-0">

@@ -16,7 +16,7 @@ module TweetsHelper
     formatted.html_safe
   end
 
-  def kill_mastadon(name)
+  def kill_mastodon(name)
     name.gsub(/@mastodon\.\S+/, '')
   end
 end

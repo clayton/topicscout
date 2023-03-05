@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_05_173602) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -74,6 +74,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
     t.index ["topic_id"], name: "index_hostname_ignore_rules_on_topic_id"
   end
 
+  create_table "influenced_urls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "influencer_id", null: false
+    t.uuid "url_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["influencer_id"], name: "index_influenced_urls_on_influencer_id"
+    t.index ["url_id"], name: "index_influenced_urls_on_url_id"
+  end
+
+  create_table "influencers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "topic_id", null: false
+    t.string "name"
+    t.string "profile_image_url"
+    t.string "profile_url"
+    t.integer "influenced_count"
+    t.integer "saved_count"
+    t.integer "collected_count"
+    t.string "platform_id"
+    t.string "username"
+    t.string "platform"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_influencers_on_topic_id"
+  end
+
   create_table "negative_search_terms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "term"
     t.uuid "topic_id"
@@ -134,6 +159,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
 
+  create_table "tweeted_urls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "tweet_id"
+    t.uuid "url_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tweeter_ignore_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "topic_id", null: false
     t.string "author_id"
@@ -145,12 +177,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
   create_table "tweets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "twitter_search_result_id", null: false
     t.uuid "topic_id", null: false
-    t.string "username"
-    t.string "name"
-    t.string "profile_image_url"
     t.text "text"
     t.string "tweet_id"
-    t.string "author_id"
     t.string "intent"
     t.datetime "tweeted_at"
     t.text "embed_html"
@@ -169,8 +197,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
     t.boolean "archived", default: false
     t.uuid "collection_id"
     t.string "twitter_list_id"
+    t.uuid "influencer_id"
+    t.datetime "published_at"
     t.index ["collection_id"], name: "index_tweets_on_collection_id"
     t.index ["ignored"], name: "index_tweets_on_ignored"
+    t.index ["influencer_id"], name: "index_tweets_on_influencer_id"
     t.index ["topic_id"], name: "index_tweets_on_topic_id"
     t.index ["tweet_id"], name: "index_tweets_on_tweet_id"
     t.index ["twitter_search_result_id"], name: "index_tweets_on_twitter_search_result_id"
@@ -228,17 +259,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
     t.string "title"
     t.string "status"
     t.string "unwound_url"
-    t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "tweet_id"
     t.uuid "topic_id"
     t.string "editorial_title"
     t.string "editorial_url"
     t.text "editorial_description"
     t.string "editorial_category"
-    t.string "uri_hash"
-    t.index ["topic_id", "uri_hash"], name: "index_urls_on_topic_id_and_uri_hash", unique: true
+    t.boolean "ignored", default: false
+    t.boolean "archived", default: false
+    t.boolean "saved", default: false
+    t.uuid "collection_id"
+    t.float "score", default: 0.0
+    t.datetime "published_at"
     t.index ["topic_id"], name: "index_urls_on_topic_id"
   end
 
@@ -264,6 +297,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_04_151836) do
   add_foreign_key "collections", "topics"
   add_foreign_key "email_verifications", "users"
   add_foreign_key "hostname_ignore_rules", "topics"
+  add_foreign_key "influenced_urls", "influencers"
+  add_foreign_key "influenced_urls", "urls"
+  add_foreign_key "influencers", "topics"
   add_foreign_key "search_terms", "topics"
   add_foreign_key "topics", "users"
   add_foreign_key "tweeter_ignore_rules", "topics"

@@ -32,17 +32,22 @@ class Topic < ApplicationRecord
   end
 
   def unedited_tweets(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
-    results = tweets.includes(:hashtags).unedited.qualified(threshold)
+    results = tweets.includes(:hashtags, :influencer).unedited.qualified(threshold)
     filtered_and_sorted_results(results, sort, time_filter, visibility_filter)
   end
 
   def unedited_urls(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
-    results = urls.includes(:tweet).relevant.unedited.qualified(threshold)
-    filtered_and_sorted_results(results, sort, time_filter)
+    results = urls.includes(:influencers).relevant.unedited.qualified(threshold)
+    filtered_and_sorted_results(results, sort, time_filter, visibility_filter)
   end
 
   def saved_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.includes(:hashtags, :urls).reviewing.uncollected
+    results = tweets.includes(:influencer).reviewing.uncollected
+    filtered_and_sorted_results(results, sort, time_filter)
+  end
+
+  def saved_urls(sort = 'score', time_filter = 'all')
+    results = urls.includes(:influencers).reviewing.uncollected
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
@@ -66,20 +71,20 @@ class Topic < ApplicationRecord
     yesterday_end_time = day_time
     week_time = (now.beginning_of_day - 1.week).in_time_zone('UTC')
 
-    results = results.where('tweets.tweeted_at > ?', hour_time) if time_filter == 'hour'
-    results = results.where('tweets.tweeted_at > ?', day_time) if time_filter == 'day'
+    results = results.where('published_at > ?', hour_time) if time_filter == 'hour'
+    results = results.where('published_at > ?', day_time) if time_filter == 'day'
     if time_filter == 'yesterday'
-      results = results.where(['tweets.tweeted_at > ? AND tweets.tweeted_at < ?', yesterday_start_time,
+      results = results.where(['published_at > ? AND published_at < ?', yesterday_start_time,
                                yesterday_end_time])
     end
-    results = results.where('tweets.tweeted_at > ?', week_time) if time_filter == 'week'
+    results = results.where('published_at > ?', week_time) if time_filter == 'week'
 
     results
   end
 
   def sorted_results(results, sort = 'score')
-    results = results.order(Tweet.arel_table[:tweeted_at].desc) if sort == 'newest'
-    results = results.order(Tweet.arel_table[:score].desc) if sort == 'score' || sort.nil?
+    results = results.order(published_at: :desc) if sort == 'newest'
+    results = results.order(score: :desc) if sort == 'score' || sort.nil?
 
     results
   end

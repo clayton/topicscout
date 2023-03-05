@@ -1,14 +1,29 @@
 class Url < ApplicationRecord
-  belongs_to :tweet
+  belongs_to :topic
+  belongs_to :collection, optional: true
 
-  scope :unique, -> { distinct('unwound_url') }
-  scope :unedited, -> { where(tweets: { saved: false, archived: false }) }
-  scope :uncollected, -> { where(tweets: { collection_id: nil }) }
-  scope :relevant, -> { where(tweets: { ignored: false }) }
-  scope :qualified, ->(threshold) { where(Tweet.arel_table[:score].gteq(threshold)) }
+  has_many :tweeted_urls
+  has_many :tweets, through: :tweeted_urls
+
+  has_many :influenced_urls
+  has_many :influencers, through: :influenced_urls
+
+  after_save_commit :promote_to_list
+  after_save :populate_editorial_fields!
+
+  scope :unedited, -> { where(saved: false, archived: false) }
+  scope :newest, -> { order(published_at: :desc) }
+  scope :recent, -> { order(published_at: :desc).limit(40) }
+  scope :ignored, -> { where(ignored: true) }
+  scope :relevant, -> { where(ignored: false) }
+  scope :qualified, ->(threshold) { where(['score >= ?', threshold]) }
+  scope :best, -> { order(score: :desc) }
+  scope :reviewing, -> { where(ignored: false, saved: true, archived: false) }
+  scope :uncollected, -> { where(collection_id: nil) }
+  scope :collected, -> { where.not(collection_id: nil) }
+  scope :unsaved, -> { where(saved: false) }
 
   before_create :cleanup_unwound_url
-  before_create :calculate_uri_hash
 
   def hostname
     return unless unwound_url
@@ -20,15 +35,25 @@ class Url < ApplicationRecord
     end
   end
 
-  def populate_editorial_fields!
-    update!(editorial_title: title, editorial_url: strip_utm(unwound_url))
+  def first_influencer
+    influencers.first
   end
 
-  def tweet_score
-    tweet.score
+  def first_influencer_username
+    first_influencer&.username
+  end
+
+  def first_influencer_profile_url
+    first_influencer&.profile_url
   end
 
   private
+
+  def populate_editorial_fields!
+    return unless saved? && saved_change_to_collection_id?
+
+    update!(editorial_title: title, editorial_url: strip_utm(unwound_url))
+  end
 
   def strip_utm(url)
     return unless url
@@ -46,14 +71,25 @@ class Url < ApplicationRecord
 
   def cleanup_unwound_url
     return unless unwound_url
-    
+
     self.unwound_url = strip_utm(unwound_url)
   end
 
-  def calculate_uri_hash
-    return unless unwound_url
-    return if uri_hash.present?
+  def promote_to_list
+    return unless saved? && saved_change_to_collection_id?
 
-    self.uri_hash = Digest::SHA2.hexdigest(unwound_url)
+    list_id = topic.twitter_lists.managed.first&.twitter_list_id
+
+    return if list_id.blank?
+
+    first_influencer = influenced_urls.order(created_at: :asc).first&.influencer
+
+    return unless first_influencer
+
+    PromoteUserToListJob.perform_later(
+      topic.user_auth_token,
+      list_id,
+      first_influencer.platform_id
+    )
   end
 end

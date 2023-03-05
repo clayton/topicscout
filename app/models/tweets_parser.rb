@@ -48,29 +48,28 @@ class TweetsParser
 
       entities = tweet.fetch('entities', {})
       hashtags = parse_hashtags(entities)
-      urls = parse_urls(entities)
       edited_tweets = parse_edited_tweets(tweet)
 
-      @topic.tweets.find_or_create_by!(tweet_id: tweet.fetch('id', nil)) do |t|
+      influencer = find_or_create_influencer(tweet, users)
+      urls = find_or_create_urls(entities, influencer, tweet)
+
+      created_tweet = @topic.tweets.find_or_create_by!(tweet_id: tweet.fetch('id', nil)) do |t|
+        t.influencer = influencer
         t.twitter_list_id = @list_id
-        t.twitter_search_result = @twitter_search_result
-        t.name = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('name', nil)
-        t.profile_image_url = users.find do |user|
-          user.fetch('id', nil) == tweet_author_id
-        end.fetch('profile_image_url', nil)
-        t.username = users.find { |user| user.fetch('id', nil) == tweet_author_id }.fetch('username', nil)
         t.twitter_search_result = @twitter_search_result
         t.text = tweet.fetch('text', nil)
         t.tweet_id = tweet.fetch('id', nil)
-        t.author_id = tweet_author_id
-        t.intent = @intent
         t.tweeted_at = tweet.fetch('created_at', nil)
         t.public_metrics = tweet.fetch('public_metrics', {})
         t.lang = tweet.fetch('lang', nil)
         t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
-        t.raw_urls = urls.compact.map { |url| t.urls.build(url) }
         t.edited_tweet_ids = edited_tweets
+        t.urls << urls
       end
+
+      urls.each { |url| url.increment!(score: created_tweet.score) }
+
+      influencer.increment!(:influenced_count)
 
       @added_count += 1
 
@@ -84,14 +83,33 @@ class TweetsParser
     history || []
   end
 
+  def find_or_create_influencer(tweet, users)
+    platform_id = tweet.fetch('author_id', nil)
+    return unless platform_id
+
+    name = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('name', nil)
+    profile_image_url = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('profile_image_url', nil)
+    username = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('username', nil)
+
+    Influencer.find_or_create_by(topic: @topic, platform_id: platform_id) do |influencer|
+      influencer.name = name
+      influencer.profile_image_url = profile_image_url
+      influencer.username = username
+      influencer.platform = 'twitter'
+      influencer.profile_url = "https://twitter.com/#{username}"
+    end
+  end
+
   def parse_hashtags(entities)
     return [] unless entities
 
     entities.fetch('hashtags', []).map { |h| h.fetch('tag', nil) }
   end
 
-  def parse_urls(entities)
+  def find_or_create_urls(entities, influencer, tweet)
     return [] unless entities
+
+    created_urls = []
 
     entities.fetch('urls', []).map do |url|
       next unless url.fetch('title', nil)
@@ -100,12 +118,18 @@ class TweetsParser
       next if url.fetch('unwound_url', nil).empty?
       next if @twitter_search_result.ignored_hostname?(url.fetch('unwound_url', nil))
 
-      {
-        status: url.fetch('status', nil),
-        title: url.fetch('title', nil),
-        display_url: url.fetch('display_url', nil),
-        unwound_url: url.fetch('unwound_url', nil)
-      }
+      unwound_url = url.fetch('unwound_url', nil)
+
+      created_urls << @topic.urls.find_or_create_by(unwound_url: unwound_url) do |u|
+        u.influencers << influencer
+        u.title = url.fetch('title', nil)
+        u.display_url = url.fetch('display_url', nil)
+        u.unwound_url = url.fetch('unwound_url', nil)
+        u.status = url.fetch('status', nil)
+        u.published_at = tweet.fetch('created_at', nil)
+      end
     end
+
+    created_urls
   end
 end

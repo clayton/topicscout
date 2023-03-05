@@ -3,13 +3,8 @@ class SavesController < FilteredListController
   before_action :load_collection
 
   def index
-    begin
-      @pagy, @tweets = pagy(@topic.saved_tweets(saves_params[:sort], saves_params[:time_filter]))
-    rescue Pagy::OverflowError
-      saves_params[:page] = 1
-      @pagy, @tweets = pagy(@topic.saved_tweets(saves_params[:sort], saves_params[:time_filter]))
-    end
-    
+    @tweets = @topic.saved_tweets(saves_params[:sort], saves_params[:time_filter])
+    @urls = @topic.saved_urls(saves_params[:sort], saves_params[:time_filter])
   end
 
   def load_topic
@@ -26,6 +21,6 @@ class SavesController < FilteredListController
   end
 
   def saves_params
-    params.permit(:sort, :time_filter, :page, :topic_id)
+    params.permit(:sort, :time_filter, :page, :topic_id, :visibility_filter)
   end
 end

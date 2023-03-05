@@ -4,6 +4,10 @@ class TweeterIgnoreRule < ApplicationRecord
   after_create_commit :ignore_tweets
 
   def ignore_tweets
-    topic.tweets.where(author_id: author_id).update_all(ignored: true)
+    influencer = Influencer.find_by(platform_id: author_id)
+
+    return unless influencer
+
+    influencer.tweets.uncollected.update_all(ignored: true)
   end
 end

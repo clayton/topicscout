@@ -1,0 +1,74 @@
+<div class="col-span-1" id="<%= dom_id(url) %>">
+  <div class="grid grid-cols-3 bg-white rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
+    <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
+      <div class="flex flex-col space-y-2">
+        <% if url.influencers.size > 1 %>
+          <div>
+            First shared by
+          </div>
+        <% end %>
+        <div class="flex flex-col items-center lg:flex-row">
+          <div class="flex-shrink-0 w-10 h-10">
+            <%= image_tag first_influencer.profile_image_url, class: 'h-10 w-10 rounded-full' %>
+          </div>
+          <div class="lg:ml-4">
+            <div class="font-medium text-gray-900"><%= link_to("@#{first_influencer.username}", "https://twitter.com/#{first_influencer.username}", target: '_blank', class: 'underline text-purple-500') %></div>
+            <div class="text-gray-500"><%= kill_mastodon(first_influencer.name) %></div>
+          </div>
+        </div>
+        <% if url.influencers.size > 1 %>
+          <div>
+            and <%= url.influencers.size %> others.
+          </div>
+        <% else %>
+          <div>
+            <%= form_tag topic_influencer_ignore_rules_path(url.topic) do %>
+              <%= hidden_field_tag :remove_id, dom_id(url) %>
+              <%= hidden_field_tag :author_id, first_influencer.platform_id %>
+              <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore @<%= first_influencer.username %></button>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
+      <div class="flex flex-col justify-between h-full space-y-4">
+        <div>
+          <%= link_to(local_time(url.published_at), url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-xs') %>
+        </div>
+        <div class="flex-grow">
+          <p><%= link_to(url.title, url.unwound_url, target: '_blank', class: 'text-purple-500 underline text-lg') %></p>
+          <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800"><%= url.hostname %></span>
+        </div>
+        <div>
+          <%= form_with model: [topic, topic.hostname_ignore_rules.build] do |f| %>
+            <%= f.hidden_field :url_id, value: url.id %>
+            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore <%= url.hostname %></button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="order-last col-span-3 p-2 text-sm text-gray-500 xl:order-3 md:col-span-8 xl:col-span-1">
+      <div class="flex items-center justify-between w-full text-gray-700 xl:items-start xl:flex-col">
+        <div class="flex items-center space-x-1">
+          <div class="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path d="M15.5 2A1.5 1.5 0 0014 3.5v13a1.5 1.5 0 001.5 1.5h1a1.5 1.5 0 001.5-1.5v-13A1.5 1.5 0 0016.5 2h-1zM9.5 6A1.5 1.5 0 008 7.5v9A1.5 1.5 0 009.5 18h1a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0010.5 6h-1zM3.5 10A1.5 1.5 0 002 11.5v5A1.5 1.5 0 003.5 18h1A1.5 1.5 0 006 16.5v-5A1.5 1.5 0 004.5 10h-1z" />
+            </svg>
+          </div>
+          <div ><%= number_with_delimiter(url.score.round) %></div>
+        </div>
+      </div>
+    </div>
+    <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
+      <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
+        <%= form_with url: topic_archived_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+        <% end %>
+        <%= form_with url: topic_saved_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

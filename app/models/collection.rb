@@ -2,6 +2,7 @@ class Collection < ApplicationRecord
   belongs_to :user
   belongs_to :topic
   has_many :tweets
+  has_many :urls
   has_many :collection_categories
 
   after_create_commit :create_categories

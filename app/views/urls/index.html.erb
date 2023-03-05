@@ -9,7 +9,7 @@
 <%= turbo_frame_tag dom_id(@topic, 'urls') do %>
   <div class="grid grid-cols-1 space-y-4">
     <% @urls.each do |url| %>
-      <%= render partial: 'row', locals: { topic: @topic, url: url } %>
+      <%= render partial: 'unedited_url', locals: { topic: @topic, url: url, first_influencer: url.influencers.first } %>
     <% end %>
   </div>
   <div class="flex flex-col items-center justify-between py-8 space-y-4 sm:flex-row sm:space-y-0">
