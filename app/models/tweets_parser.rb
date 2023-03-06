@@ -89,9 +89,18 @@ class TweetsParser
     platform_id = tweet.fetch('author_id', nil)
     return unless platform_id
 
-    name = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('name', nil)
-    profile_image_url = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('profile_image_url', nil)
-    username = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('username', nil)
+    matching_user = users.find { |user| user.fetch('id', nil) == platform_id } || {}
+
+    name = matching_user.fetch('name', nil)
+    profile_image_url = matching_user.fetch('profile_image_url', nil)
+    username = matching_user.fetch('username', nil)
+    verified = matching_user.fetch('verified', false)
+    verified_type = matching_user.fetch('verified_type', nil)
+    public_metrics = matching_user.fetch('public_metrics', {})
+    followers_count = public_metrics.fetch('followers_count', 0)
+    following_count = public_metrics.fetch('following_count', 0)
+    tweet_count = public_metrics.fetch('tweet_count', 0)
+    listed_count = public_metrics.fetch('listed_count', 0)
 
     influencer = Influencer.find_or_create_by(topic: @topic, platform_id: platform_id)
 
@@ -99,6 +108,12 @@ class TweetsParser
       name: name,
       profile_image_url: profile_image_url,
       username: username,
+      verified: verified,
+      verified_type: verified_type,
+      followers_count: followers_count,
+      following_count: following_count,
+      tweet_count: tweet_count,
+      listed_count: listed_count,
       platform: 'twitter',
       profile_url: "https://twitter.com/#{username}"
     )

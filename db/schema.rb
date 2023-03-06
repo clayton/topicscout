@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_06_031748) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_06_170414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -97,6 +97,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_031748) do
     t.string "platform"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "verified", default: false
+    t.string "verified_type"
+    t.bigint "followers_count", default: 0
+    t.bigint "following_count", default: 0
+    t.bigint "tweet_count", default: 0
+    t.bigint "listed_count", default: 0
     t.index ["topic_id"], name: "index_influencers_on_topic_id"
   end
 
