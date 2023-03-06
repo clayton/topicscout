@@ -30,14 +30,14 @@ class EmailVerification < ApplicationRecord
       { from: 'help@topicscout.app',
         to: email,
         template_alias: 'verify_email',
-        template_model: { 'product_url' => 'https://app.topicscoutapp.com',
+        template_model: { 'product_url' => 'https://fly.topicscoutapp.com',
                           'name' => user.name,
                           'product_name' => 'Topic Scout',
                           'code' => code,
                           'support_email' => 'help@topicscout.app',
                           'sender_name' => 'Clayton',
-                          'action_url' => 'https://app.topicscoutapp.com/profile',
-                          'login_url' => 'https://app.topicscoutapp.com/login' } }
+                          'action_url' => 'https://fly.topicscoutapp.com/profile',
+                          'login_url' => 'https://fly.topicscoutapp.com/login' } }
     )
   end
 end
