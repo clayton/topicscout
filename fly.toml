@@ -21,6 +21,7 @@ kill_timeout = 5
 
 [env]
   PORT = "8080"
+  PRIMARY_REGION = 'dfw'
 
 [experimental]
   auto_rollback = true
