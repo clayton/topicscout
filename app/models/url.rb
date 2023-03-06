@@ -60,6 +60,8 @@ class Url < ApplicationRecord
 
     begin
       uri = URI.parse(url)
+      return url if uri.query.nil?
+      
       clean_key_vals = URI.decode_www_form(uri.query).reject { |k, _| k.start_with?('utm_') }
       uri.query = URI.encode_www_form(clean_key_vals)
 
@@ -72,7 +74,7 @@ class Url < ApplicationRecord
   def cleanup_unwound_url
     return unless unwound_url
 
-    self.unwound_url = strip_utm(unwound_url)
+    self.clean_url = strip_utm(unwound_url)
   end
 
   def promote_to_list

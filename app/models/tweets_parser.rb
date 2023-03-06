@@ -64,10 +64,12 @@ class TweetsParser
         t.lang = tweet.fetch('lang', nil)
         t.hashtags << hashtags.compact.map { |hashtag| t.hashtags.build(tag: hashtag) }
         t.edited_tweet_ids = edited_tweets
-        t.urls << urls
       end
 
-      urls.each { |url| url.increment!(:score, created_tweet.score) }
+      urls.each do |url| 
+        url.increment!(:score, created_tweet.score)
+        TweetedUrl.find_or_create_by(tweet: created_tweet, url: url)
+      end
 
       influencer.increment!(:influenced_count)
 
@@ -91,13 +93,17 @@ class TweetsParser
     profile_image_url = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('profile_image_url', nil)
     username = users.find { |user| user.fetch('id', nil) == platform_id }.fetch('username', nil)
 
-    Influencer.find_or_create_by(topic: @topic, platform_id: platform_id) do |influencer|
-      influencer.name = name
-      influencer.profile_image_url = profile_image_url
-      influencer.username = username
-      influencer.platform = 'twitter'
-      influencer.profile_url = "https://twitter.com/#{username}"
-    end
+    influencer = Influencer.find_or_create_by(topic: @topic, platform_id: platform_id)
+
+    influencer.update(
+      name: name,
+      profile_image_url: profile_image_url,
+      username: username,
+      platform: 'twitter',
+      profile_url: "https://twitter.com/#{username}"
+    )
+
+    influencer
   end
 
   def parse_hashtags(entities)
@@ -120,14 +126,17 @@ class TweetsParser
 
       unwound_url = url.fetch('unwound_url', nil)
 
-      created_urls << @topic.urls.find_or_create_by(unwound_url: unwound_url) do |u|
-        u.influencers << influencer
+      created_url = @topic.urls.find_or_create_by(unwound_url: unwound_url) do |u|
         u.title = url.fetch('title', nil)
         u.display_url = url.fetch('display_url', nil)
         u.unwound_url = url.fetch('unwound_url', nil)
         u.status = url.fetch('status', nil)
         u.published_at = tweet.fetch('created_at', nil)
       end
+
+      InfluencedUrl.find_or_create_by(influencer: influencer, url: created_url)
+
+      created_urls << created_url
     end
 
     created_urls

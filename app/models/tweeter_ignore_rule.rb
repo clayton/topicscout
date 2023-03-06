@@ -9,5 +9,6 @@ class TweeterIgnoreRule < ApplicationRecord
     return unless influencer
 
     influencer.tweets.uncollected.update_all(ignored: true)
+    influencer.urls.uncollected.update_all(ignored: true)
   end
 end

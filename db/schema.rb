@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_05_174850) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_06_025800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_05_174850) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["influencer_id"], name: "index_influenced_urls_on_influencer_id"
+    t.index ["url_id", "influencer_id"], name: "index_influenced_urls_on_url_id_and_influencer_id", unique: true
     t.index ["url_id"], name: "index_influenced_urls_on_url_id"
   end
 
@@ -164,6 +165,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_05_174850) do
     t.uuid "url_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tweet_id", "url_id"], name: "index_tweeted_urls_on_tweet_id_and_url_id", unique: true
   end
 
   create_table "tweeter_ignore_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -272,7 +274,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_05_174850) do
     t.uuid "collection_id"
     t.float "score", default: 0.0
     t.datetime "published_at"
+    t.string "clean_url"
     t.index ["topic_id"], name: "index_urls_on_topic_id"
+    t.index ["unwound_url"], name: "index_urls_on_unwound_url"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

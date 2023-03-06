@@ -1,11 +1,12 @@
 class Topic < ApplicationRecord
+  has_many :influencers, dependent: :destroy
+  has_many :urls, dependent: :destroy
+  has_many :tweets, dependent: :destroy
   has_many :tweeter_ignore_rules, dependent: :destroy
   has_many :hostname_ignore_rules, dependent: :destroy
   has_many :twitter_search_results, dependent: :destroy
-  has_many :tweets, dependent: :destroy
   has_many :search_terms, dependent: :destroy
   has_many :negative_search_terms, dependent: :destroy
-  has_many :urls
   has_many :collections, dependent: :destroy
   has_many :twitter_lists, dependent: :destroy
   has_many :category_templates, dependent: :destroy
@@ -42,12 +43,12 @@ class Topic < ApplicationRecord
   end
 
   def saved_tweets(sort = 'score', time_filter = 'all')
-    results = tweets.includes(:influencer).reviewing.uncollected
+    results = tweets.includes(:influencer).reviewing
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
   def saved_urls(sort = 'score', time_filter = 'all')
-    results = urls.includes(:influencers).reviewing.uncollected
+    results = urls.includes(:influencers).reviewing
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
