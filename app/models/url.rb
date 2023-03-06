@@ -23,6 +23,7 @@ class Url < ApplicationRecord
   scope :collected, -> { where.not(collection_id: nil) }
   scope :unsaved, -> { where(saved: false) }
 
+  before_create :hash_url
   before_create :cleanup_unwound_url
 
   def hostname
@@ -49,6 +50,10 @@ class Url < ApplicationRecord
 
   private
 
+  def hash_url
+    self.url_hash = Digest::SHA256.hexdigest(unwound_url)
+  end
+
   def populate_editorial_fields!
     return unless saved? && saved_change_to_collection_id?
 
@@ -61,7 +66,7 @@ class Url < ApplicationRecord
     begin
       uri = URI.parse(url)
       return url if uri.query.nil?
-      
+
       clean_key_vals = URI.decode_www_form(uri.query).reject { |k, _| k.start_with?('utm_') }
       uri.query = URI.encode_www_form(clean_key_vals)
 

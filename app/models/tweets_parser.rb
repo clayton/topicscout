@@ -126,7 +126,13 @@ class TweetsParser
 
       unwound_url = url.fetch('unwound_url', nil)
 
-      created_url = @topic.urls.find_or_create_by(unwound_url: unwound_url) do |u|
+      next if unwound_url.nil?
+
+      url_hash = Digest::SHA256.hexdigest(unwound_url)
+
+      created_url = @topic.urls.find_or_create_by(url_hash: url_hash) do |u|
+        u.unwound_url = url.fetch('unwound_url', nil)
+        u.url_hash = url_hash
         u.title = url.fetch('title', nil)
         u.display_url = url.fetch('display_url', nil)
         u.unwound_url = url.fetch('unwound_url', nil)
