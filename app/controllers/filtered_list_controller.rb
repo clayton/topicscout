@@ -6,6 +6,7 @@ class FilteredListController < ApplicationController
   before_action :determine_sort
   before_action :determine_time_filter
   before_action :determine_visibility_filter
+  before_action :determine_influencer_filter
 
   def set_default_sort
     @sort = filter_params.fetch(:sort, 'score')
@@ -41,7 +42,13 @@ class FilteredListController < ApplicationController
     @visibility_filter = filter_params.fetch(:visibility_filter, 'relevant')
   end
 
+  def determine_influencer_filter
+    return @influencers_filter = 'all' unless filter_params[:influencers_filter].in? %w[all saved collected popular]
+
+    @influencers_filter = filter_params.fetch(:influencers_filter, 'all')
+  end
+
   def filter_params
-    params.permit(:page, :sort, :time_filter, :visibility_filter, :topic_id)
+    params.permit(:page, :sort, :time_filter, :visibility_filter, :topic_id, :influencers_filter)
   end
 end

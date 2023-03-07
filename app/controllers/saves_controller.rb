@@ -21,6 +21,6 @@ class SavesController < FilteredListController
   end
 
   def saves_params
-    params.permit(:sort, :time_filter, :page, :topic_id, :visibility_filter)
+    params.permit(:sort, :time_filter, :page, :topic_id, :visibility_filter, :influencers_filter)
   end
 end

@@ -4,15 +4,15 @@ class TweetsController < FilteredListController
 
     begin
       @pagy, @tweets = pagy(@topic.unedited_tweets(permitted_params[:sort], permitted_params[:time_filter],
-                                                   permitted_params[:visibility_filter]))
+                                                   permitted_params[:visibility_filter], permitted_params[:influencers_filter]))
     rescue Pagy::OverflowError
       params[:page] = 1
       @pagy, @tweets = pagy(@topic.unedited_tweets(permitted_params[:sort], permitted_params[:time_filter],
-                                                   permitted_params[:visibility_filter]))
+                                                   permitted_params[:visibility_filter], permitted_params[:influencers_filter]))
     end
   end
 
   def permitted_params
-    params.permit(:page, :sort, :time_filter, :visibility_filter, :topic_id)
+    params.permit(:page, :sort, :time_filter, :visibility_filter, :topic_id, :influencers_filter)
   end
 end

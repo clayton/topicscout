@@ -17,8 +17,15 @@ module TweetsHelper
   end
 
   def kill_mastodon(name)
-    return "" unless name
-    
+    return '' unless name
+
     name.gsub(/@mastodon\.\S+/, '')
+  end
+
+  def tweet_bg_color(tweet)
+    return 'bg-blue-50' if tweet&.influencer&.collected_tweets
+    return 'bg-yellow-50' if tweet&.influencer&.saved_tweets
+
+    'bg-white'
   end
 end

@@ -8,7 +8,9 @@ class Url < ApplicationRecord
   has_many :influenced_urls, dependent: :destroy
   has_many :influencers, through: :influenced_urls
 
+  
   after_save_commit :promote_to_list
+  after_save :update_influencer_metrics
   after_save :populate_editorial_fields!
 
   scope :unedited, -> { where(saved: false, archived: false) }
@@ -98,5 +100,19 @@ class Url < ApplicationRecord
       list_id,
       first_influencer&.platform_id
     )
+  end
+
+  def update_influencer_metrics
+    return unless saved?
+    return unless first_influencer
+    return unless saved_change_to_collection_id? || saved_change_to_saved?
+
+    if saved_change_to_collection_id?
+      first_influencer.update(collected_tweets: true)
+      first_influencer.increment!(:collected_count)
+    elsif saved_change_to_saved?
+      first_influencer.update(saved_tweets: true)
+      first_influencer.increment!(:saved_count)
+    end
   end
 end

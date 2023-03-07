@@ -1,5 +1,5 @@
 <div class="col-span-1" id="<%= dom_id(url) %>">
-  <div class="grid grid-cols-3 bg-white rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
+  <div class="grid grid-cols-3 <%= url_bg_color(url) %> rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
     <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
       <div class="flex flex-col space-y-2">
         <% if url.influencers.size > 1 %>
@@ -18,7 +18,7 @@
         </div>
         <% if url.influencers.size > 1 %>
           <div>
-            and <%= url.influencers.size %> others.
+            and <%= url.influencers.size - 1 %> others.
           </div>
         <% else %>
           <div>
@@ -27,6 +27,20 @@
               <%= hidden_field_tag :author_id, first_influencer&.platform_id %>
               <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore @<%= first_influencer&.username %></button>
             <% end %>
+          </div>
+        <% end %>
+        <% if url.first_influencer&.collected_tweets? %>
+          <div>
+            <span class="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+              <%= url.first_influencer&.collected_count %> collected
+            </span>
+          </div>
+        <% end %>
+        <% if url.first_influencer&.saved_tweets? %>
+          <div>
+            <span class="inline-flex items-center rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+              <%= url.first_influencer&.saved_count %> saved
+            </span>
           </div>
         <% end %>
       </div>

@@ -1,6 +1,6 @@
 require 'active_support/core_ext/integer/time'
 
-Rails.application.default_url_options = { host: 'topicscout.test', protocol: 'https' }
+Rails.application.default_url_options = { host: 'clzts.test', protocol: 'https' }
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -10,7 +10,7 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  config.hosts << 'topicscout.test'
+  config.hosts << 'clzts.test'
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -65,8 +65,8 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :resque
 
-  config.action_mailer[:default_url_options] = { host: 'topicscout.test', protocol: 'https' }
-  config.action_controller[:default_url_options] = { host: 'topicscout.test', protocol: 'https' }
+  config.action_mailer[:default_url_options] = { host: 'clzts.test', protocol: 'https' }
+  config.action_controller[:default_url_options] = { host: 'clzts.test', protocol: 'https' }
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

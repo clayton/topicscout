@@ -16,7 +16,7 @@
   </div>
 </div>
 <%= render partial: 'topics/tab_nav', locals: {topic: @topic, active: :tweets } %>
-<%= render partial: 'topics/filters', locals: {topic: @topic, existing_params: params.permit(:page, :sort, :time_filter, :visbility_filter, :topic_id), params: params.permit(:page, :sort, :time_filter, :topic_id), list_path: 'topic_tweets_url'} %>
+<%= render partial: 'topics/filters', locals: {topic: @topic, existing_params: params.permit(:page, :sort, :time_filter, :visbility_filter, :topic_id, :influencers_filter), params: params.permit(:page, :sort, :time_filter, :topic_id), list_path: 'topic_tweets_url'} %>
 <%= turbo_frame_tag dom_id(@topic, 'list') do %>
   <div class="grid grid-cols-1 space-y-4">
     <% @tweets.each do |tweet| %>

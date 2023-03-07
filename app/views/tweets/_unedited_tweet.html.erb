@@ -1,5 +1,5 @@
 <div class="col-span-1" id="<%= dom_id(tweet) %>">
-  <div class="grid grid-cols-3 bg-white rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
+  <div class="grid grid-cols-3 <%= tweet_bg_color(tweet) %> rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
     <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
       <div class="flex flex-col space-y-2">
         <div class="flex flex-col items-center lg:flex-row">
@@ -18,6 +18,20 @@
             <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Ignore @<%= tweet.username %></button>
           <% end %>
         </div>
+        <% if tweet.influencer&.collected_tweets? %>
+          <div>
+            <span class="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+              <%= tweet.influencer&.collected_count %> collected
+            </span>
+          </div>
+        <% end %>
+        <% if tweet.influencer&.saved_tweets? %>
+          <div>
+            <span class="inline-flex items-center rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+              <%= tweet.influencer&.saved_count %> saved
+            </span>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">

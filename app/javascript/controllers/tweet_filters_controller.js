@@ -13,6 +13,8 @@ export default class extends Controller {
     "timingForm",
     "visibilityForm",
     "desktopVisibilityFilter",
+    "desktopInfluencersFilter",
+    "influencersForm"
   ];
 
   connect() {}
@@ -63,11 +65,23 @@ export default class extends Controller {
     }
   }
 
+  toggleDesktopInfluencersFilter() {
+    if (this.desktopInfluencersFilterTarget.classList.contains("hidden")) {
+      enter(this.desktopInfluencersFilterTarget);
+    } else {
+      leave(this.desktopInfluencersFilterTarget);
+    }
+  }
+
   changeTimingFilter(event) {
     this.timingFormTarget.submit();
   }
 
   changeVisibilityFilter(event) {
     this.visibilityFormTarget.submit();
+  }
+
+  changeInfluencersFilter(event) {
+    this.influencersFormTarget.submit();
   }
 }

@@ -97,17 +97,61 @@
             </div>
           </div>
         </div>
-        
         <!-- Mobile filter dialog toggle, controls the 'mobileFilterDialogOpen' state. -->
-        <button data-action="click->tweet-filters#toggleMobileVisibilityDialog" type="button" class="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden">Filters</button>
+        <button data-action="click->tweet-filters#toggleMobileInfluencerDialog" type="button" class="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden">Filters</button>
         <div class="hidden sm:flex sm:items-baseline sm:space-x-8">
-        <div id="desktop-menu-0" class="relative inline-block text-left">
+          <% unless list_path == 'topic_saves_url' %>
+            <div id="desktop-menu-0" class="relative inline-block text-left">
+              <div>
+                <button type="button" data-action="click->tweet-filters#toggleDesktopInfluencersFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
+                  <span>Influencers</span>
+                  <% if @influencers_filter && @influencers_filter != 'all' %>
+                    <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>
+                  <% end %>
+                  <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              <div 
+              data-tweet-filters-target="desktopInfluencersFilter"
+              data-transition-enter="transition ease-out duration-100"
+              data-transition-enter-start="transform opacity-0 scale-95"
+              data-transition-enter-end="transform opacity-100 scale-100"
+              data-transition-leave="transition ease-in duration-75"
+              data-transition-leave-start="transform opacity-100 scale-100"
+              data-transition-leave-end="transform opacity-0 scale-95"
+              class="absolute right-0 z-10 hidden p-4 mt-2 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'influencersForm'} do %>
+                  <%= hidden_field_tag 'sort', @sort %>
+                  <%= hidden_field_tag 'page', @page %>
+                  <%= hidden_field_tag 'visibility_filter', @visibility_filter %>
+                  <div class="flex items-center">
+                    <%= radio_button_tag 'influencers_filter', 'collected', (@influencers_filter == 'collected'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeInfluencersFilter' } %>
+                    <%= label_tag "influencers_filter_collected", "Collected", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                  </div>
+                  <div class="flex items-center">
+                    <%= radio_button_tag 'influencers_filter', 'saved', (@influencers_filter == 'saved'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeInfluencersFilter' } %>
+                    <%= label_tag "influencers_filter_saved", "Saved", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                  </div>
+                  <div class="flex items-center">
+                    <%= radio_button_tag 'influencers_filter', 'popular', (@influencers_filter == 'popular'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeInfluencersFilter' } %>
+                    <%= label_tag "influencers_filter_popular", "Popular", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                  </div>
+                  <div class="flex items-center">
+                    <%= radio_button_tag 'influencers_filter', 'all', (@influencers_filter == 'all'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeInfluencersFilter' } %>
+                    <%= label_tag "influencers_filter_all", "All", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          
+          <div id="desktop-menu-1" class="relative inline-block text-left">
             <div>
               <button type="button" data-action="click->tweet-filters#toggleDesktopVisibilityFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
                 <span>Visibility</span>
-
                 <% if @visibility_filter %>
-                  <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>    
+                  <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>
                 <% end %>
                 <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -134,13 +178,13 @@
               <% end %>
             </div>
           </div>
-          <div id="desktop-menu-1" class="relative inline-block text-left">
+          <% end %>
+          <div id="desktop-menu-2" class="relative inline-block text-left">
             <div>
               <button type="button" data-action="click->tweet-filters#toggleDesktopTimingFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
-                <span>Filters</span>
-
-                <% if @time_filter %>
-                  <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>    
+                <span>Timing</span>
+                <% if @time_filter && @time_filter != 'all' %>
+                  <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>
                 <% end %>
                 <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -160,6 +204,7 @@
                 <%= hidden_field_tag 'sort', @sort %>
                 <%= hidden_field_tag 'page', @page %>
                 <%= hidden_field_tag 'visibility_filter', @visibility_filter %>
+                <%= hidden_field_tag 'influencers_filter', @influencers_filter %>
                 <div class="flex items-center">
                   <%= radio_button_tag 'time_filter', 'hour', (@time_filter == 'hour'), class: 'h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeTimingFilter' } %>
                   <%= label_tag "time_filter_hour", "Last hour", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>

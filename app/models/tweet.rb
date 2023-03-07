@@ -18,6 +18,7 @@ class Tweet < ApplicationRecord
 
   after_save_commit :promote_to_list
   after_save_commit :fetch_embed_html
+  after_save :update_influencer_metrics
 
   scope :unedited, -> { where(saved: false, archived: false) }
   scope :newest, -> { order(published_at: :desc) }
@@ -106,6 +107,20 @@ class Tweet < ApplicationRecord
   def edited_tweet_ids=(tweet_ids)
     tweet_ids.each do |id|
       Tweet.unsaved.uncollected.where(tweet_id: id).first&.update(archived: true)
+    end
+  end
+
+  def update_influencer_metrics
+    return unless saved?
+    return unless influencer
+    return unless saved_change_to_collection_id? || saved_change_to_saved?
+
+    if saved_change_to_collection_id?
+      influencer.update(collected_tweets: true)
+      influencer.increment!(:collected_count)
+    elsif saved_change_to_saved?
+      influencer.update(saved_tweets: true)
+      influencer.increment!(:saved_count)
     end
   end
 end

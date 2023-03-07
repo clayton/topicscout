@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_06_170414) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_07_181244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -103,6 +103,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_170414) do
     t.bigint "following_count", default: 0
     t.bigint "tweet_count", default: 0
     t.bigint "listed_count", default: 0
+    t.boolean "collected_tweets"
+    t.boolean "saved_tweets"
     t.index ["topic_id"], name: "index_influencers_on_topic_id"
   end
 
@@ -207,6 +209,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_170414) do
     t.string "twitter_list_id"
     t.uuid "influencer_id"
     t.datetime "published_at"
+    t.string "author_id"
+    t.string "author_name"
+    t.string "author_username"
+    t.string "author_profile_image_url"
     t.index ["collection_id"], name: "index_tweets_on_collection_id"
     t.index ["ignored"], name: "index_tweets_on_ignored"
     t.index ["influencer_id"], name: "index_tweets_on_influencer_id"

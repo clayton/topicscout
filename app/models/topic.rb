@@ -32,14 +32,14 @@ class Topic < ApplicationRecord
     twitter_search_results.completed.newest.first&.results_count || 0
   end
 
-  def unedited_tweets(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
+  def unedited_tweets(sort = 'score', time_filter = 'all', visibility_filter = 'relevant', influencer_filter = 'all')
     results = tweets.includes(:hashtags, :influencer).unedited.qualified(threshold)
-    filtered_and_sorted_results(results, sort, time_filter, visibility_filter)
+    filtered_and_sorted_results(results, sort, time_filter, visibility_filter, influencer_filter)
   end
 
-  def unedited_urls(sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
+  def unedited_urls(sort = 'score', time_filter = 'all', visibility_filter = 'relevant', influencer_filter = 'all')
     results = urls.includes(:influencers).relevant.unedited.qualified(threshold)
-    filtered_and_sorted_results(results, sort, time_filter, visibility_filter)
+    filtered_and_sorted_results(results, sort, time_filter, visibility_filter, influencer_filter)
   end
 
   def saved_tweets(sort = 'score', time_filter = 'all')
@@ -52,8 +52,9 @@ class Topic < ApplicationRecord
     filtered_and_sorted_results(results, sort, time_filter)
   end
 
-  def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all', visibility_filter = 'relevant')
+  def filtered_and_sorted_results(results, sort = 'score', time_filter = 'all', visibility_filter = 'relevant', influencer_filter = 'all')
     results = visible_results(results, visibility_filter)
+    results = influencer_results(results, influencer_filter)
     results = timely_results(results, time_filter)
     sorted_results(results, sort)
   end
@@ -62,6 +63,14 @@ class Topic < ApplicationRecord
     return results if visibility_filter == 'all'
 
     results.relevant
+  end
+
+  def influencer_results(results, influencer_filter = 'all')
+    return results.where(influencers: { collected_tweets: true }) if influencer_filter == 'collected'
+    return results.where(influencers: { saved_tweets: true }) if influencer_filter == 'saved'
+    return results.where(influencers: { followers_count: Influencer.arel_table[:followers_count].gt(10_000) }) if influencer_filter == 'popular'
+
+    results
   end
 
   def timely_results(results, time_filter = 'all')
