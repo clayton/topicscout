@@ -9,7 +9,7 @@ class TwitterSearchJob < ApplicationJob
 
     options = {}
     options[:since_id] = twitter_search_result.newest_tweet_id if twitter_search_result.newest_tweet_id.present?
-    options[:start_time] = twitter_search_result.parsed_start_time
+    options[:start_time] = twitter_search_result.parsed_start_time unless twitter_search_result.newest_tweet_id.present?
 
     raw = client.search.tweets(query, options)
 
