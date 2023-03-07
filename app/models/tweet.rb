@@ -32,7 +32,7 @@ class Tweet < ApplicationRecord
   scope :unsaved, -> { where(saved: false) }
 
   def url
-    "https://twitter.com/#{username}/status/#{tweet_id}"
+    "https://twitter.com/#{influencer&.username}/status/#{tweet_id}"
   end
 
   def username
@@ -60,7 +60,20 @@ class Tweet < ApplicationRecord
   end
 
   def calculate_score
-    self.score = (impression_count + (like_count * 5) + (retweet_count * 20))
+    follower_count = if influencer.nil? || influencer&.followers_count.zero?
+                       impression_count * 4
+                     else
+                       influencer&.followers_count
+                     end
+
+    if follower_count.zero?
+      self.score = 0
+      return
+    end
+
+    raw_score = ((impression_count / (follower_count * 0.25)) + ((like_count / (follower_count * 0.02)) + ((retweet_count / (follower_count * 0.002)))))
+
+    self.score = raw_score
   end
 
   def broadcast_create
