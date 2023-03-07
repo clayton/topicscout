@@ -2,10 +2,10 @@
   <div class="space-y-8 divide-y divide-gray-200">
     <div>
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Details</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Details</h3>
         <p class="mt-1 text-sm text-gray-500">The details about this particular topic.</p>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
           <%= f.label :name, "Name", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
@@ -13,11 +13,11 @@
           </div>
         </div>
       </div>
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
         <div class="sm:col-span-4">
           <%= f.label :topic_id, "Topic", class: "block text-sm font-medium text-gray-700"%>
           <div class="mt-1">
-            <%= f.select :topic_id, options_for_select(current_user.topics.order(:name).map{|t| [t.name, t.id]}, @collection.topic_id), {include_blank: 'Select a Topic'}, {class: 'mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'} %>
+            <%= f.select :topic_id, options_for_select(current_user.topics.undeleted.order(:name).map{|t| [t.name, t.id]}, @collection.topic_id), {include_blank: 'Select a Topic'}, {class: 'mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'} %>
           </div>
         </div>
       </div>
@@ -25,7 +25,7 @@
     <div class="pt-5">
       <div class="flex justify-end">
         <%= link_to "Cancel", collections_path, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
-        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
+        <button type="submit" class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
       </div>
     </div>
   <% end %>
