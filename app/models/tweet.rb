@@ -36,19 +36,19 @@ class Tweet < ApplicationRecord
   end
 
   def username
-    influencer&.username
+    influencer&.username || 'unknown'
   end
 
   def name
-    influencer&.name
+    influencer&.name || 'unknown'
   end
 
   def profile_image_url
-    influencer&.profile_image_url
+    influencer&.profile_image_url || ''
   end
 
   def author_id
-    influencer&.platform_id
+    influencer&.platform_id || 'unknown'
   end
 
   def public_metrics=(metrics)

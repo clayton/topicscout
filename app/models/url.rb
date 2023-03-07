@@ -96,7 +96,7 @@ class Url < ApplicationRecord
     PromoteUserToListJob.perform_later(
       topic.user_auth_token,
       list_id,
-      first_influencer.platform_id
+      first_influencer&.platform_id
     )
   end
 end
