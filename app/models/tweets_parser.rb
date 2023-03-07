@@ -79,7 +79,7 @@ class TweetsParser
 
       influencer.increment!(:influenced_count)
 
-      @added_count += 1
+      @added_count += 1 if created_tweet.previously_new_record?
 
       @newest_tweet_id = tweet.fetch('id', nil)
     end
