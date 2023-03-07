@@ -1,5 +1,5 @@
 class TweetsParser
-  attr_reader :results_count, :ignored_count, :added_count
+  attr_reader :results_count, :ignored_count, :added_count, :newest_tweet_id
 
   def self.parse(results, twitter_search_result, list, intent = nil)
     parser = TweetsParser.new(results, twitter_search_result, list, intent)
@@ -15,14 +15,14 @@ class TweetsParser
     @ignored_count = 0
     @added_count = 0
     @topic = @twitter_search_result.topic
-    @newest_id = nil
+    @newest_tweet_id = nil
     @list_id = list_id || nil
   end
 
   def parse
     save_tweets(@results.to_h)
 
-    save_tweets(@results.to_h) while (@results = @results.next) && @twitter_search_result.under_limit(@added_count)
+    save_tweets(@results.to_h) while (@results = @results.next) && @twitter_search_result.under_limit(@results_count)
 
     yield self if block_given?
   rescue StandardError => e
@@ -46,6 +46,8 @@ class TweetsParser
         next
       end
 
+      matching_user = users.find { |user| user.fetch('id', nil) == tweet_author_id } || {}
+
       entities = tweet.fetch('entities', {})
       hashtags = parse_hashtags(entities)
       edited_tweets = parse_edited_tweets(tweet)
@@ -54,6 +56,10 @@ class TweetsParser
       urls = find_or_create_urls(entities, influencer, tweet)
 
       created_tweet = @topic.tweets.find_or_create_by!(tweet_id: tweet.fetch('id', nil)) do |t|
+        t.author_id = tweet_author_id
+        t.author_name = matching_user.fetch('name', nil)
+        t.author_username = matching_user.fetch('username', nil)
+        t.author_profile_image_url = matching_user.fetch('profile_image_url', nil)
         t.influencer = influencer
         t.twitter_list_id = @list_id
         t.twitter_search_result = @twitter_search_result
@@ -75,7 +81,7 @@ class TweetsParser
 
       @added_count += 1
 
-      @newest_id = tweet.fetch('id', nil)
+      @newest_tweet_id = tweet.fetch('id', nil)
     end
   end
 

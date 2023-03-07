@@ -7,7 +7,11 @@ class TwitterSearchJob < ApplicationJob
     topic = twitter_search_result.topic
     query = topic.to_query
 
-    raw = client.search.tweets(query, start_time: twitter_search_result.parsed_start_time)
+    options = {}
+    options[:since_id] = twitter_search_result.newest_tweet_id if twitter_search_result.newest_tweet_id.present?
+    options[:start_time] = twitter_search_result.parsed_start_time
+
+    raw = client.search.tweets(query, options)
 
     TweetsParser.parse(raw, twitter_search_result, nil) do |parser|
       twitter_search_result.update!(completed: true)
@@ -15,6 +19,7 @@ class TwitterSearchJob < ApplicationJob
       twitter_search_result.increment!(:results_count, parser.results_count)
       twitter_search_result.increment!(:ignored_count, parser.ignored_count)
       twitter_search_result.increment!(:added_count, parser.added_count)
+      twitter_search_result.update(newest_tweet_id: parser.newest_tweet_id)
       Rails.logger.debug("[TwitterSearchJob] Finished for (#{twitter_search_result.topic.name}) #{parser.results_count} results, #{parser.ignored_count} ignored, #{parser.added_count} added")
     end
   rescue StandardError => e
