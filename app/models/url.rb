@@ -2,10 +2,10 @@ class Url < ApplicationRecord
   belongs_to :topic
   belongs_to :collection, optional: true
 
-  has_many :tweeted_urls
+  has_many :tweeted_urls, dependent: :destroy
   has_many :tweets, through: :tweeted_urls
 
-  has_many :influenced_urls
+  has_many :influenced_urls, dependent: :destroy
   has_many :influencers, through: :influenced_urls
 
   after_save_commit :promote_to_list

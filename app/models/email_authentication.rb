@@ -23,14 +23,14 @@ class EmailAuthentication < ApplicationRecord
       { from: 'help@topicscout.app',
         to: user.email,
         template_alias: Rails.application.credentials.postmark_email_auth_template,
-        template_model: { 'product_url' => 'https://app.topicscoutapp.com',
+        template_model: { 'product_url' => 'https://topicscout.fly.dev',
                           'name' => user.name,
                           'product_name' => 'Topic Scout',
                           'code' => code,
                           'support_email' => 'help@topicscout.app',
                           'sender_name' => 'Clayton',
-                          'action_url' => 'https://app.topicscoutapp.com/profile',
-                          'login_url' => 'https://app.topicscoutapp.com/login' } }
+                          'action_url' => 'https://topicscout.fly.dev/profile',
+                          'login_url' => 'https://topicscout.fly.dev/login' } }
     )
   end
 end
