@@ -10,7 +10,7 @@ class UsersController < AuthenticatedUserController
   def update
     if current_user.update(user_params)
       flash[:success] = 'Your profile has been updated.'
-      redirect_to root_path
+      redirect_to profile_path
     else
       flash[:error] = 'There was an error updating your profile.'
       render :edit
@@ -18,7 +18,7 @@ class UsersController < AuthenticatedUserController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :timezone)
+    params.require(:user).permit(:email, :name, :timezone, :beta)
   end
 
   def verify_email

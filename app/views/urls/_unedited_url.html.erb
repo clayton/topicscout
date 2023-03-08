@@ -53,21 +53,23 @@
         <div class="flex-grow">
           <p><%= link_to(url.title, url.clean_url, target: '_blank', class: 'text-purple-500 underline text-lg') %></p>
           <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800"><%= url.hostname %></span>
-          <div class="p-4 mt-2 font-mono text-sm text-left bg-gray-100">
-            <% url.tweets.each do |t| %>
-              id: <%= t.id %><br />
-              url: <%= t.url %><br />
-              score: <%= t.score %><br />
-              impression_count: <%= t.impression_count %><br />
-              retweet_count: <%= t.retweet_count %><br />
-              like_count: <%= t.like_count %><br />
-              reply_count: <%= t.reply_count %><br />
-              quote_count: <%= t.quote_count %><br />
-              influencer followers: <%= t.influencer&.followers_count || 'NaN (calculated)' %>
-              <br>
-              <br>
-            <% end %>
-          </div>
+          <% if current_user.beta? %>
+            <div class="p-4 mt-2 font-mono text-sm text-left bg-gray-100">
+              <% url.tweets.each do |t| %>
+                id: <%= t.id %><br />
+                url: <%= t.url %><br />
+                score: <%= t.score %><br />
+                impression_count: <%= t.impression_count %><br />
+                retweet_count: <%= t.retweet_count %><br />
+                like_count: <%= t.like_count %><br />
+                reply_count: <%= t.reply_count %><br />
+                quote_count: <%= t.quote_count %><br />
+                influencer followers: <%= t.influencer&.followers_count || 'NaN (calculated)' %>
+                <br>
+                <br>
+              <% end %>
+            </div>
+          <% end %>
         </div>
         <div>
           <%= form_with model: [topic, topic.hostname_ignore_rules.build] do |f| %>

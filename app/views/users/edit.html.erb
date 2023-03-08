@@ -96,7 +96,18 @@
             <div class="sm:col-span-4">
               <%= form.label :timezone, "Preferred time zone", class: "block text-sm font-medium text-gray-700"%>
               <div class="mt-1">
-                <%= form.select :timezone, time_zone_options_for_select(current_user.timezone, ActiveSupport::TimeZone.us_zones), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+                <%= form.select :timezone, time_zone_options_for_select(current_user.timezone, ActiveSupport::TimeZone.us_zones), {}, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md' %>
+              </div>
+            </div>
+            <div class="sm:col-span-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-6">
+                  <%= form.check_box :beta, class: 'w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-600'%>
+                </div>
+                <div class="ml-3">
+                  <%= form.label 'beta', 'Enable beta features' %>
+                  <p id="beta-description" class="text-sm text-gray-500">Enable experimental beta features.</p>
+                </div>
               </div>
             </div>
           </div>
