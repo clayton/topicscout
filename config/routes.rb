@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :users
+    get '/logout', to: 'sessions#destroy', as: 'logout'
   end
 
   get '/dashboard', to: 'dashboard#show', as: :dashboard

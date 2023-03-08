@@ -25,7 +25,7 @@
     <% end %>
     <% if session[:admin_id] %>
       <div class="p-1 text-xl font-bold text-center text-gray-900 uppercase bg-yellow-200">
-        ADMIN
+        ADMIN <span class="text-base"><%= link_to "Detach", admin_logout_path, class: 'underline normal-case hover:text-gray-700', remote: true, method: :delete %></span>
       </div>
     <% end %>
     <div data-controller="navigation">
