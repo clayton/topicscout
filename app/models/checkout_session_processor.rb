@@ -10,7 +10,6 @@ class CheckoutSessionProcessor
 
     raise CheckoutSessionProcessor::CheckoutNotFound unless @checkout_session
 
-    # Rails.logger.debug(@checkout_session)
 
     @customer = @checkout_session['customer']
 

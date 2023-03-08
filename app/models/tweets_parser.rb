@@ -26,7 +26,6 @@ class TweetsParser
 
     yield self if block_given?
   rescue StandardError => e
-    Rails.logger.debug "TweetsParser: #{e} \n #{e.backtrace.join('\n')}"
     @twitter_search_result.update(errored: true, completed: true, error_message: e.message)
     Honeybadger.notify(e)
   end

@@ -19,10 +19,9 @@ class TwitterListSearchJob < ApplicationJob
       twitter_search_result.increment!(:results_count, parser.results_count)
       twitter_search_result.increment!(:ignored_count, parser.ignored_count)
       twitter_search_result.increment!(:added_count, parser.added_count)
-      Rails.logger.debug("[TwitterListSearchJob] Finished for (#{twitter_search_result.topic.name}) #{parser.results_count} results, #{parser.ignored_count} ignored, #{parser.added_count} added")
+      twitter_search_result.update(completed: true)
     end
   rescue StandardError => e
-    Rails.logger.debug("[TwitterSearchJob] #{e.message} #{e.backtrace}}")
     twitter_search_result.update(errored: true, completed: true, error_message: e.message)
     Honeybadger.notify(e)
   end

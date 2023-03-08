@@ -16,9 +16,7 @@
                 <ul>
                   <% category_urls.sort_by(&:score).reverse.each do |category_url| %>
                     <li>
-                      <a href="<%= category_url.editorial_url || category_url.clean_url %>"><%= category_url.editorial_title || category_url.title %></a> (<%= category_url.score %>)
-                      <br>
-                      <span><%= category_url.hostname %></span>
+                      <a href="<%= category_url.editorial_url || category_url.clean_url %>"><%= category_url.editorial_title || category_url.title %></a>
                     </li>
                   <% end %>
                 </ul>
