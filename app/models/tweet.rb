@@ -31,6 +31,7 @@ class Tweet < ApplicationRecord
   scope :uncollected, -> { where(collection_id: nil) }
   scope :collected, -> { where.not(collection_id: nil) }
   scope :unsaved, -> { where(saved: false) }
+  scope :unarchived, -> { where(archived: false) }
 
   def url
     "https://twitter.com/#{influencer&.username}/status/#{tweet_id}"

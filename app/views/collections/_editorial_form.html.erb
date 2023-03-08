@@ -1,4 +1,4 @@
-<%= form_with model: [collection, url], data: {'editorial-target' => 'form', 'remote' => true} do |f| %>
+<%= form_with model: [collection, url], data: {'editorial-target' => 'form'} do |f| %>
   <div class="flex flex-col space-y-2">
     <div>
       <%= f.label :editorial_title, class: 'sr-only' %>
@@ -10,14 +10,26 @@
     </div>
     <div>
       <%= f.label :editorial_description, class: 'sr-only' %>
-      <%= f.text_area :editorial_description, class: 'block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:py-1.5 sm:text-sm sm:leading-6', placeholder: 'Description', rows: 2, 'data-action' => 'focusout->editorial#save' %>
+      <%= f.text_area :editorial_description, class: 'block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:py-1.5 sm:text-sm sm:leading-6', placeholder: 'Description', rows: 4, 'data-action' => 'focusout->editorial#save' %>
     </div>
     <div>
       <%= f.label :editorial_category, class: 'sr-only' %>
       <%= f.select :editorial_category, options_for_select(collection.collection_categories.map(&:name), url.editorial_category), {include_blank: 'Choose a category'}, {class: 'mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'} %>
-    </div>    
+    </div>
   </div>
-  <div class="flex items-center justify-end mt-2">
-    <%= f.submit "Save", class: 'px-2 py-1 text-sm font-semibold text-purple-600 rounded shadow-sm bg-purple-50 hover:bg-purple-100', data: {'editorial-target' => 'button'} %>
+  <div class="flex items-center justify-between mt-2">
+    <div>
+      <div class="relative flex items-start">
+        <div class="flex items-center h-6">
+          <%= f.check_box :archived, class: 'h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-600' %>
+        </div>
+        <div class="ml-3 text-sm leading-6">
+          <%= f.label :archived, "Archive", class: 'text-gray-700' %>
+        </div>
+      </div>
+    </div>
+    <div>
+      <%= f.submit "Save", class: 'px-2 py-1 text-sm font-semibold text-purple-600 rounded shadow-sm bg-purple-50 hover:bg-purple-100', data: {'editorial-target' => 'button'} %>
+    </div>
   </div>
 <% end %>

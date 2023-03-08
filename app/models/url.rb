@@ -24,6 +24,7 @@ class Url < ApplicationRecord
   scope :uncollected, -> { where(collection_id: nil) }
   scope :collected, -> { where.not(collection_id: nil) }
   scope :unsaved, -> { where(saved: false) }
+  scope :unarchived, -> { where(archived: false) }
 
   before_create :hash_url
   before_create :cleanup_unwound_url

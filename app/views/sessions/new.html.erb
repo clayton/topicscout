@@ -9,7 +9,7 @@
 <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
   <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
   
-    <%= form_tag login_challenge_path, class: 'space-y-6', remote: false, turbo: false, data: {turbo: false} do |f| %>
+    <%= form_tag login_challenge_path, class: 'space-y-6', remote: false, turbo: false, data: {turbo: false}, target: '_top' do |f| %>
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
         <div class="mt-1">

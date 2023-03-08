@@ -7,11 +7,17 @@ class CollectionUrlsController < AuthenticatedUserController
 
     respond_to do |format|
       format.html { redirect_to collection_path(@collection) }
-      format.turbo_stream { render turbo_stream: turbo_stream.replace(@url, partial: 'collections/collected_url', locals: { collection: @collection, url: @url }) }
+      format.turbo_stream { 
+        if @url.archived?
+          render turbo_stream: turbo_stream.remove(@url) 
+        else
+          render turbo_stream: turbo_stream.replace(@url, partial: 'collections/collected_url', locals: { collection: @collection, url: @url }) 
+        end
+      }
     end
   end
 
   def url_params
-    params.require(:url).permit(:editorial_title, :editorial_url, :editorial_description, :editorial_category)
+    params.require(:url).permit(:editorial_title, :editorial_url, :editorial_description, :editorial_category, :archived)
   end
 end
