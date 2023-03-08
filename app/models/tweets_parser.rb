@@ -47,6 +47,8 @@ class TweetsParser
 
       matching_user = users.find { |user| user.fetch('id', nil) == tweet_author_id } || {}
 
+      next if just_a_retweet(tweet)
+
       entities = tweet.fetch('entities', {})
       hashtags = parse_hashtags(entities)
       edited_tweets = parse_edited_tweets(tweet)
@@ -82,6 +84,17 @@ class TweetsParser
 
       @newest_tweet_id = tweet.fetch('id', nil)
     end
+  end
+
+  def just_a_retweet(tweet)
+    referenced_tweets = tweet.fetch('referenced_tweets', [])
+
+    return false if referenced_tweets.empty?
+    
+    first_tweet = referenced_tweets.first
+    type = first_tweet.fetch('type', nil)
+
+    type == 'retweeted'
   end
 
   def parse_edited_tweets(tweet)

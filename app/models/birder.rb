@@ -56,7 +56,7 @@ module Birder
     end
 
     def tweets(list_id)
-      body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics', 'expansions' => 'author_id,edit_history_tweet_ids',
+      body = { 'tweet.fields' => 'created_at,entities,lang,public_metrics,referenced_tweets', 'expansions' => 'author_id,edit_history_tweet_ids',
                'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
 
       path = "/2/lists/#{list_id}/tweets"
