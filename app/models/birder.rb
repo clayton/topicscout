@@ -11,8 +11,11 @@ module Birder
   end
 
   class Search
+    attr_accessor :debug
+
     def initialize(client: Birder::Client.new)
       @client = client
+      @debug = ''
     end
 
     def tweets(query, options = {})
@@ -24,16 +27,18 @@ module Birder
 
       path = '/2/tweets/search/recent'
 
-      Rails.logger.info "Birder::Search.tweets: #{path} #{body}"
+      @debug = "Birder::Search.tweets: #{path} #{body}"
 
       Birder::Results.new(@client.get(path, body), @client,
-                          request: { path: path, body: body, page: 'next_token' })
+                          request: { path: path, body: body, page: 'next_token' }, debug: @debug)
     end
   end
 
   class List
+    attr_accessor :debug
     def initialize(client: Birder::Client.new)
       @client = client
+      @debug = ''
     end
 
     def create(name, options = {})
@@ -42,6 +47,8 @@ module Birder
       body.merge!('private' => options.fetch(:private, nil)) if options.fetch(:private, nil)
 
       path = '/2/lists'
+
+      @debug = "Birder::List.create: #{path} #{body}"
 
       response = @client.post(path, body.to_json, {})
       Birder::Twitter::List.new(response['data']['id'], response['data']['name'])
@@ -61,27 +68,29 @@ module Birder
 
       path = "/2/lists/#{list_id}/tweets"
 
+      @debug = "Birder::List.tweets: #{path} #{body}"
       Rails.logger.info "Birder::List.tweets: #{path} #{body}"
 
       Birder::Results.new(@client.get(path, body), @client,
-                          request: { path: path, body: body, page: 'pagination_token' })
+                          request: { path: path, body: body, page: 'pagination_token' }, debug: @debug)
     end
   end
 
   class Results
-    attr_reader :request, :data, :meta, :includes
+    attr_reader :request, :data, :meta, :includes, :debug
 
-    def initialize(response, client, request: {})
+    def initialize(response, client, request: {}, debug: nil)
       @response = response
       @client = client
       @request = request
       @meta = response.fetch('meta', {})
       @data = response.fetch('data', [])
       @includes = response.fetch('includes', {})
+      @debug = debug
     end
 
     def to_h
-      { 'data' => @data, 'meta' => @meta, 'includes' => @includes }
+      { 'data' => @data, 'meta' => @meta, 'includes' => @includes, 'debug' => @debug }
     end
 
     def next
@@ -97,7 +106,7 @@ module Birder
       body.merge!(next_token: next_token) if page == 'next_token'
 
       Birder::Results.new(@client.get(path, body, headers), @client,
-                          request: { path: path, body: body, headers: headers, page: page })
+                          request: { path: path, body: body, headers: headers, page: page }, debug: @debug)
     end
   end
 

@@ -13,6 +13,8 @@ class TwitterSearchJob < ApplicationJob
 
     raw = client.search.tweets(query, options)
 
+    twitter_search_result.update(debug_description: raw.debug)
+
     TweetsParser.parse(raw, twitter_search_result, nil) do |parser|
       twitter_search_result.update!(completed: true)
 

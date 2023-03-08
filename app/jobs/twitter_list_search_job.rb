@@ -15,6 +15,8 @@ class TwitterListSearchJob < ApplicationJob
 
     raw = client.list.tweets(list_id)
 
+    twitter_search_result.update(debug_description: raw.debug)
+
     TweetsParser.parse(raw, twitter_search_result, list_id) do |parser|
       twitter_search_result.increment!(:results_count, parser.results_count)
       twitter_search_result.increment!(:ignored_count, parser.ignored_count)
