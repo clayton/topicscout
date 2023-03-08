@@ -5,6 +5,7 @@ class TwitterSearchResult < ApplicationRecord
   has_many :tweets, dependent: :destroy
 
   after_create :search
+  after_create :search_lists
 
   # after_update :send_digest
 
@@ -33,12 +34,18 @@ class TwitterSearchResult < ApplicationRecord
   end
 
   def search
-    topic.twitter_lists.map(&:twitter_list_id).compact.each do |list_id|
-      TwitterListSearchJob.perform_later(self, list_id, topic.user_auth_token)
-    end
+    return if list_search?
 
     TwitterSearchJob.perform_later(self)
     update(query: topic.to_query)
+  end
+
+  def search_lists
+    return unless list_search?
+
+    topic.twitter_lists.map(&:twitter_list_id).compact.each do |list_id|
+      TwitterListSearchJob.perform_later(self, list_id, topic.user_auth_token)
+    end
   end
 
   def since_id
