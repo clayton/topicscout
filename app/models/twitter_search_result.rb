@@ -53,7 +53,7 @@ class TwitterSearchResult < ApplicationRecord
   end
 
   def parsed_start_time
-    (Time.current - 70.minutes).rfc3339
+    (Time.current - 250.minutes).rfc3339
   end
 
   def status
