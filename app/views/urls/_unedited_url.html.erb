@@ -12,7 +12,7 @@
             <%= image_tag first_influencer&.profile_image_url || '', class: 'h-10 w-10 rounded-full' %>
           </div>
           <div class="lg:ml-4">
-            <div class="font-medium text-gray-900"><%= link_to("@#{first_influencer&.username}", "https://twitter.com/#{first_influencer&.username}", target: '_blank', class: 'underline text-purple-500') %></div>
+            <div class="font-medium text-gray-900"><%= link_to("@#{first_influencer&.username}", "https://twitter.com/#{first_influencer&.username}", target: '_blank', class: 'underline text-violet-500') %></div>
             <div class="text-gray-500"><%= kill_mastodon(first_influencer&.name) %></div>
           </div>
         </div>
@@ -48,10 +48,10 @@
     <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
       <div class="flex flex-col justify-between h-full space-y-4">
         <div>
-          <%= link_to(local_time(url.published_at || url.created_at), url.clean_url, target: '_blank', class: 'text-purple-500 underline text-xs') %>
+          <%= link_to(local_time(url.published_at || url.created_at), url.clean_url, target: '_blank', class: 'text-violet-500 underline text-xs') %>
         </div>
         <div class="flex-grow">
-          <p><%= link_to(url.title, url.clean_url, target: '_blank', class: 'text-purple-500 underline text-lg') %></p>
+          <p><%= link_to(url.title, url.clean_url, target: '_blank', class: 'text-violet-500 underline text-lg') %></p>
           <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800"><%= url.hostname %></span>
           <% if current_user.beta? %>
             <div class="p-4 mt-2 font-mono text-sm text-left bg-gray-100">
@@ -89,15 +89,46 @@
           </div>
           <div ><%= number_with_delimiter(url.score.round(2)) %></div>
         </div>
+        <div class="flex items-center space-x-1">
+          <div class="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div >
+            <%= number_with_delimiter(url.retweet_count) %>
+          </div>
+        </div>
+        <div class="flex items-center space-x-1">
+          <div class="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
+            </svg>
+          </div>
+          <div >
+            <%= number_with_delimiter(url.like_count) %>
+          </div>
+        </div>
+        <div class="flex items-center space-x-1">
+          <div class="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+              <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div >
+            <%= number_with_delimiter(url.impression_count) %>
+          </div>
+        </div>
       </div>
     </div>
     <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
       <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
         <%= form_with url: topic_archived_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-violet-700 bg-violet-100 border border-transparent rounded-md xl:w-auto hover:bg-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Archive</button>
         <% end %>
         <%= form_with url: topic_saved_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-violet-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Save</button>
         <% end %>
       </div>
     </div>

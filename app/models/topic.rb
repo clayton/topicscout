@@ -21,8 +21,12 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :twitter_lists, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :category_templates, allow_destroy: true, reject_if: :all_blank
-
+  
+  scope :paused, -> { where(paused: true) }
+  scope :deleted, -> { where(deleted: true) }
   scope :undeleted, -> { where(deleted: false) }
+  scope :unpaused, -> { where(paused: false) }
+  scope :active, -> { undeleted.unpaused }
 
   def user_auth_token
     user.auth_token
@@ -94,6 +98,9 @@ class Topic < ApplicationRecord
 
   def sorted_results(results, sort = 'score')
     results = results.order(published_at: :desc) if sort == 'newest'
+    results = results.order(impression_count: :desc) if sort == 'impressions'
+    results = results.order(like_count: :desc) if sort == 'likes'
+    results = results.order(retweet_count: :desc) if sort == 'retweets'
     results = results.order(score: :desc) if sort == 'score' || sort.nil?
 
     results

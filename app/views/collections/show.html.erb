@@ -50,12 +50,12 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <% @tweets.each do |tweet| %>
                 <tr>
-                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></td>
+                  <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'text-violet-600 hover:text-violet-900') %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 whitespace-wrap"><%= display_entitites(tweet.text) %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= local_time(tweet.tweeted_at) %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap"><%= tweet.score.round %></td>
                   <td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-nowrap">
-                    <%= link_to 'View on Twitter', tweet.url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
+                    <%= link_to 'View on Twitter', tweet.url, target: '_blank', class: 'text-violet-600 hover:text-violet-900' %>
                   </td>
                 </tr>
               <% end %>

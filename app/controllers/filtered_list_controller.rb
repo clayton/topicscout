@@ -25,7 +25,7 @@ class FilteredListController < ApplicationController
   end
 
   def determine_sort
-    return @sort = 'score' unless filter_params[:sort].in? %w[score newest]
+    return @sort = 'score' unless filter_params[:sort].in? %w[score newest impressions likes retweets]
 
     @sort = filter_params.fetch(:sort, 'score')
   end

@@ -1,7 +1,7 @@
 namespace :search do
   desc 'Search twitter'
   task twitter: :environment do
-    Topic.undeleted.all.each do |topic|
+    Topic.active.all.each do |topic|
       next if topic.search_in_progress?
 
       topic.twitter_search_results.create(max_results: 3000, limited: true)
@@ -9,7 +9,7 @@ namespace :search do
   end
 
   task lists: :environment do
-    Topic.undeleted.all.each do |topic|
+    Topic.active.all.each do |topic|
       topic.twitter_search_results.create(max_results: 3000, limited: true, list_search: true)
     end
   end

@@ -75,6 +75,9 @@ class TweetsParser
 
       urls.each do |url| 
         url.increment!(:score, created_tweet.score)
+        url.increment!(:impression_count, created_tweet.public_metrics.fetch('impression_count', 0))
+        url.increment!(:like_count, created_tweet.public_metrics.fetch('like_count', 0))
+        url.increment!(:retweet_count, created_tweet.public_metrics.fetch('retweet_count', 0))
         TweetedUrl.find_or_create_by(tweet: created_tweet, url: url)
       end
 

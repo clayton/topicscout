@@ -1,9 +1,9 @@
 module TweetsHelper
   def display_entitites(text)
-    formatted = text.gsub(/(#\w+)/, "<span class='text-purple-800'>\\1</span>")
-    formatted = formatted.gsub(/(https:\S+)/, "<a href='\\1' target='_blank' class='text-purple-500'>\\1</a>")
+    formatted = text.gsub(/(#\w+)/, "<span class='text-violet-800'>\\1</span>")
+    formatted = formatted.gsub(/(https:\S+)/, "<a href='\\1' target='_blank' class='text-violet-500'>\\1</a>")
     formatted = formatted.gsub(/@(\w+)/,
-                               "<a href='https://twitter.com/\\1' target='_blank' class='text-purple-500'>@\\1</a>")
+                               "<a href='https://twitter.com/\\1' target='_blank' class='text-violet-500'>@\\1</a>")
     formatted = formatted.gsub(/\n/, '<br>')
     formatted.html_safe
   end

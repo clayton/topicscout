@@ -7,7 +7,7 @@
             <%= image_tag tweet.profile_image_url || '', class: 'h-10 w-10 rounded-full' %>
           </div>
           <div class="lg:ml-4">
-            <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-purple-500') %></div>
+            <div class="font-medium text-gray-900"><%= link_to("@#{tweet.username}", "https://twitter.com/#{tweet.username}", target: '_blank', class: 'underline text-violet-500') %></div>
             <div class="text-gray-500"><%= kill_mastodon(tweet.name) %></div>
           </div>
         </div>
@@ -15,7 +15,7 @@
           <%= form_with model: [tweet.topic, TweeterIgnoreRule.new] do |f| %>
             <%= f.hidden_field :author_id, value: tweet.author_id %>
             <%= f.hidden_field :page, value: params[:page] %>
-            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">Ignore @<%= tweet.username %></button>
+            <button type="submit" class="inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Ignore @<%= tweet.username %></button>
           <% end %>
         </div>
         <% if tweet.influencer&.collected_tweets? %>
@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="order-3 col-span-5 p-2 text-sm text-gray-500 md:col-span-4 xl:col-span-5 md:order-2">
-      <div class=""><%= link_to(local_time(tweet.tweeted_at), tweet.url, target: '_blank', class: 'text-purple-500 underline text-xs') %></div>
+      <div class=""><%= link_to(local_time(tweet.tweeted_at), tweet.url, target: '_blank', class: 'text-violet-500 underline text-xs') %></div>
       <div class="mt-1 text-gray-900"><%= display_entitites(tweet.text) %></div>
       <div class="mt-1">
         <% tweet.hashtags.map do |tag| %>
-          <div class="relative inline-block mr-2 text-sm text-purple-400" data-controller='saved-hashtag'>
+          <div class="relative inline-block mr-2 text-sm text-violet-400" data-controller='saved-hashtag'>
             <div class="absolute bottom-0 left-0 z-50 hidden p-1 bg-white border border-gray-200 rounded-md shadow-md" data-saved-hashtag-target="forms">
               <div class="relative p-4">
                 <a data-action="click->saved-hashtag#close" href="#" class="absolute top-0 right-0 text-gray-500">
@@ -52,7 +52,7 @@
                   <%= form_with model: [topic, tweet, NegativeSearchTerm.new] do |f| %>
                     <%= f.hidden_field :page, value: params[:page] %>
                     <%= f.hidden_field :term, value: "##{tag.tag}" %>
-                    <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Exclude <%= "##{tag.tag}"%></button>
+                    <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Exclude <%= "##{tag.tag}"%></button>
                   <% end %>
                   <%= form_with model: [topic, tweet, SearchTerm.new] do |f| %>
                     <%= f.hidden_field :page, value: params[:page] %>
@@ -142,10 +142,10 @@
     <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
       <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
         <%= form_with url: topic_archived_tweet_path(topic, tweet), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 border border-transparent rounded-md xl:w-auto hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Archive</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-violet-700 bg-violet-100 border border-transparent rounded-md xl:w-auto hover:bg-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Archive</button>
         <% end %>
         <%= form_with url: topic_saved_tweet_path(topic, tweet), method: :patch, class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Save</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-violet-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Save</button>
         <% end %>
       </div>
     </div>

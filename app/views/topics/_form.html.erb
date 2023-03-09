@@ -16,7 +16,7 @@
           <div class="sm:col-span-4">
             <%= label_tag :query, "Query", class: "block text-sm font-medium text-gray-700"%>
             <div class="mt-1">
-              <span class="inline-block w-full p-2 font-mono text-sm text-purple-500 bg-gray-100"><%= @topic.search_phrase %></span>
+              <span class="inline-block w-full p-2 font-mono text-sm bg-gray-100 text-violet-500"><%= @topic.search_phrase %></span>
             </div>
           </div>
         <% end %>
@@ -66,7 +66,6 @@
             </div>
           </div>
         <% end %>
-
       </div>
     </div>
     <div class="pt-8">
@@ -126,52 +125,52 @@
           </fieldset>
         </div>
         <%#= render partial: 'ignored_attributes', locals: {f: f, topic: @topic }%>
-    </div>
-    <div class="pt-8">
-      <div>
-        <h3 class="text-lg font-medium leading-6 text-gray-900">Negative keywords</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional negative keywords to help restrict irrelevant search results.</p>
       </div>
-      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <%= f.fields_for :negative_search_terms do |term_form| %>
-          <div class="sm:col-span-4">
-            <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-          </div>
-        <% end %>
-        <% if @topic.persisted? %>
-          <div class="sm:col-span-4">
-            <%= f.fields_for @topic.negative_search_terms.build do |new_term| %>
-              <%= new_term.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-            <% end %>
-          </div>
-        <% else %>
-          <% 3.times do %>
+      <div class="pt-8">
+        <div>
+          <h3 class="text-lg font-medium leading-6 text-gray-900">Negative keywords</h3>
+          <p class="mt-1 text-sm text-gray-500">Optional negative keywords to help restrict irrelevant search results.</p>
+        </div>
+        <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <%= f.fields_for :negative_search_terms do |term_form| %>
             <div class="sm:col-span-4">
-              <%= f.fields_for :new_negative_search_terms do |search_term_builder| %>
-                <%= search_term_builder.label 'Negative keyword', class: 'sr-only' %>
-                <%= search_term_builder.text_field '', class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
-              <% end %>
+              <%= term_form.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
             </div>
           <% end %>
-        <% end %>
+          <% if @topic.persisted? %>
+            <div class="sm:col-span-4">
+              <%= f.fields_for @topic.negative_search_terms.build do |new_term| %>
+                <%= new_term.text_field :term, class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+              <% end %>
+            </div>
+          <% else %>
+            <% 3.times do %>
+              <div class="sm:col-span-4">
+                <%= f.fields_for :new_negative_search_terms do |search_term_builder| %>
+                  <%= search_term_builder.label 'Negative keyword', class: 'sr-only' %>
+                  <%= search_term_builder.text_field '', class: 'flex-1 focus:ring-violet-500 focus:border-violet-500 block w-full min-w-0 rounded-md shadow-sm sm:text-sm border-gray-300' %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </div>
-    </div>
-    <div class="pt-8">
-      <div>
-        <h3 class="text-lg font-medium leading-6 text-gray-900">Scoring threshold</h3>
-        <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="p-1 font-mono text-xs text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
-      </div>
-      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <div class="sm:col-span-4">
-          <%= f.label :threshold, "Minimum score", class: "block text-sm font-medium text-gray-700"%>
-          <div class="mt-1">
-            <%= f.number_field :threshold, step: :any, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+      <div class="pt-8">
+        <div>
+          <h3 class="text-lg font-medium leading-6 text-gray-900">Scoring threshold</h3>
+          <p class="mt-1 text-sm text-gray-500">Optional scoring threshold to help filter out low-quality tweets based on a simple scoring formula (<span class="p-1 font-mono text-xs text-pink-500 bg-gray-100">(impressions + (likes * 5) + (retweets * 20))</span>).</p>
+        </div>
+        <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-4">
+            <%= f.label :threshold, "Minimum score", class: "block text-sm font-medium text-gray-700"%>
+            <div class="mt-1">
+              <%= f.number_field :threshold, step: :any, class: 'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' %>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="pt-8">
+    <div class="pt-8">
       <div>
         <h3 class="text-lg font-medium leading-6 text-gray-900">Topic categories</h3>
         <p class="mt-1 text-sm text-gray-500">Categories for this topic to better organize tweets.</p>
@@ -184,10 +183,31 @@
         <% end %>
       </div>
     </div>
-  <div class="pt-5">
-    <div class="flex justify-end">
-      <%= link_to "Cancel", cancel_link, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
-      <button type="submit" class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
+    <div class="pt-8">
+      <div>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Status</h3>
+        <p class="mt-1 text-sm text-gray-500">Pause this topic to temporarily stop searches.</p>
+      </div>
+      <div class="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <fieldset>
+            <legend class="sr-only">Paused</legend>
+            <div class="mt-4 space-y-4">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= f.check_box :paused, class: 'focus:ring-violet-500 h-4 w-4 text-violet-600 border-gray-300 rounded' %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= f.label :paused, "Pause this topic", class: 'font-medium text-gray-700' %>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+      </div>      
     </div>
-  </div>
-<% end %>
+    <div class="pt-5">
+      <div class="flex justify-end">
+        <%= link_to "Cancel", cancel_link, class: 'bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500' %>
+        <button type="submit" class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">Save</button>
+      </div>
+    </div>
+  <% end %>

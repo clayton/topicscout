@@ -7,7 +7,7 @@
   <div class="sm:hidden">
     <%= form_tag topic_tweets_path(topic), method: :get, "data-tab-nav-target" => "form" do %>
       <label for="tabs" class="sr-only">Select a tab</label>
-      <select data-action="change->tab-nav#navigate" class="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm">
+      <select data-action="change->tab-nav#navigate" class="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:border-violet-500 focus:outline-none focus:ring-violet-500 sm:text-sm">
         <option value="tweets" <%= active == :tweets ? "selected" : "" %>>Tweets</option>
         <option value="urls" <%= active == :urls ? "selected" : "" %>>Links</option>
         <option value="saves" <%= active == :saves ? "selected" : "" %>>Saves</option>
@@ -17,7 +17,7 @@
   <div class="hidden sm:block">
     <div class="border-b border-gray-200">
       <nav class="flex -mb-px space-x-8" aria-label="Tabs">
-        <!-- Current: "border-purple-500 text-purple-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+        <!-- Current: "border-violet-500 text-violet-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
         <%= topic_tab_nav_link("Tweets", topic_tweets_path(topic), active == :tweets) %>
         <%= topic_tab_nav_link("Links", topic_urls_path(topic), active == :urls) %>
         <%= topic_tab_nav_link("Saved", topic_saves_path(topic), active == :saves) %>

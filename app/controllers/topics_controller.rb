@@ -62,7 +62,7 @@ class TopicsController < AuthenticatedUserController
   private
 
   def topic_params
-    params.require(:topic).permit(:topic, :require_links, :require_media, :require_images, :ignore_ads, :require_verified, :daily_digest, :filter_by_language, :threshold, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: %i[term required exact_match],
+    params.require(:topic).permit(:topic, :paused, :require_links, :require_media, :require_images, :ignore_ads, :require_verified, :daily_digest, :filter_by_language, :threshold, :weekly_digest, :search_time_zone, :search_time_hour, :name, search_term: %i[term required exact_match],
                                                                                                                                                                                                                                         search_terms_attributes: %i[term id required exact_match],
                                                                                                                                                                                                                                         new_search_terms: %i[term required exact_match],
                                                                                                                                                                                                                                         negative_search_term: [:term],

@@ -12,7 +12,7 @@
         <h2 class="font-semibold text-lg text-gray-800 mt-4 mb-2">Tweets</h2>
           <div>
             <div class="mt-1">
-              <textarea rows="<%= @tweets.size * 5 %>" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm">
+              <textarea rows="<%= @tweets.size * 5 %>" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 sm:text-sm">
                 <% @tweets.each do |tweet| -%>
 <%= render partial: 'markdown_tweet', locals: {tweet: tweet}%>
                 <% end %>
@@ -23,7 +23,7 @@
         <h2 class="font-semibold text-lg text-gray-800 mt-8 mb-2">Links</h2>
         <div>
             <div class="mt-1">
-              <textarea rows="<%= @urls.size * 2 %>" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm">
+              <textarea rows="<%= @urls.size * 2 %>" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 sm:text-sm">
                 <% @urls.each do |url| -%>
 <%= render partial: 'markdown_url', locals: {url: url} %>
 

@@ -1,5 +1,5 @@
 <td class="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 whitespace-normal">
-  <p><%= link_to("@#{url.first_influencer_username}", "https://twitter.com/#{url.first_influencer_username}", target: '_blank', class: 'text-purple-600 hover:text-purple-900') %></p>
+  <p><%= link_to("@#{url.first_influencer_username}", "https://twitter.com/#{url.first_influencer_username}", target: '_blank', class: 'text-violet-600 hover:text-violet-900') %></p>
   <%= local_time(url.published_at || url.created_at) %>
 </td>
 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap grow">
@@ -7,5 +7,5 @@
 </td>
 <td class="px-3 py-4 text-sm text-gray-500 whitespace-normal"><%= url.score.round %></td>
 <td class="relative py-4 pl-3 pr-6 text-sm font-medium text-right whitespace-normal">
-  <%= link_to 'View', url.clean_url, target: '_blank', class: 'text-purple-600 hover:text-purple-900' %>
+  <%= link_to 'View', url.clean_url, target: '_blank', class: 'text-violet-600 hover:text-violet-900' %>
 </td>

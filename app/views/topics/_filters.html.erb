@@ -22,7 +22,7 @@
       class="relative flex flex-col w-full h-full max-w-xs py-4 pb-6 ml-auto overflow-y-auto bg-white shadow-xl">
         <div class="flex items-center justify-between px-4">
           <h2 class="text-lg font-medium text-gray-900">Filters</h2>
-          <button type="button" data-action="click->tweet-filters#toggleMobileDialog" class="flex items-center justify-center w-10 h-10 p-2 -mr-2 text-gray-400 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <button type="button" data-action="click->tweet-filters#toggleMobileDialog" class="flex items-center justify-center w-10 h-10 p-2 -mr-2 text-gray-400 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             <span class="sr-only">Close menu</span>
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -46,19 +46,19 @@
             <div class="pt-6" id="filter-section-0">
               <div class="space-y-6">
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-0" name="category[]" value="tees" type="checkbox" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                  <input id="filter-mobile-category-0" name="category[]" value="tees" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
                   <label for="filter-mobile-category-0" class="ml-3 text-sm text-gray-500">Last hour</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
                   <label for="filter-mobile-category-1" class="ml-3 text-sm text-gray-500">Today</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
                   <label for="filter-mobile-category-1" class="ml-3 text-sm text-gray-500">Yesterday</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-2" name="category[]" value="hats" type="checkbox" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                  <input id="filter-mobile-category-2" name="category[]" value="hats" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
                   <label for="filter-mobile-category-2" class="ml-3 text-sm text-gray-500">This week</label>
                 </div>
               </div>
@@ -93,7 +93,10 @@
           class="absolute left-0 z-10 hidden w-40 mt-2 origin-top-left bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="mobile-menu-button" tabindex="-1">
             <div class="py-1" role="none">
               <%= link_to "Highest scoring", self.send(list_path, topic, params.merge!(sort: 'score')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'score' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
-              <%= link_to "Newest", self.send(list_path, topic, params.merge!(sort: 'newest')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'newest' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-1' %>
+              <%= link_to "Newest", self.send(list_path, topic, params.merge!(sort: 'newest')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'newest' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-2' %>
+              <%= link_to "Impressions", self.send(list_path, topic, params.merge!(sort: 'impressions')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'impressions' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-3' %>
+              <%= link_to "Likes", self.send(list_path, topic, params.merge!(sort: 'likes')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'likes' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-4' %>
+              <%= link_to "Retweets", self.send(list_path, topic, params.merge!(sort: 'retweets')), class: "block px-4 py-2 text-sm font-medium text-gray-900 #{@sort == 'retweets' ? 'bg-gray-100' : ''}", role: 'menuitem', tabindex: '-4' %>
             </div>
           </div>
         </div>
@@ -171,6 +174,7 @@
                 <%= hidden_field_tag 'sort', @sort %>
                 <%= hidden_field_tag 'page', @page %>
                 <%= hidden_field_tag 'time_filter', @time_filter %>
+                <%= hidden_field_tag 'influencers_filter', @influencers_filter %>
                 <div class="flex items-center">
                   <%= check_box_tag 'visibility_filter', 'all', (@visibility_filter == 'all'), class: 'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeVisibilityFilter' } %>
                   <%= label_tag "visibility_filter_ignored", "Show ignored", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
