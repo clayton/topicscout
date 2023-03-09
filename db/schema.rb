@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_09_133433) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_09_135114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -164,7 +164,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_133433) do
     t.boolean "ignore_ads", default: false
     t.boolean "require_verified"
     t.boolean "deleted", default: false
-    t.boolean "paused"
+    t.boolean "paused", default: false
     t.index ["user_id"], name: "index_topics_on_user_id"
     t.index ["utc_search_hour"], name: "index_topics_on_utc_search_hour"
   end
