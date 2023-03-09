@@ -1,14 +1,13 @@
-class HostnameIgnoreRulesController < ApplicationController
+class HostnameIgnoreRulesController < AuthenticatedUserController
   include ActionView::RecordIdentifier
   
   def create
-    @topic = Topic.includes(:tweets).find(params[:topic_id])
-    @tweet = @topic.tweets.includes(:urls).find_by(id: rule_params[:tweet_id])
-    @url = @tweet.urls.find_by(id: rule_params[:url_id])
+    @topic = Topic.find(params[:topic_id])
+    @url = @topic.urls.find_by(id: rule_params[:url_id])
 
     @topic.hostname_ignore_rules.find_or_create_by(hostname: @url.hostname)
     
-    @tweet.update(ignored: true)
+    @url.update(ignored: true)
 
     respond_to do |format|
       format.html { redirect_to topic_urls_url(@topic) }

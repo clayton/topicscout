@@ -125,10 +125,10 @@
     <div class="order-2 col-span-1 p-2 text-sm font-medium xl:order-4 md:col-span-2 md:order-3 xl:col-span-2">
       <div class="flex flex-col items-center justify-between h-full xl:h-auto xl:flex-row xl:justify-end xl:space-y-0 xl:space-x-2">
         <%= form_with url: topic_archived_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-violet-700 bg-violet-100 border border-transparent rounded-md xl:w-auto hover:bg-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Archive</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium border border-transparent rounded-md text-violet-700 bg-violet-100 xl:w-auto hover:bg-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Archive</button>
         <% end %>
         <%= form_with url: topic_saved_url_path(topic, url), method: 'patch', class: 'w-full xl:w-auto', data: {'turbo-stream': true} do |f| %>
-          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-violet-600 border border-transparent rounded-md shadow-sm xl:w-auto hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Save</button>
+          <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-violet-600 xl:w-auto hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">Save</button>
         <% end %>
       </div>
     </div>
