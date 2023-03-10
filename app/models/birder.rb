@@ -10,6 +10,26 @@ module Birder
     end
   end
 
+  class Tweets
+    def initialize(client: Birder::Client.new)
+      @client = client
+      @debug = ''
+    end
+
+    def tweet(id)
+      # 1634202159234310144
+      body = { 'expansions' => 'author_id,edit_history_tweet_ids', 'tweet.fields' => 'created_at,context_annotations,entities,lang,public_metrics',
+               'user.fields' => 'username,profile_image_url,public_metrics,verified,verified_type' }
+
+      path = "/2/tweets/#{id}"
+
+      @debug = "Birder::Search.tweets: #{path} #{body}"
+
+      Birder::Results.new(@client.get(path, body), @client,
+                          request: { path: path, body: body, page: 'next_token' }, debug: @debug)               
+    end
+  end
+
   class Search
     attr_accessor :debug
 
@@ -187,6 +207,10 @@ module Birder
 
     def search
       @search = Birder::Search.new(client: self)
+    end
+
+    def tweets
+      @tweets = Birder::Tweets.new(client: self)
     end
   end
 
