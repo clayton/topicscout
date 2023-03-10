@@ -1,4 +1,4 @@
-<div class="col-span-1" id="<%= dom_id(url) %>">
+<div class="col-span-1 space-y-4" id="<%= dom_id(url) %>">
   <div class="grid grid-cols-3 <%= url_bg_color(url) %> rounded-md shadow-md md:grid-cols-8 xl:grid-cols-10">
     <div class="order-1 col-span-2 p-2 text-sm md:col-span-2">
       <div class="flex flex-col space-y-2">
@@ -133,4 +133,11 @@
       </div>
     </div>
   </div>
+  <% if current_user.beta? %>
+    <% Url.relevant.unedited.where.not(id: url.id).search_by_title(url.title).limit(3).each do |similar| %>
+      <div class="px-4 py-2 text-sm bg-gray-200 rounded-md shadow-sm">
+        Related: <%= similar.title %>
+      </div>
+    <% end %>
+  <% end %>
 </div>
