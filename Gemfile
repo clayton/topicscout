@@ -91,3 +91,5 @@ gem 'htmlbeautifier'
 gem "local_time", "~> 2.1"
 
 gem "dotenv", "~> 2.8"
+
+gem "string-similarity", "~> 2.1"
