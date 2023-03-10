@@ -12,6 +12,13 @@ class UrlsController < FilteredListController
     end
   end
 
+  def show
+    @url = Url.includes(:influencers, :topic, :tweets).where(id: params[:id]).first
+    @topic = @url.topic
+    @influencers = @url.influencers
+    @tweets = @url.tweets
+  end
+
   def permitted_params
     params.permit(:page, :sort, :time_filter, :visibility_filter, :topic_id, :id, :influencers_filter)
   end

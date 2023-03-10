@@ -23,7 +23,9 @@ Rails.application.routes.draw do
     end
     resources :tweeter_ignore_rules
     resources :influencer_ignore_rules
-    resources :urls
+    resources :urls do
+      resources :similar_urls
+    end
     resources :saves
     resources :archived_tweets
     resources :archived_urls

@@ -1,0 +1,29 @@
+<div class="px-4 py-2 text-sm bg-gray-200 rounded-md shadow-sm">
+  <div class="flex text-gray-400 gap-x-2">
+    <div>
+      <%= similar_url.first_influencer&.username || 'Unknown influencer' %>
+    </div>
+    <div class="flex-grow ">
+      <span class="font-medium text-gray-500"><%= similar_url.title %></span>
+    </div>
+    <div>
+      <%= local_time(similar_url.created_at) %>
+    </div>
+    <div class="flex flex-row space-x-2">
+      <div><%= score_svg %></div>
+      <div><%= similar_url.score.round(2) %></div>
+    </div>
+    <div class="flex flex-row space-x-2">
+      <div><%= retweet_svg %></div>
+      <div><%= similar_url.retweet_count %></div>
+    </div>
+    <div class="flex flex-row space-x-2">
+      <div><%= like_svg %></div>
+      <div><%= similar_url.like_count %></div>
+    </div>
+    <div class="flex flex-row space-x-2">
+      <div><%= impression_svg %></div>
+      <div><%= similar_url.impression_count %></div>
+    </div>
+  </div>
+</div>
