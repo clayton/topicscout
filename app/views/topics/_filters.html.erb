@@ -46,19 +46,19 @@
             <div class="pt-6" id="filter-section-0">
               <div class="space-y-6">
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-0" name="category[]" value="tees" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
+                  <input id="filter-mobile-category-0" name="category[]" value="tees" type="checkbox" class="w-4 h-4 border-gray-300 rounded text-violet-600 focus:ring-violet-500">
                   <label for="filter-mobile-category-0" class="ml-3 text-sm text-gray-500">Last hour</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
+                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 border-gray-300 rounded text-violet-600 focus:ring-violet-500">
                   <label for="filter-mobile-category-1" class="ml-3 text-sm text-gray-500">Today</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
+                  <input id="filter-mobile-category-1" name="category[]" value="crewnecks" type="checkbox" class="w-4 h-4 border-gray-300 rounded text-violet-600 focus:ring-violet-500">
                   <label for="filter-mobile-category-1" class="ml-3 text-sm text-gray-500">Yesterday</label>
                 </div>
                 <div class="flex items-center">
-                  <input id="filter-mobile-category-2" name="category[]" value="hats" type="checkbox" class="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500">
+                  <input id="filter-mobile-category-2" name="category[]" value="hats" type="checkbox" class="w-4 h-4 border-gray-300 rounded text-violet-600 focus:ring-violet-500">
                   <label for="filter-mobile-category-2" class="ml-3 text-sm text-gray-500">This week</label>
                 </div>
               </div>
@@ -100,6 +100,14 @@
             </div>
           </div>
         </div>
+        <%# <div class="flex-grow max-w-sm">
+          <form action="">
+            <div>
+              <label for="query" class="sr-only">Search query</label>
+              <input type="text" name="email" id="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="search">
+            </div>
+          </form>
+        </div> %>
         <!-- Mobile filter dialog toggle, controls the 'mobileFilterDialogOpen' state. -->
         <button data-action="click->tweet-filters#toggleMobileInfluencerDialog" type="button" class="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden">Filters</button>
         <div class="hidden sm:flex sm:items-baseline sm:space-x-8">
@@ -148,20 +156,19 @@
                 <% end %>
               </div>
             </div>
-          
-          <div id="desktop-menu-1" class="relative inline-block text-left">
-            <div>
-              <button type="button" data-action="click->tweet-filters#toggleDesktopVisibilityFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
-                <span>Visibility</span>
-                <% if @visibility_filter %>
-                  <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>
-                <% end %>
-                <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-            <div 
+            <div id="desktop-menu-1" class="relative inline-block text-left">
+              <div>
+                <button type="button" data-action="click->tweet-filters#toggleDesktopVisibilityFilter" class="inline-flex items-center justify-center text-sm font-medium text-gray-700 group hover:text-gray-900" aria-expanded="false">
+                  <span>Visibility</span>
+                  <% if @visibility_filter %>
+                    <span class="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">1</span>
+                  <% end %>
+                  <svg class="flex-shrink-0 w-5 h-5 ml-1 -mr-1 text-gray-400 group-hover:text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              <div 
               data-tweet-filters-target="desktopVisibilityFilter"
               data-transition-enter="transition ease-out duration-100"
               data-transition-enter-start="transform opacity-0 scale-95"
@@ -170,18 +177,18 @@
               data-transition-leave-start="transform opacity-100 scale-100"
               data-transition-leave-end="transform opacity-0 scale-95"
               class="absolute right-0 z-10 hidden p-4 mt-2 origin-top-right bg-white rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'visibilityForm'} do %>
-                <%= hidden_field_tag 'sort', @sort %>
-                <%= hidden_field_tag 'page', @page %>
-                <%= hidden_field_tag 'time_filter', @time_filter %>
-                <%= hidden_field_tag 'influencers_filter', @influencers_filter %>
-                <div class="flex items-center">
-                  <%= check_box_tag 'visibility_filter', 'all', (@visibility_filter == 'all'), class: 'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeVisibilityFilter' } %>
-                  <%= label_tag "visibility_filter_ignored", "Show ignored", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
-                </div>
-              <% end %>
+                <%= form_tag self.send(list_path, topic), method: :get, class: 'space-y-4', data: {'tweet-filters-target' => 'visibilityForm'} do %>
+                  <%= hidden_field_tag 'sort', @sort %>
+                  <%= hidden_field_tag 'page', @page %>
+                  <%= hidden_field_tag 'time_filter', @time_filter %>
+                  <%= hidden_field_tag 'influencers_filter', @influencers_filter %>
+                  <div class="flex items-center">
+                    <%= check_box_tag 'visibility_filter', 'all', (@visibility_filter == 'all'), class: 'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', data: { action: 'change->tweet-filters#changeVisibilityFilter' } %>
+                    <%= label_tag "visibility_filter_ignored", "Show ignored", class: 'pr-6 ml-3 text-sm font-medium text-gray-900 whitespace-nowrap' %>
+                  </div>
+                <% end %>
+              </div>
             </div>
-          </div>
           <% end %>
           <div id="desktop-menu-2" class="relative inline-block text-left">
             <div>

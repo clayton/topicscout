@@ -63,17 +63,23 @@ class Tweet < ApplicationRecord
 
   def calculate_score
     follower_count = if influencer.nil? || influencer&.followers_count.zero?
-                       impression_count * 4
+                       1
                      else
                        influencer&.followers_count
                      end
 
-    if follower_count.zero?
-      self.score = 0
-      return
-    end
+    # Old scoring
+    # raw_score = ((impression_count / (follower_count * 0.25)) + ((like_count / (follower_count * 0.02)) + ((retweet_count / (follower_count * 0.002)))))
 
-    raw_score = ((impression_count / (follower_count * 0.25)) + ((like_count / (follower_count * 0.02)) + ((retweet_count / (follower_count * 0.002)))))
+    # New scoring
+    # =(MIN($impressions/(followers*0.0994),10)+(MIN($likes/(followers*0.00069),10)+(MIN($retweets/(followers*0.0001),10))))*(len(followers)
+
+    impression_score = [(impression_count / (follower_count * 0.0994)), 10].min
+    like_score = [(like_count / (follower_count * 0.00069)), 10].min
+    retweet_score = [(retweet_count / (follower_count * 0.0001)), 10].min
+
+    raw_score = impression_score + like_score + retweet_score
+    raw_score *= (follower_count.to_s.length.to_i)
 
     self.score = raw_score
   end
