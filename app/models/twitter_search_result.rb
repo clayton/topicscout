@@ -83,14 +83,11 @@ class TwitterSearchResult < ApplicationRecord
   def ignored_hostname?(url)
     ignores = topic.hostname_ignore_rules.map(&:hostname)
 
-    begin
-      url_hostname = URI.parse(url).hostname
-    rescue StandardError => e
-      Honeybadger.notify("#{e.message} - #{url}")
-      return false
+    ignores.each do |hostname|
+      return true if url.include?(hostname)
     end
 
-    ignores.include?(url_hostname)
+    false
   end
 
   def send_digest

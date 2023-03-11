@@ -4,6 +4,7 @@ class SimilarUrlsController < ApplicationController
     @similar = Url.includes(:influencers)
                   .relevant.unedited
                   .where.not(id: @url.id)
+                  .where(Url.arel_table[:impression_count].gt(@url.impression_count))
                   .search_by_title(query(@url.title))
                   .order(impression_count: :desc)
                   .limit(5)
