@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_10_181758) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_12_153044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -245,6 +245,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_181758) do
     t.string "auth_token"
     t.string "refresh_token"
     t.datetime "auth_token_expires_at"
+  end
+
+  create_table "twitter_list_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "author_id"
+    t.uuid "twitter_list_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "twitter_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

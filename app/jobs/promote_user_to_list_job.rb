@@ -11,6 +11,8 @@ class PromoteUserToListJob < ApplicationJob
       raise "Missing User ID", "User ID is missing" if user_id.blank?
       
       client.list.promote(list_id, user_id)
+
+      TwitterListMembership.add_to_twitter_list(list_id, user_id)
     rescue Birder::Error => e
       Honeybadger.notify(e)
     end

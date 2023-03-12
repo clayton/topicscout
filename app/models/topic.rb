@@ -21,7 +21,7 @@ class Topic < ApplicationRecord
   accepts_nested_attributes_for :negative_search_terms, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :twitter_lists, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :category_templates, allow_destroy: true, reject_if: :all_blank
-  
+
   scope :paused, -> { where(paused: true) }
   scope :deleted, -> { where(deleted: true) }
   scope :undeleted, -> { where(deleted: false) }
@@ -72,7 +72,9 @@ class Topic < ApplicationRecord
   def influencer_results(results, influencer_filter = 'all')
     return results.where(influencers: { collected_tweets: true }) if influencer_filter == 'collected'
     return results.where(influencers: { saved_tweets: true }) if influencer_filter == 'saved'
-    return results.where(influencers: { followers_count: Influencer.arel_table[:followers_count].gt(10_000) }) if influencer_filter == 'popular'
+    if influencer_filter == 'popular'
+      return results.where(influencers: { followers_count: Influencer.arel_table[:followers_count].gt(10_000) })
+    end
 
     results
   end
@@ -261,5 +263,13 @@ class Topic < ApplicationRecord
     token = user_auth_token
 
     CreateTwitterListJob.perform_later(named, description, token, id)
+  end
+
+  def author_included_on_managed_list?(author_id)
+    managed_list = twitter_lists.includes(:twitter_list_memberships).managed.first
+
+    return false if managed_list.nil?
+
+    managed_list.twitter_list_memberships.where(author_id: author_id).any?
   end
 end
