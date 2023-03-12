@@ -14,6 +14,7 @@
           <div class="lg:ml-4">
             <div class="font-medium text-gray-900"><%= link_to("@#{first_influencer&.username}", "https://twitter.com/#{first_influencer&.username}", target: '_blank', class: 'underline text-violet-500') %></div>
             <div class="text-gray-500"><%= kill_mastodon(first_influencer&.name) %></div>
+            <div class="text-sm text-gray-500"><%= number_with_delimiter(url.influencers.sum(&:followers_count) || 0) %> combined followers</div>
           </div>
         </div>
         <% if url.influencers.size > 1 %>

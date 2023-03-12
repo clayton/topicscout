@@ -74,12 +74,12 @@ class Tweet < ApplicationRecord
     # New scoring
     # =(MIN($impressions/(followers*0.0994),10)+(MIN($likes/(followers*0.00069),10)+(MIN($retweets/(followers*0.0001),10))))*(len(followers)
 
-    impression_score = [(impression_count / (follower_count * 0.0994)), 10].min
-    like_score = [(like_count / (follower_count * 0.00069)), 10].min
-    retweet_score = [(retweet_count / (follower_count * 0.0001)), 10].min
+    impression_score = [(impression_count / (follower_count * 0.0994)), 5].min
+    like_score = [(like_count / (follower_count * 0.00069)), 5].min
+    retweet_score = [(retweet_count / (follower_count * 0.0001)), 5].min
 
     raw_score = impression_score + like_score + retweet_score
-    raw_score *= (follower_count.to_s.length.to_i)
+    raw_score *= follower_count.to_s.length.to_i
 
     self.score = raw_score
   end
@@ -93,6 +93,10 @@ class Tweet < ApplicationRecord
   def promote_to_list
     return unless saved? && saved_change_to_collection_id?
 
+    add_to_twitter_list
+  end
+
+  def add_to_twitter_list
     list_id = topic.twitter_lists.managed.first&.twitter_list_id
 
     return if list_id.blank?

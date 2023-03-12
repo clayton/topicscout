@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :search_terms
     resources :negative_search_terms
     resources :tweets do
+      resources :twitter_list_memberships
       resources :search_terms, controller: 'tweet_search_terms'
       resources :negative_search_terms, controller: 'tweet_negative_search_terms'
     end
