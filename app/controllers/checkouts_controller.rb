@@ -10,10 +10,10 @@ class CheckoutsController < ApplicationController
       session[:user_id] = @subscription.user.id
     rescue CheckoutSessionProcessor::CustomerNotFound
       Honeybadger.notify("Customer not found for checkout: #{params[:checkout_session_id]}")
-      flash[:error] = 'There was an error creating your account. Contact help@topicscout.app.'
+      flash[:error] = 'There was an error creating your account. Contact help@topicscoutapp.com.'
     rescue CheckoutSessionProcessor::CheckoutNotFound
       Honeybadger.notify("Checkout session not found: #{params[:checkout_session_id]}")
-      flash[:error] = 'There was an error creating your account. Contact help@topicscout.app.'
+      flash[:error] = 'There was an error creating your account. Contact help@topicscoutapp.com.'
     end
 
     redirect_to onboarding_start_url

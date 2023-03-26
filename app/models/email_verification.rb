@@ -27,14 +27,14 @@ class EmailVerification < ApplicationRecord
 
     # Example request
     client.deliver_with_template(
-      { from: 'help@topicscout.app',
+      { from: 'help@topicscoutapp.com',
         to: email,
         template_alias: 'verify_email',
         template_model: { 'product_url' => 'https://app.topicscoutapp.com',
                           'name' => user.name,
                           'product_name' => 'Topic Scout',
                           'code' => code,
-                          'support_email' => 'help@topicscout.app',
+                          'support_email' => 'help@topicscoutapp.com',
                           'sender_name' => 'Clayton',
                           'action_url' => 'https://app.topicscoutapp.com/profile',
                           'login_url' => 'https://app.topicscoutapp.com/login' } }

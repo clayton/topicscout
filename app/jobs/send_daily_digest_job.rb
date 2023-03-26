@@ -20,7 +20,7 @@ class SendDailyDigestJob < ApplicationJob
 
     # Example request
     client.deliver_with_template(
-      { from: 'scott@topicscout.app',
+      { from: 'help@topicscoutapp.com',
         to: user.email,
         template_alias: 'daily-tweet-digest',
         template_model: twitter_search_result.digest }

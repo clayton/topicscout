@@ -69,7 +69,7 @@ class TwitterSearchResult < ApplicationRecord
       results_count: results_count,
       topic_tweets_url: topic_tweets_url(topic),
       edit_topic_url: edit_topic_url(topic),
-      support_email: 'help@topicscout.app',
+      support_email: 'help@topicscoutapp.com',
       tweets: tweets.qualified(topic.threshold).limit(10).map do |t|
                 { name: t.name, username: t.username, profile_image_url: t.profile_image_url, embed_html: t.text }
               end
