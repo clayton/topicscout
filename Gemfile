@@ -95,3 +95,5 @@ gem "dotenv", "~> 2.8"
 gem "string-similarity", "~> 2.1"
 
 gem "pg_search", "~> 2.3"
+
+gem "table_print", "~> 1.5"

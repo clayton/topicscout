@@ -292,6 +292,7 @@ GEM
       railties (>= 6.0.0)
     string-similarity (2.1.0)
     stripe (8.3.0)
+    table_print (1.5.7)
     tailwindcss-rails (2.0.24-arm64-darwin)
       railties (>= 6.0.0)
     terminal-table (3.0.2)
@@ -348,6 +349,7 @@ DEPENDENCIES
   stimulus-rails
   string-similarity (~> 2.1)
   stripe (~> 8.1)
+  table_print (~> 1.5)
   tailwindcss-rails
   turbo-rails
   tzinfo-data

@@ -38,7 +38,7 @@ class EmailAuthenticationsController < ApplicationController
 
     if remembered_session&.user
       session[:user_id] = remembered_session.user_id
-      redirect_to session[:return_to] || dashboard_url
+      redirect_to session[:return_to] || root_url
       return false
     end
 
